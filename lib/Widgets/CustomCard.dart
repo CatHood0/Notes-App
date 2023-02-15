@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/controller/CreateNoteController.dart';
 
+// ignore: must_be_immutable
 class customCard extends StatefulWidget {
   
   int id;
@@ -43,7 +44,7 @@ class _customCardState extends State<customCard> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        noteController.setIdCard(card);
+        
       },
       child: Container(
         child: Card(

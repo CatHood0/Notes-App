@@ -1,20 +1,20 @@
 class note{
 
-  static String? _title;
-  static String? _content;
-  static DateTime? _createDate;
+  String _title;
+  String _content;
+  DateTime _createDate;
 
-  note({title, content,createDate});
+  note(this._title, this._content, this._createDate);
 
-  static String? getTitle(){
+  String getTitle(){
     return _title;
   }
 
-  static String? getContent(){
+  String getContent(){
     return _content;
   }
 
-  static DateTime? getDate(){
+  DateTime getDate(){
     return _createDate;
   }
 
