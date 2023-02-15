@@ -4,10 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class menu extends StatelessWidget {
-  const menu({super.key});
+
+  BuildContext context; 
+  menu(this.context, {super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(context) {
     return Drawer(
         backgroundColor: Color.fromARGB(255, 70, 70, 70),
         elevation: 0,
@@ -40,6 +42,7 @@ class menu extends StatelessWidget {
                   title: Text("Home", style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold)),
                   onTap: () => {
                       print("Hola"),
+                      Navigator.pop(context),
                   },
               ),
             ),
@@ -54,6 +57,7 @@ class menu extends StatelessWidget {
                   title: Text("Notes", style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold)),
                   onTap: () => {
                       print("Hola"),
+                      Navigator.pop(context),
                   },
                          ),
              ),
@@ -68,6 +72,7 @@ class menu extends StatelessWidget {
                   title: Text("Settings", style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold)),
                   onTap: () => {
                       print("Hola"),
+                      Navigator.pop(context),
                   },
                          ),
              ),

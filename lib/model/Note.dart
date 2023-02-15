@@ -10,7 +10,7 @@ class note{
     return _title;
   }
 
-  static String? content(){
+  static String? getContent(){
     return _content;
   }
 
