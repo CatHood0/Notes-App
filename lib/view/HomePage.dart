@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_project/model/Note.dart';
 import 'package:notes_project/view/Menu.dart';
 
 class homePage extends StatelessWidget {
@@ -43,7 +44,7 @@ class homePage extends StatelessWidget {
                       elevation: 5,
                       shape: CircleBorder(),
                       onPressed: (){
-
+                          Navigator.pushNamed(context, 'create_notes');
                       },
                     ),
                   ],
@@ -55,6 +56,7 @@ class homePage extends StatelessWidget {
         drawer: Container(
           width: 200,
           child: menu(),
+          
         ),
     );
   }

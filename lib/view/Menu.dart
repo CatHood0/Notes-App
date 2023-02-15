@@ -29,39 +29,48 @@ class menu extends StatelessWidget {
                     accountEmail: Text("user@gmail.com"),
                 ),
              ),
-            ListTile(//esto nos deja crear una lista de objetos usables
-                leading: Icon(//leading es casi que pegado a la izquierda
-                  size: 20,
-                  CupertinoIcons.home, color: Colors.white,
-                ),
-                shape: StadiumBorder(),
-                title: Text("Home", style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold)),
-                onTap: () => {
-                    print("Hola"),
-                },
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: ListTile(//esto nos deja crear una lista de objetos usables
+                  leading: Icon(//leading es casi que pegado a la izquierda
+                    size: 25,
+                    CupertinoIcons.home, color: Colors.white,
+                  ),
+                  shape: StadiumBorder(),
+                  title: Text("Home", style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold)),
+                  onTap: () => {
+                      print("Hola"),
+                  },
+              ),
             ),
-             ListTile(//esto nos deja crear una lista de objetos usables
-                leading: Icon(//leading es casi que pegado a la izquierda
-                size: 20,
-                  CupertinoIcons.book, color: Colors.white,
-                ),
-                shape: StadiumBorder(),
-                title: Text("Notes", style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold)),
-                onTap: () => {
-                    print("Hola"),
-                },
-            ),
-             ListTile(//esto nos deja crear una lista de objetos usables
-                leading: Icon(//leading es casi que pegado a la izquierda
-                size: 20,
-                  CupertinoIcons.settings_solid, color: Colors.white,
-                ),
-                shape: StadiumBorder(),
-                title: Text("Settings", style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold)),
-                onTap: () => {
-                    print("Hola"),
-                },
-            ),
+             Padding(
+               padding: const EdgeInsets.all(8.0),
+               child: ListTile(//esto nos deja crear una lista de objetos usables
+                  leading: Icon(//leading es casi que pegado a la izquierda
+                  size: 25,
+                    CupertinoIcons.book, color: Colors.white,
+                  ),
+                  shape: StadiumBorder(),
+                  title: Text("Notes", style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold)),
+                  onTap: () => {
+                      print("Hola"),
+                  },
+                         ),
+             ),
+             Padding(
+               padding: const EdgeInsets.all(8.0),
+               child: ListTile(//esto nos deja crear una lista de objetos usables
+                  leading: Icon(//leading es casi que pegado a la izquierda
+                  size: 25,
+                    CupertinoIcons.settings_solid, color: Colors.white,
+                  ),
+                  shape: StadiumBorder(),
+                  title: Text("Settings", style: TextStyle(color: Colors.white, fontSize: 19, fontWeight: FontWeight.bold)),
+                  onTap: () => {
+                      print("Hola"),
+                  },
+                         ),
+             ),
             
           ],
         ),
