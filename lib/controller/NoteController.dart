@@ -1,19 +1,18 @@
-import 'package:notes_project/Widgets/CustomCard.dart';
 
 import '../model/Note.dart';
 
 class noteController{
 
-  static int? idCard;
+  static int? idNote;
+  static note? Notes;
   static List<int> ids = [];//this for that the user can delete some files the same time
-  static customCard? cusCard;
   static List<note> _listaNotas = [
     note("Hola", "Contenido", DateTime.now(), 0),//this can nullable if is: [];
   ];
 
-  static void getIdCard(customCard card){
-      idCard = card.getIdCard();
-      cusCard = card;
+  static void getIdCard(note Note){
+      idNote = Note.getId();
+      Notes = Note;
   }
 
   static List<note> getList(){

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notes_project/Widgets/CustomCard.dart';
 import 'package:notes_project/controller/NoteController.dart';
 
 import '../model/Note.dart';
