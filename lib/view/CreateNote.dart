@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/Widgets/CustomCard.dart';
-import 'package:notes_project/controller/CreateNoteController.dart';
-import 'package:notes_project/model/Note.dart';
+import 'package:notes_project/controller/NoteController.dart';
+
+import '../model/Note.dart';
 
 class createNote extends StatefulWidget {
   createNote({super.key});
@@ -37,12 +38,10 @@ class _createNoteState extends State<createNote> {
                     splashRadius: 20,
                     icon: Icon(Icons.check),
                     onPressed: () {
-                      final Note = new customCard(2, title, content, DateTime.now());
+                      final Note = new note(title, content, DateTime.now(), 2);
                       setState(() {
-                      noteController.listaNotas.insert(0, Note);
-                      print(noteController.listaNotas.length);
+                      noteController.addCustomCard(Note);
                       Navigator.pushReplacementNamed(context, 'homePage');
-                        
                       });
                     },
                  ),
@@ -88,7 +87,7 @@ class _createNoteState extends State<createNote> {
                           autofocus: false,
                           decoration: InputDecoration(hintText: "Your title", hintStyle: TextStyle(color: Colors.grey)),
                           style: TextStyle(color: Colors.white, fontSize: 18),
-                          onChanged: (value) => {title = value, print(title),},
+                          onChanged: (value) => {title = value},
                       ),
                     ),
                   ),
@@ -110,7 +109,6 @@ class _createNoteState extends State<createNote> {
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
                             onChanged: (value) => {content = value},
-                           
                         ),
                     ),
                   ),  

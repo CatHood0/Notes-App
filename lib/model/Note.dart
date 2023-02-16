@@ -1,10 +1,11 @@
 class note{
 
+  int? _id;
   String _title;
   String _content;
   DateTime _createDate;
 
-  note(this._title, this._content, this._createDate);
+  note(this._title, this._content, this._createDate, this._id);
 
   String getTitle(){
     return _title;
@@ -18,5 +19,8 @@ class note{
     return _createDate;
   }
 
+  int? getId(){
+    return _id;
+  }
 
 }
