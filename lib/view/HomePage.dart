@@ -5,7 +5,8 @@ import 'package:notes_project/view/ReadNote.dart';
 import '../model/Note.dart';
 
 class homePage extends StatefulWidget {
-  homePage({super.key});
+  String? search;
+  homePage(this.search,{super.key,});
 
   @override
   State<homePage> createState() => _homePageState();
@@ -13,10 +14,14 @@ class homePage extends StatefulWidget {
 
 class _homePageState extends State<homePage> {
   
-  List<note> listaNotas = noteController.getList();
+  late List<note> listaNotas;
+  late bool isSearcheable;
+
   @override
-  void initState() {
+  void initState() {//todo metodo que necesitemos que se cargue apenas iniciar, lo pondremos dentro de este metodo
     super.initState();
+    listaNotas = noteController.getList(widget.search);
+    isSearcheable = noteController.isSearch(widget.search);
   }
   
   @override
@@ -33,10 +38,11 @@ class _homePageState extends State<homePage> {
           centerTitle: true,
           backgroundColor: Color.fromARGB(255, 59, 59, 59),
           elevation: 8,
-          actions: [
+          actions: [ 
           IconButton(
             icon: Icon(Icons.add),
             splashRadius: 20,
+            tooltip: "Add a new note",
             color: Color.fromARGB(255, 255, 255, 255),
               onPressed: (){
                 Navigator.pushNamed(context, 'create_notes');
@@ -48,10 +54,12 @@ class _homePageState extends State<homePage> {
             IconButton(
               alignment: Alignment.centerRight,
               tooltip: "Search",
+              icon: Icon(Icons.search),
               onPressed: () {
-              }, 
-              icon: const Icon(Icons.search)
+
+                }, 
               ),
+
           ],
         ),
         body: Container(

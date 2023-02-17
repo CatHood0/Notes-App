@@ -15,8 +15,22 @@ class noteController{
       Notes = Note;
   }
 
-  static List<note> getList(){
-    return _listaNotas;
+  static List<note> getList(String? search){
+      if(search != null){
+        for(int i=0; i<_listaNotas.length;i++){
+          if(_listaNotas[i].getTitle()==search){
+              return _listaNotas;
+          }
+        }
+      }
+     return _listaNotas;
+  }
+  
+  static bool isSearch(String? search){
+    if(search != null){
+         return true;
+      }
+     return false;
   }
 
   static void addCustomCard(note Note){
