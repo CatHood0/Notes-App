@@ -56,15 +56,20 @@ class _homePageState extends State<homePage> {
         ),
         body: Container(
              height: double.infinity,
-                child: ListView.builder(
-                  itemCount: listaNotas.length,
-                  itemBuilder: (context, index) {
+             child: GridView.builder(
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), 
+              itemCount: listaNotas.length,
+              shrinkWrap: true,
+              padding: EdgeInsets.all(10),
+              itemBuilder: (context, index) {
                     return Container(
+                      height: 70,
                        child: GestureDetector(
                         onTap: () {
                             Navigator.push(context, MaterialPageRoute(builder: (context) => readPage(new note(listaNotas[index].getTitle(), listaNotas[index].getContent(), listaNotas[index].getDate(), listaNotas[index].getId()))));
                         },
                          child: Card(
+                          shadowColor: Colors.purpleAccent,
                           color: Colors.grey,
                               child: Column(
                                 children: [

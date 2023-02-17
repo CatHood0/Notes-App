@@ -26,11 +26,8 @@ class _createNoteState extends State<createNote> {
         title: Text("New note", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
         centerTitle: true,
         actions: [
-          Padding(
-            padding: EdgeInsets.only(
-              right: 5,
-            ),
-            child: Row(
+             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Container(
                  child:  IconButton(
@@ -56,7 +53,6 @@ class _createNoteState extends State<createNote> {
                 ),
               ],
             ),
-          ),
         ],
       ),
         body: SingleChildScrollView(
