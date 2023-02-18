@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/controller/NoteController.dart';
 import 'package:notes_project/view/HomePage.dart';
-import 'package:notes_project/view/Notes.dart';
+import 'package:notes_project/view/NotesPage.dart';
 
 import '../model/Note.dart';
 import 'Pages.dart';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:notes_project/view/HomePage.dart';
-import 'package:notes_project/view/Notes.dart';
+import 'package:notes_project/view/NotesPage.dart';
 import 'package:notes_project/view/Settings.dart';
 
 class pages extends StatefulWidget {
