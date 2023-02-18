@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/controller/NoteController.dart';
+import 'package:notes_project/view/Notes.dart';
+import 'package:notes_project/view/Pages.dart';
 
 import '../model/Note.dart';
 
@@ -36,8 +38,8 @@ class _createNoteState extends State<createNote> {
                     onPressed: () {
                       final Note = new note(title, content, DateTime.now(), 2, false);
                       setState(() {
-                      noteController.addCustomCard(Note);
-                      Navigator.pushReplacementNamed(context, 'homePage');
+                          noteController.addCustomCard(Note);
+                          Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => pages()), (Route<dynamic> route) => false);
                       });
                     },
                  ),
@@ -47,7 +49,7 @@ class _createNoteState extends State<createNote> {
                     splashRadius: 20,
                     icon: Icon(Icons.clear),
                     onPressed: () {
-                        Navigator.pushReplacementNamed(context, 'homePage');
+                        Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => pages()), (Route<dynamic> route) => false);
                     },
                  ),
                 ),

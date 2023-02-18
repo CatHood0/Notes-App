@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../model/Note.dart';
 
+// ignore: must_be_immutable
 class propertiesNote extends StatefulWidget {
   note Note;
   propertiesNote(this.Note, {super.key});
