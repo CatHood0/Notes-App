@@ -5,9 +5,9 @@ class note{
   String _content;
   bool favorite;
   DateTime _createDate;
-  DateTime? _dateTimeModification;
+  DateTime _dateTimeModification;
 
-  note(this._title, this._content, this._createDate, this._id, this.favorite, [this._dateTimeModification]);
+  note(this._title, this._content, this._createDate, this._id, this.favorite, this._dateTimeModification);
 
   String getTitle(){
     return _title;
@@ -34,14 +34,7 @@ class note{
   }
 
    DateTime getDateModification(){
-    if(_dateTimeModification == null){
-      print("Es nulo");
-       return _createDate;
-    }
-    else{
-      print("No es nulo");
-      return _dateTimeModification!;
-    }
+      return _dateTimeModification;
   }
 
   void setDateModification(DateTime timeNow){

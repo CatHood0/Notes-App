@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/controller/NoteController.dart';
 import 'package:notes_project/view/CreateNote.dart';
-import 'package:notes_project/view/DialogSearch.dart';
 import 'package:notes_project/Widgets/NoteView.dart';
+import 'package:notes_project/Widgets/dialogSearch.dart';
 import '../model/Note.dart';
 
 // ignore: must_be_immutable

@@ -37,7 +37,7 @@ class _createNoteState extends State<createNote> {
                   icon: Icon(Icons.check),
                   onPressed: () {
                     final Note =
-                        new note(title, content, DateTime.now(), 2, false);
+                        new note(title, content, DateTime.now(), 2, false, DateTime.now());
                     setState(() {
                       noteController.addCustomCard(Note);
                       Navigator.of(context).pushAndRemoveUntil(

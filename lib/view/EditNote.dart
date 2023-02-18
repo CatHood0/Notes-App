@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/controller/NoteController.dart';
-import 'package:notes_project/view/HomePage.dart';
-import 'package:notes_project/view/NotesPage.dart';
-
 import '../model/Note.dart';
 import 'Pages.dart';
 
@@ -40,11 +37,15 @@ class _editNoteState extends State<editNote> {
                   splashRadius: 20,
                   icon: Icon(Icons.check),
                   onPressed: () {
-                    final Note = new note(title, content, DateTime.now(), 2,
-                        widget.Note.getFavorite());
-                      setState(() {
+                    final Note = new note(title, content, widget.Note.getDate(), 2,
+                        widget.Note.getFavorite(), DateTime.now());
+                    setState(
+                      () {
                         noteController.setUpdateNote(widget.index, Note);
-                        Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => pages()), (Route route) => false);
+                        Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => pages()),
+                            (Route route) => false);
                       },
                     );
                   },
@@ -55,7 +56,10 @@ class _editNoteState extends State<editNote> {
                   splashRadius: 20,
                   icon: Icon(Icons.clear),
                   onPressed: () {
-                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => pages()), (Route route) => false);
+                    Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => pages()),
+                        (Route route) => false);
                   },
                 ),
               ),

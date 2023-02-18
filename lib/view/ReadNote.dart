@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:notes_project/view/DialogProperties.dart';
+import 'package:notes_project/Widgets/DialogProperties.dart';
 import 'package:notes_project/view/EditNote.dart';
 
 import '../model/Note.dart';
