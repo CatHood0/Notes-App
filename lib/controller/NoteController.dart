@@ -7,7 +7,7 @@ class noteController{
   static note? Notes;
   static List<int> ids = [];//this for that the user can delete some files the same time
   static List<note> _listaNotas = [
-    note("Hola", "Contenido", DateTime.now(), 0),//this can nullable if is: [];
+    note("Hola", "Contenido", DateTime.now(), 0, true),//this can nullable if is: [];
   ];
 
   static void getIdCard(note Note){
@@ -24,6 +24,20 @@ class noteController{
         }
       }
      return _listaNotas;
+  }
+
+  static void setFavorite(int index, bool state){
+      _listaNotas[index].setFavorite(state);
+  }
+
+  static void setUpdateNote(int index, note Note){
+      _listaNotas[index].setTitle(Note.getTitle());
+      _listaNotas[index].setContent(Note.getContent());
+      _listaNotas[index].setDateModification(DateTime.now());
+  }
+
+  static void removeNote(int index){
+      _listaNotas.removeAt(index);
   }
   
   static bool isSearch(String? search){

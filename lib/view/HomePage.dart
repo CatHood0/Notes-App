@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/controller/NoteController.dart';
+import 'package:notes_project/view/DialogSearch.dart';
 import 'package:notes_project/view/Menu.dart';
 import 'package:notes_project/view/ReadNote.dart';
 import '../model/Note.dart';
 
+// ignore: must_be_immutable
 class homePage extends StatefulWidget {
   String? search;
   homePage(this.search,{super.key,});
@@ -56,41 +58,82 @@ class _homePageState extends State<homePage> {
               tooltip: "Search",
               icon: Icon(Icons.search),
               onPressed: () {
-
+                  showDialog(context: context, builder: (context){
+                       return dialogSearch();
+                    },
+                  );
                 }, 
               ),
-
           ],
         ),
         body: Container(
              height: double.infinity,
-             child: GridView.builder(
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), 
-              itemCount: listaNotas.length,
-              shrinkWrap: true,
-              padding: EdgeInsets.all(10),
-              itemBuilder: (context, index) {
-                    return Container(
-                      height: 70,
-                       child: GestureDetector(
-                        onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => readPage(new note(listaNotas[index].getTitle(), listaNotas[index].getContent(), listaNotas[index].getDate(), listaNotas[index].getId()))));
-                        },
-                         child: Card(
-                          shadowColor: Colors.purpleAccent,
-                          color: Colors.grey,
-                              child: Column(
-                                children: [
-                                   Text(listaNotas[index].getTitle(), style: TextStyle(color: Colors.white),),
-                                ],
-                              ),
+                child: GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2), 
+                itemCount: listaNotas.length,
+                padding: EdgeInsets.all(10),
+                itemBuilder: (context, index) {
+                      return Container(                       
+                          height: 70,
+                           child: GestureDetector(
+                            onTap: () {
+                              final Note = new note(listaNotas[index].getTitle(), listaNotas[index].getContent(), listaNotas[index].getDate(), listaNotas[index].getId(), listaNotas[index].getFavorite());
+                              Navigator.push(context, MaterialPageRoute(builder: (context) => readPage(index, Note)));
+                              print(index);
+                            },               
+                             child: Padding(
+                               padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                                 child: Card(
+                                  elevation: 10,
+                                  color: Color.fromARGB(255, 105, 105, 105),
+                                      child: Column(                              
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              right: 120,
+                                              bottom: 9,
+                                            ),
+                                            child: IconButton(
+                                              onPressed: () {
+                                              setState(() {
+                                              listaNotas[index].getFavorite() ?
+                                              noteController.setFavorite(index, false)
+                                              :
+                                              noteController.setFavorite(index, true);
+                                              });
+                                            }, 
+                                            icon: listaNotas[index].getFavorite() ? 
+                                            Icon(Icons.star, color: Color.fromARGB(255, 240, 153, 255),)
+                                            :
+                                            Icon(Icons.star_outline, color: Color.fromARGB(255, 240, 153, 255),),
+                                            splashRadius: 20,
+                                            alignment: Alignment.center,
+                                            tooltip: "Select star for convert this note in your favorite",
+                                            ),
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 10,
+                                              right: 8,
+                                              left: 8,
+                                            ),
+                                            child: Text(listaNotas[index].getTitle(), style: 
+                                                TextStyle(color: Colors.white,
+                                                  fontWeight: FontWeight.bold,
+                                                  fontSize: 20
+                                                ),
+                                                
+                                            ),
+                                          ),               
+                                        ],
+                                      ),
+                               ),
+                             ),
                            ),
-                       ),
                       );              
                     },    
-                  ), 
-        ),
-                
+                  ),
+             ),         
         drawer: Container(
           width: 200,
           child: menu(context),

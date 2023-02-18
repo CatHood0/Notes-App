@@ -3,18 +3,21 @@ import 'package:notes_project/controller/NoteController.dart';
 
 import '../model/Note.dart';
 
-class createNote extends StatefulWidget {
-  createNote({super.key});
+// ignore: must_be_immutable
+class editNote extends StatefulWidget {
+  int index;
+  note Note;
+  editNote(this.index, this.Note, {super.key});
 
   @override
-  State<createNote> createState() => _createNoteState();
+  State<editNote> createState() => _editNoteState();
 }
 
-class _createNoteState extends State<createNote> {
+class _editNoteState extends State<editNote> {
   late TextEditingController textTitleController;
   late TextEditingController textContentController; 
-  String title = "";
-  String content = "";
+  late String title;
+  late String content;
 
   @override
   Widget build(BuildContext context) {
@@ -23,8 +26,7 @@ class _createNoteState extends State<createNote> {
       appBar: AppBar(
         backgroundColor: Color.fromARGB(255, 59, 59, 59),
         elevation: 8,
-        title: Text("New note", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
-        centerTitle: true,
+        title: Text("Edit your note", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
         actions: [
              Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -34,14 +36,15 @@ class _createNoteState extends State<createNote> {
                     splashRadius: 20,
                     icon: Icon(Icons.check),
                     onPressed: () {
-                      final Note = new note(title, content, DateTime.now(), 2, false);
+                      final Note = new note(title, content, DateTime.now(), 2, widget.Note.getFavorite());
                       setState(() {
-                      noteController.addCustomCard(Note);
-                      Navigator.pushReplacementNamed(context, 'homePage');
+                      noteController.setUpdateNote(widget.index, Note);
+                          Navigator.pushReplacementNamed(context, 'homePage');
                       });
                     },
-                 ),
+                  ),
                 ),
+                
                 Container(
                   child:  IconButton(
                     splashRadius: 20,
@@ -58,7 +61,6 @@ class _createNoteState extends State<createNote> {
         body: SingleChildScrollView(
             child: Column(
               children: <Widget>[
-                
                   Padding(
                     padding: const EdgeInsets.only(
                       top: 2,
@@ -70,7 +72,6 @@ class _createNoteState extends State<createNote> {
                       child: TextFormField(
                           autocorrect: true,
                           controller: textTitleController,
-                          autofocus: false,
                           decoration: InputDecoration(hintText: "Your title", hintStyle: TextStyle(color: Colors.grey)),
                           style: TextStyle(color: Colors.white, fontSize: 22),
                           onChanged: (value) => {title = value},
@@ -106,8 +107,10 @@ class _createNoteState extends State<createNote> {
    @override
   void initState() {
     super.initState();
-    textContentController = TextEditingController();
-    textTitleController = TextEditingController();
+    title = widget.Note.getTitle();
+    content = widget.Note.getContent();
+    textContentController = TextEditingController(text: content);
+    textTitleController = TextEditingController(text: title);
   }
 
   @override
@@ -115,6 +118,8 @@ class _createNoteState extends State<createNote> {
     super.dispose();
     textContentController.dispose();
     textTitleController.dispose();
+    title = "";
+    content = "";
   }
 
 }
