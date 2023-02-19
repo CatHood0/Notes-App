@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:notes_project/Widgets/popupOptions.dart';
 import 'package:notes_project/controller/NoteController.dart';
 import 'package:notes_project/view/CreateNote.dart';
 import 'package:notes_project/Widgets/NoteView.dart';
@@ -25,7 +26,8 @@ class _notesPageState extends State<notesPage> {
   void initState() {
     //todo metodo que necesitemos que se cargue apenas iniciar, lo pondremos dentro de este metodo
     super.initState();
-    _listNote = noteController.getList(widget.search);
+    noteController.fillList();
+    _listNote = noteController.getList("");
     _isSearcheable = noteController.isSearch(widget.search);
   }
 
@@ -47,6 +49,7 @@ class _notesPageState extends State<notesPage> {
         centerTitle: true,
         backgroundColor: Color.fromARGB(255, 59, 59, 59),
         elevation: 8,
+        leading: popupMenu(),
         actions: [
           IconButton(
             icon: Icon(Icons.add),
@@ -64,6 +67,7 @@ class _notesPageState extends State<notesPage> {
             alignment: Alignment.centerRight,
             tooltip: "Search",
             icon: Icon(Icons.search),
+            splashRadius: 20,
             onPressed: () {
               showDialog(
                 context: context,
@@ -75,16 +79,18 @@ class _notesPageState extends State<notesPage> {
           ),
         ],
       ),
-      body: Container(
-        height: double.infinity,
-        child: GridView.builder(
-          gridDelegate:
-              SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-          itemCount: _listNote.length,
-          padding: EdgeInsets.all(10),
-          itemBuilder: (context, index) {
-            return noteCard(_listNote, index);
-          },
+      body: SafeArea(//Esto es para los teléfonos con Notch
+        child: Container(
+          height: double.infinity,
+          child: GridView.builder(
+            gridDelegate:
+                SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            itemCount: _listNote.length,
+            padding: EdgeInsets.all(10),
+            itemBuilder: (context, index) {
+              return noteCard(_listNote, index);
+            },
+          ),
         ),
       ),
     );

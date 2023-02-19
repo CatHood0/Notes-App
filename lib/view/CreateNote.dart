@@ -36,8 +36,8 @@ class _createNoteState extends State<createNote> {
                   splashRadius: 20,
                   icon: Icon(Icons.check),
                   onPressed: () {
-                    final Note =
-                        new note(title, content, DateTime.now(), 2, false, DateTime.now());
+                    final Note = new note(title, content, DateTime.now(), 2,
+                        false, DateTime.now());
                     setState(() {
                       noteController.addCustomCard(Note);
                       Navigator.of(context).pushAndRemoveUntil(
@@ -62,51 +62,53 @@ class _createNoteState extends State<createNote> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 2,
-                right: 7,
-                left: 7,
-              ),
-              child: Container(
-                width: double.infinity,
-                child: TextFormField(
-                  autocorrect: true,
-                  controller: textTitleController,
-                  autofocus: false,
-                  decoration: InputDecoration(
-                      hintText: "Your title",
-                      hintStyle: TextStyle(color: Colors.grey)),
-                  style: TextStyle(color: Colors.white, fontSize: 22),
-                  onChanged: (value) => {title = value},
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 2,
+                  right: 7,
+                  left: 7,
                 ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: double.infinity,
-                child: TextFormField(
-                  autocorrect: true,
-                  controller: textContentController,
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                  decoration: InputDecoration.collapsed(
-                    hintText: "Write your thoughts",
-                    hintStyle: TextStyle(color: Colors.grey),
+                child: Container(
+                  width: double.infinity,
+                  child: TextFormField(
+                    autocorrect: true,
+                    controller: textTitleController,
+                    autofocus: false,
+                    decoration: InputDecoration(
+                        hintText: "Your title",
+                        hintStyle: TextStyle(color: Colors.grey)),
+                    style: TextStyle(color: Colors.white, fontSize: 22),
+                    onChanged: (value) => {title = value},
                   ),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  onChanged: (value) => {content = value},
                 ),
               ),
-            ),
-          ],
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: double.infinity,
+                  child: TextFormField(
+                    autocorrect: true,
+                    controller: textContentController,
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    decoration: InputDecoration.collapsed(
+                      hintText: "Write your thoughts",
+                      hintStyle: TextStyle(color: Colors.grey),
+                    ),
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    onChanged: (value) => {content = value},
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

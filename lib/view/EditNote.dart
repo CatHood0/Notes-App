@@ -67,50 +67,52 @@ class _editNoteState extends State<editNote> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 2,
-                right: 7,
-                left: 7,
-              ),
-              child: Container(
-                width: double.infinity,
-                child: TextFormField(
-                  autocorrect: true,
-                  controller: textTitleController,
-                  decoration: InputDecoration(
-                      hintText: "Your title",
-                      hintStyle: TextStyle(color: Colors.grey)),
-                  style: TextStyle(color: Colors.white, fontSize: 22),
-                  onChanged: (value) => {title = value},
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: 2,
+                  right: 7,
+                  left: 7,
                 ),
-              ),
-            ),
-            SizedBox(
-              height: 10,
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Container(
-                width: double.infinity,
-                child: TextFormField(
-                  autocorrect: true,
-                  controller: textContentController,
-                  style: TextStyle(color: Colors.white, fontSize: 18),
-                  decoration: InputDecoration.collapsed(
-                    hintText: "Write your thoughts",
-                    hintStyle: TextStyle(color: Colors.grey),
+                child: Container(
+                  width: double.infinity,
+                  child: TextFormField(
+                    autocorrect: true,
+                    controller: textTitleController,
+                    decoration: InputDecoration(
+                        hintText: "Your title",
+                        hintStyle: TextStyle(color: Colors.grey)),
+                    style: TextStyle(color: Colors.white, fontSize: 22),
+                    onChanged: (value) => {title = value},
                   ),
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  onChanged: (value) => {content = value},
                 ),
               ),
-            ),
-          ],
+              SizedBox(
+                height: 10,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Container(
+                  width: double.infinity,
+                  child: TextFormField(
+                    autocorrect: true,
+                    controller: textContentController,
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    decoration: InputDecoration.collapsed(
+                      hintText: "Write your thoughts",
+                      hintStyle: TextStyle(color: Colors.grey),
+                    ),
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    onChanged: (value) => {content = value},
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

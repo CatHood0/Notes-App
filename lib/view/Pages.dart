@@ -23,7 +23,7 @@ class _pagesState extends State<pages> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: listPages[indexPage],
+        body: SafeArea(child: listPages[indexPage]),
         bottomNavigationBar: Container(
           color: Color.fromARGB(255, 51, 51, 51),
           child: Padding(

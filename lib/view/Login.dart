@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class login extends StatelessWidget {
-  const login({super.key});
+  login({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -9,10 +9,12 @@ class login extends StatelessWidget {
       title: 'Material App',
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Material App Bar'),
+          title: Text('Material App Bar'),
         ),
-        body: const Center(
-          child: Text('Hello World'),
+        body: SafeArea(
+          child: Center(
+            child: Text('Hello World'),
+          ),
         ),
       ),
     );

@@ -10,20 +10,50 @@ class noteController{
     note("Hola", "Contenido", DateTime.now(), 0, true, DateTime.now()),//this can nullable if is: [];
   ];
 
+  static List<note> _listAllNotes = _listaNotas;
+
+  static List<note> _listFavoriteNotes= [
+    note("Recetas", "Contenido de las recetas", DateTime.now(), 0, true, DateTime.now()),//this can nullable if is: [];
+
+  ];
+  static List<note> _listNotFavoriteNotes= [
+    note("", "Contenido", DateTime.now(), 0, false, DateTime.now()),//this can nullable if is: [];
+  ];
+
   static void getIdCard(note Note){
       idNote = Note.getId();
       Notes = Note;
   }
 
-  static List<note> getList(String? search){
-      if(search != null){
-        for(int i=0; i<_listaNotas.length;i++){
-          if(_listaNotas[i].getTitle()==search){
-              return _listaNotas;
-          }
-        }
-      }
+  static List<note> getList(String? search){//hay que probar esto
+    if(search!=""){
+       for(int i=0; i<_listaNotas.length;i++){
+            if(_listaNotas[i].getTitle()==search){
+              _listaNotas.removeWhere((search) => _listaNotas[i].getTitle()!=search);
+               return _listaNotas;
+            }
+       }
+    }
      return _listaNotas;
+  }
+
+  static void fillList(){
+       for(int i=0; i<_listaNotas.length;i++){
+      if(_listaNotas[i].getFavorite()==true && _listaNotas[i].getId()!=0){
+          _listFavoriteNotes.insert(0, _listaNotas[i]);
+      }
+      else{
+          _listNotFavoriteNotes.insert(0, _listaNotas[i]);
+      }
+    }
+  }
+
+  static List<note> getListFavorite(){
+    return _listFavoriteNotes;
+  }
+
+  static List<note> getListNotFavorite(){
+    return _listNotFavoriteNotes;
   }
 
   static void setFavorite(int index, bool state){
