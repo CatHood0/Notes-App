@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/controller/NoteController.dart';
 import '../model/Note.dart';
-import 'Pages.dart';
 
 // ignore: must_be_immutable
 class editNote extends StatefulWidget {

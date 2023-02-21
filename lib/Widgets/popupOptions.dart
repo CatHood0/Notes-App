@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notes_project/controller/NoteController.dart';
-import 'package:notes_project/view/Pages.dart';
 
 enum listOptions { listAllNotes, listFavoriteNotes, backup, restore }
 
