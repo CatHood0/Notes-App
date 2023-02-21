@@ -25,7 +25,7 @@ class _propertiesNoteState extends State<propertiesNote> {
                   Text('Title: ${widget.Note.getTitle()}'),
                   Text('Date: ${widget.Note.getDate().toString()}'),
                   Text('Modification: ${widget.Note.getDateModification().toString()}'),
-                  Text('id: ${widget.Note.getId().toString()}'),
+                  Text('id: ${widget.Note.getKey().toString()}'),
               ]
             ),
         ),

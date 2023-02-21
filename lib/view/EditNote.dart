@@ -37,17 +37,10 @@ class _editNoteState extends State<editNote> {
                   splashRadius: 20,
                   icon: Icon(Icons.check),
                   onPressed: () {
-                    final Note = new note(title, content, widget.Note.getDate(), 2,
-                        widget.Note.getFavorite(), DateTime.now());
-                    setState(
-                      () {
+                    final Note = new note(title, content, widget.Note.getDate(),
+                        2, widget.Note.getFavorite(), DateTime.now());
                         noteController.setUpdateNote(widget.index, Note);
-                        Navigator.pushAndRemoveUntil(
-                            context,
-                            MaterialPageRoute(builder: (context) => pages()),
-                            (Route route) => false);
-                      },
-                    );
+                        Navigator.pop(context);
                   },
                 ),
               ),
@@ -56,10 +49,7 @@ class _editNoteState extends State<editNote> {
                   splashRadius: 20,
                   icon: Icon(Icons.clear),
                   onPressed: () {
-                    Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => pages()),
-                        (Route route) => false);
+                    Navigator.pop(context);
                   },
                 ),
               ),

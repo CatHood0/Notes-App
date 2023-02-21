@@ -27,8 +27,9 @@ class _readPageState extends State<readPage> {
           backgroundColor: Color.fromARGB(255, 59, 59, 59),
           actions: [
             IconButton(
-                onPressed: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => editNote(widget.index, widget.Note)));
+                onPressed: () async {
+                    await Navigator.push(context, MaterialPageRoute(builder: (context) => editNote(widget.index, widget.Note)));
+                    setState(() {});
                 }, 
                 icon: Icon(Icons.edit)
               ),

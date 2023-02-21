@@ -38,12 +38,9 @@ class _createNoteState extends State<createNote> {
                   onPressed: () {
                     final Note = new note(title, content, DateTime.now(), 2,
                         false, DateTime.now());
-                    setState(() {
-                      noteController.addCustomCard(Note);
-                      Navigator.of(context).pushAndRemoveUntil(
-                          MaterialPageRoute(builder: (context) => pages()),
-                          (Route<dynamic> route) => false);
-                    });
+                        noteController.addCustomCard(Note);
+                        Navigator.pop(context);
+                    setState(() {});
                   },
                 ),
               ),

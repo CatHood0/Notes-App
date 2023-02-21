@@ -1,13 +1,13 @@
 class note{
 
-  int? _id;
+  int? _key;//ponemos key porque de esa forma es que se suele registrar en firestore. Key value
   String _title;
   String _content;
   bool favorite;
   DateTime _createDate;
   DateTime _dateTimeModification;
 
-  note(this._title, this._content, this._createDate, this._id, this.favorite, this._dateTimeModification);
+  note(this._title, this._content, this._createDate, this._key, this.favorite, this._dateTimeModification);
 
   String getTitle(){
     return _title;
@@ -45,8 +45,8 @@ class note{
     return _createDate;
   }
 
-  int? getId(){
-    return _id;
+  int? getKey(){
+    return _key;
   }
 
 }

@@ -21,7 +21,7 @@ class noteController{
   ];
 
   static void getIdCard(note Note){
-      idNote = Note.getId();
+      idNote = Note.getKey();
       Notes = Note;
   }
 
@@ -39,7 +39,7 @@ class noteController{
 
   static void fillList(){
        for(int i=0; i<_listaNotas.length;i++){
-      if(_listaNotas[i].getFavorite()==true && _listaNotas[i].getId()!=0){
+      if(_listaNotas[i].getFavorite()==true && _listaNotas[i].getKey()!=0){
           _listFavoriteNotes.insert(0, _listaNotas[i]);
       }
       else{

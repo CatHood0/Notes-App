@@ -56,11 +56,9 @@ class _notesPageState extends State<notesPage> {
             splashRadius: 20,
             tooltip: "Add a new note",
             color: Color.fromARGB(255, 255, 255, 255),
-            onPressed: () {
-              setState(() {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => createNote()));
-              });
+            onPressed: () async {
+              await Navigator.push(context, MaterialPageRoute(builder: (context) => createNote()));
+              setState(() { });
             },
           ),
           IconButton(

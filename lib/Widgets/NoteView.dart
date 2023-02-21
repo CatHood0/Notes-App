@@ -21,17 +21,16 @@ class _noteCardState extends State<noteCard> {
     return Container(
       height: 70,
       child: GestureDetector(
-        onTap: () {
+        onTap: () async {
           final Note = new note(
               widget._listNote[widget.index].getTitle(),
               widget._listNote[widget.index].getContent(),
               widget._listNote[widget.index].getDate(),
-              widget._listNote[widget.index].getId(),
+              widget._listNote[widget.index].getKey(),
               widget._listNote[widget.index].getFavorite(),
               widget._listNote[widget.index].getDateModification());
-          Navigator.push(context,
-              MaterialPageRoute(builder: (context) => readPage(widget.index, Note)));
-          print(widget.index);
+          await Navigator.push(context, MaterialPageRoute(builder: (context) => readPage(widget.index, Note)));
+          setState(() {});
         },
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -62,7 +61,7 @@ class _noteCardState extends State<noteCard> {
                               ),
                         splashRadius: 20,
                         tooltip:
-                            "Select star for convert this note in your favorite",
+                            "Tap your favorite note",
                       ),
                     ],
                   ),       
@@ -87,7 +86,7 @@ class _noteCardState extends State<noteCard> {
                       )
                       :
                       Text(
-                        widget._listNote[widget.index].getContent(),
+                        widget._listNote[widget.index].getContent()+'...',
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,
