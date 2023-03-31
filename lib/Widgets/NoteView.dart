@@ -1,9 +1,8 @@
 // ignore_for_file: must_be_immutable
-
 import 'package:flutter/material.dart';
-import 'package:notes_project/controller/NoteController.dart';
-import '../model/Note.dart';
-import '../view/ReadNote.dart';
+import 'package:notes_project/data/local/NotesRepository.dart';
+import '../domain/entities/Note.dart';
+import '../UI/notes/ReadNote.dart';
 
 class noteCard extends StatefulWidget {
   List<note> _listNote;
@@ -46,8 +45,8 @@ class _noteCardState extends State<noteCard> {
                         onPressed: () {
                           setState(() {
                             widget._listNote[widget.index].getFavorite()
-                                ? noteController.setFavorite(widget.index, false)
-                                : noteController.setFavorite(widget.index, true);
+                                ? NoteRepository.setFavorite(widget.index, false)
+                                : NoteRepository.setFavorite(widget.index, true);
                           });
                         },
                         icon: widget._listNote[widget.index].getFavorite()

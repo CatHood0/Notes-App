@@ -45,7 +45,6 @@ class _dialogSearchState extends State<dialogSearch> {
                 MaterialButton(
                   child: Icon(Icons.search, color: Colors.white,),
                   onPressed: () {
-                      Navigator.pushNamed(context, 'homePage');
                   },
                 ),
               ]

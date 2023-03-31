@@ -1,7 +1,7 @@
 
-import '../model/Note.dart';
+import '../../domain/entities/Note.dart';
 
-class noteController{
+class NoteRepository{
 
   static int? idNote;
   static note? Notes;
