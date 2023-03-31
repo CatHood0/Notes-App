@@ -22,12 +22,12 @@ class _noteCardState extends State<noteCard> {
       child: GestureDetector(
         onTap: () async {
           final Note = new note(
-              widget._listNote[widget.index].getTitle(),
-              widget._listNote[widget.index].getContent(),
-              widget._listNote[widget.index].getDate(),
-              widget._listNote[widget.index].getKey(),
-              widget._listNote[widget.index].getFavorite(),
-              widget._listNote[widget.index].getDateModification());
+              title: widget._listNote[widget.index].Title,
+              content: widget._listNote[widget.index].Content,
+              createDate: widget._listNote[widget.index].Date,
+              key: widget._listNote[widget.index].Key,
+              favorite: widget._listNote[widget.index].Favorite,
+              dateTimeModification: widget._listNote[widget.index].DateModification);
           await Navigator.push(context, MaterialPageRoute(builder: (context) => readPage(widget.index, Note)));
           setState(() {});
         },
@@ -44,12 +44,9 @@ class _noteCardState extends State<noteCard> {
                       IconButton(
                         onPressed: () {
                           setState(() {
-                            widget._listNote[widget.index].getFavorite()
-                                ? NoteRepository.setFavorite(widget.index, false)
-                                : NoteRepository.setFavorite(widget.index, true);
                           });
                         },
-                        icon: widget._listNote[widget.index].getFavorite()
+                        icon: widget._listNote[widget.index].Favorite
                             ? Icon(
                                 Icons.star,
                                 color: Color.fromARGB(255, 240, 153, 255),
@@ -71,10 +68,10 @@ class _noteCardState extends State<noteCard> {
                     right: 14,
                   ),
                   child: Container(
-                      child: widget._listNote[widget.index].getTitle().trim()!="" ?
+                      child: widget._listNote[widget.index].Title.trim()!="" ?
                       Center(
                         child: Text(
-                          widget._listNote[widget.index].getTitle(),
+                          widget._listNote[widget.index].Title,
                           style: TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
@@ -85,7 +82,7 @@ class _noteCardState extends State<noteCard> {
                       )
                       :
                       Text(
-                        widget._listNote[widget.index].getContent()+'...',
+                        widget._listNote[widget.index].Content+'...',
                         style: TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

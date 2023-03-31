@@ -34,8 +34,8 @@ class _createNoteState extends State<createNote> {
                   splashRadius: 20,
                   icon: Icon(Icons.check),
                   onPressed: () {
-                    final Note = new note(title, content, DateTime.now(), 2,
-                        false, DateTime.now());
+                    final Note = new note(title: title, content: content, createDate: DateTime.now(), key: 2,
+                        favorite: false, dateTimeModification: DateTime.now());
                         NoteRepository.addCustomCard(Note);
                         Navigator.pop(context);
                     setState(() {});

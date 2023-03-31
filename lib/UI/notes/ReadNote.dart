@@ -20,7 +20,7 @@ class _readPageState extends State<readPage> {
     return Scaffold(
      backgroundColor: Color.fromARGB(255, 58, 58, 58),
         appBar: AppBar(
-          title: Text(widget.Note.getTitle(), style: 
+          title: Text(widget.Note.Title, style: 
           TextStyle(fontWeight: FontWeight.bold, fontSize: 22),
           ),
           elevation: 5,
@@ -55,7 +55,7 @@ class _readPageState extends State<readPage> {
                           minLines: 1,
                           enabled: false,
                           decoration: InputDecoration.collapsed(hintText: 'Empty note', hintStyle: TextStyle(color: Colors.white, fontSize: 18)),
-                          initialValue: widget.Note.getContent(), style: TextStyle(color: Colors.white, fontSize: 18),
+                          initialValue: widget.Note.Content, style: TextStyle(color: Colors.white, fontSize: 18),
                             keyboardType: TextInputType.multiline,
                             maxLines: null,
                         ),

@@ -1,52 +1,54 @@
-class note{
-
-  int? _key;//ponemos key porque de esa forma es que se suele registrar en firestore. Key value
-  String _title;
-  String _content;
+class note {
+  int? key;
+  String title;
+  String content;
   bool favorite;
-  DateTime _createDate;
-  DateTime _dateTimeModification;
+  DateTime createDate;
+  DateTime dateTimeModification;
 
-  note(this._title, this._content, this._createDate, this._key, this.favorite, this._dateTimeModification);
+  note({
+      required this.title,
+      required this.content,
+      required this.createDate,
+      required this.key,
+      required this.favorite,
+      required this.dateTimeModification});
 
-  String getTitle(){
-    return _title;
+  int? get Key => key;
+  String get Title => title;
+  bool get Favorite => favorite;
+  String get Content => content;
+  DateTime get DateModification => dateTimeModification;
+  DateTime get Date => createDate;
+
+  factory note.fromJson(Map<String, dynamic> json){
+    return note(
+      title: json['title'], 
+      content: json['content'], 
+      createDate: json['createDate'], 
+      key: json['key'], 
+      favorite: json['isFavorite'], 
+      dateTimeModification: json['date_modification'],
+      );
+
   }
 
-  void setFavorite(bool nState){
-      favorite = nState;
+  Map<String, dynamic> toJson() {
+    return {
+      'key': this.key,
+      'title': this.title,
+      'content': this.content,
+      'isFavorite': this.favorite,
+      'createDate': this.createDate,
+      'date_modification': this.dateTimeModification,
+    };
   }
 
-  bool getFavorite(){
-     return favorite;
-  }
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is note && runtimeType == other.runtimeType && key == other.key;
 
-  String getContent(){
-    return _content;
-  }
-
-  void setTitle(String? newTitle){
-      _title = newTitle!;
-  }
-
-  void setContent(String? newContent){
-      _content = newContent!;
-  }
-
-   DateTime getDateModification(){
-      return _dateTimeModification;
-  }
-
-  void setDateModification(DateTime timeNow){
-     _dateTimeModification = timeNow;
-  }
-
-  DateTime getDate(){
-    return _createDate;
-  }
-
-  int? getKey(){
-    return _key;
-  }
-
+  @override
+  int get hashCode => key.hashCode;
 }

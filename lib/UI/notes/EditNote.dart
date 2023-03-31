@@ -36,10 +36,14 @@ class _editNoteState extends State<editNote> {
                   splashRadius: 20,
                   icon: Icon(Icons.check),
                   onPressed: () {
-                    final Note = new note(title, content, widget.Note.getDate(),
-                        2, widget.Note.getFavorite(), DateTime.now());
-                        NoteRepository.setUpdateNote(widget.index, Note);
-                        Navigator.pop(context);
+                    final Note = note(
+                        title: title,
+                        content: content,
+                        createDate: widget.Note.Date,
+                        key: widget.Note.Key,
+                        favorite: widget.Note.Favorite,
+                        dateTimeModification: DateTime.now());
+                    Navigator.pop(context);
                   },
                 ),
               ),
@@ -110,8 +114,8 @@ class _editNoteState extends State<editNote> {
   @override
   void initState() {
     super.initState();
-    title = widget.Note.getTitle();
-    content = widget.Note.getContent();
+    title = widget.Note.Title;
+    content = widget.Note.Content;
     textContentController = TextEditingController(text: content);
     textTitleController = TextEditingController(text: title);
   }

@@ -22,10 +22,10 @@ class _propertiesNoteState extends State<propertiesNote> {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                  Text('Title: ${widget.Note.getTitle()}'),
-                  Text('Date: ${widget.Note.getDate().toString()}'),
-                  Text('Modification: ${widget.Note.getDateModification().toString()}'),
-                  Text('id: ${widget.Note.getKey().toString()}'),
+                  Text('Title: ${widget.Note.Title}'),
+                  Text('Date: ${widget.Note.Date.toString()}'),
+                  Text('Modification: ${widget.Note.DateModification.toString()}'),
+                  Text('id: ${widget.Note.Key.toString()}'),
               ]
             ),
         ),

@@ -24,7 +24,6 @@ class _notesPageState extends State<notesPage> {
   void initState() {
     //todo metodo que necesitemos que se cargue apenas iniciar, lo pondremos dentro de este metodo
     super.initState();
-    NoteRepository.fillList();
     _listNote = NoteRepository.getList("");
   }
 
