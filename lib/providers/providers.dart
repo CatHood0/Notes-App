@@ -1,0 +1,1 @@
+export '../domain/provider/noteNProvider.dart';

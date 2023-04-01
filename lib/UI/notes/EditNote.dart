@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notes_project/data/local/NotesRepository.dart';
 import '../../domain/entities/Note.dart';
 
 // ignore: must_be_immutable

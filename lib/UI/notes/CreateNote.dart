@@ -1,22 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:notes_project/data/local/NotesRepository.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:notes_project/domain/provider/noteNProvider.dart';
 import '../../domain/entities/Note.dart';
 
-class createNote extends StatefulWidget {
+// ignore: must_be_immutable
+class createNote extends ConsumerWidget {
   createNote({super.key});
 
-  @override
-  State<createNote> createState() => _createNoteState();
-}
-
-class _createNoteState extends State<createNote> {
-  late TextEditingController textTitleController;
-  late TextEditingController textContentController;
-  String title = "";
-  String content = "";
+  final textTitleController = TextEditingController(),
+      textContentController = TextEditingController();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 58, 58, 58),
       appBar: AppBar(
@@ -34,11 +29,15 @@ class _createNoteState extends State<createNote> {
                   splashRadius: 20,
                   icon: Icon(Icons.check),
                   onPressed: () {
-                    final Note = new note(title: title, content: content, createDate: DateTime.now(), key: 2,
-                        favorite: false, dateTimeModification: DateTime.now());
-                        NoteRepository.addCustomCard(Note);
-                        Navigator.pop(context);
-                    setState(() {});
+                    final Note = new note(
+                        title: textTitleController.text,
+                        content: textContentController.text,
+                        createDate: DateTime.now(),
+                        key: 2,
+                        favorite: false,
+                        dateTimeModification: DateTime.now());
+                    ref.read(noteNotifierProvider.notifier).addNote(Note);
+                    Navigator.pop(context);
                   },
                 ),
               ),
@@ -46,8 +45,7 @@ class _createNoteState extends State<createNote> {
                 child: IconButton(
                   splashRadius: 20,
                   icon: Icon(Icons.clear),
-                  onPressed: () {
-                  },
+                  onPressed: () {},
                 ),
               ),
             ],
@@ -74,7 +72,6 @@ class _createNoteState extends State<createNote> {
                         hintText: "Your title",
                         hintStyle: TextStyle(color: Colors.grey)),
                     style: TextStyle(color: Colors.white, fontSize: 22),
-                    onChanged: (value) => {title = value},
                   ),
                 ),
               ),
@@ -95,7 +92,6 @@ class _createNoteState extends State<createNote> {
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
-                    onChanged: (value) => {content = value},
                   ),
                 ),
               ),
@@ -104,19 +100,5 @@ class _createNoteState extends State<createNote> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    textContentController = TextEditingController();
-    textTitleController = TextEditingController();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    textContentController.dispose();
-    textTitleController.dispose();
   }
 }

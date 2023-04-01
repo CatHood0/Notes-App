@@ -1,6 +1,5 @@
 // ignore_for_file: must_be_immutable
 import 'package:flutter/material.dart';
-import 'package:notes_project/data/local/NotesRepository.dart';
 import '../domain/entities/Note.dart';
 import '../UI/notes/ReadNote.dart';
 

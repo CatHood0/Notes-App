@@ -1,30 +1,24 @@
 import 'package:flutter/material.dart';
-import 'package:notes_project/Widgets/popupOptions.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notes_project/UI/notes/CreateNote.dart';
+import 'package:notes_project/Widgets/popupOptions.dart';
 import 'package:notes_project/Widgets/NoteView.dart';
 import '../../Widgets/DialogSearch.dart';
-import '../../data/local/NotesRepository.dart';
-import '../../domain/entities/Note.dart';
+import '../../domain/provider/noteNProvider.dart';
 
-// ignore: must_be_immutable
-class notesPage extends StatefulWidget {
-  notesPage(
-    {
+class notesPage extends ConsumerStatefulWidget {
+  notesPage({
     super.key,
   });
 
   @override
-  State<notesPage> createState() => _notesPageState();
+  ConsumerState<notesPage> createState() => _notesPageState();
 }
 
-class _notesPageState extends State<notesPage> {
-  late List<note> _listNote;
-
+class _notesPageState extends ConsumerState<notesPage> {
   @override
   void initState() {
-    //todo metodo que necesitemos que se cargue apenas iniciar, lo pondremos dentro de este metodo
     super.initState();
-    _listNote = NoteRepository.getList("");
   }
 
   @override
@@ -34,6 +28,7 @@ class _notesPageState extends State<notesPage> {
 
   @override
   Widget build(BuildContext context) {
+    final n = ref.watch(noteNotifierProvider);
     return Scaffold(
       backgroundColor: Color.fromARGB(255, 58, 58, 58),
       appBar: AppBar(
@@ -53,8 +48,8 @@ class _notesPageState extends State<notesPage> {
             tooltip: "Add a new note",
             color: Color.fromARGB(255, 255, 255, 255),
             onPressed: () async {
-              await Navigator.push(context, MaterialPageRoute(builder: (context) => createNote()));
-              setState(() { });
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => createNote()));
             },
           ),
           IconButton(
@@ -73,16 +68,17 @@ class _notesPageState extends State<notesPage> {
           ),
         ],
       ),
-      body: SafeArea(//Esto es para los teléfonos con Notch
+      body: SafeArea(
+        //Esto es para los teléfonos con Notch
         child: Container(
           height: double.infinity,
           child: GridView.builder(
             gridDelegate:
                 SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-            itemCount: _listNote.length,
+            itemCount: n.length,
             padding: EdgeInsets.all(10),
             itemBuilder: (context, index) {
-              return noteCard(_listNote, index);
+              return noteCard(n, index);
             },
           ),
         ),
