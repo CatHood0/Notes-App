@@ -4,7 +4,7 @@ import 'package:notes_project/UI/notes/CreateNote.dart';
 import 'package:notes_project/Widgets/popupOptions.dart';
 import 'package:notes_project/Widgets/NoteView.dart';
 import '../../Widgets/DialogSearch.dart';
-import '../../domain/provider/noteNProvider.dart';
+import '../../data/provider/noteNProvider.dart';
 
 class notesPage extends ConsumerStatefulWidget {
   notesPage({

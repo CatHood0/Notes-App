@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../entities/Note.dart';
+import '../../domain/entities/Note.dart';
 
 class notesNotifier extends StateNotifier<List<note>> {
   notesNotifier()
@@ -21,4 +21,12 @@ class notesNotifier extends StateNotifier<List<note>> {
       Note
     ];
   }
+
+  void setFavorite(int index, note Note){
+    final List<note> list = state;
+    list[index] = Note;
+    state = [...list]; 
+  }
+
+
 }

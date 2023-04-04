@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notes_project/domain/provider/noteNProvider.dart';
+import 'package:notes_project/data/provider/noteNProvider.dart';
 import '../../domain/entities/Note.dart';
 
 // ignore: must_be_immutable
