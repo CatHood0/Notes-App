@@ -13,9 +13,39 @@ dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  google_nav_bar: ^5.0.6
-  json_serializable: ^6.6.1
+
+   #Local packages
+  crypto: ^3.0.2
+  shared_preferences: ^2.0.20
+  image_picker: ^0.8.6+4
+  intl: ^0.18.0
+  cached_network_image: ^3.2.3
+  string_validator: ^1.0.0 #url(IsURL), equals(equals)
+  email_validator: ^2.1.17
+  readmore: ^2.2.0
+  flutter_animate: ^4.1.1+1
+  custom_navigation_bar: ^0.8.2 
+
+  #state managment
   flutter_riverpod: ^2.3.2
+
+  #rich text editor with this (your do have a save file how a json)
+  zefyr: ^0.12.0
+  
+  #DB packages
+  google_sign_in: ^6.0.2
+  cloud_firestore: ^4.5.0
+  firebase_auth: ^4.2.2
+  firebase_storage: ^11.1.0
+  firebase_core: ^2.9.0
+  firebase_in_app_messaging: ^0.7.1
+
+  #API packages
+  http: ^0.13.5
+
+  #test db packages
+  firebase_auth_mocks: ^0.11.0
+  fake_cloud_firestore: ^2.4.1+1
 
 dev_dependencies:
   flutter_test:

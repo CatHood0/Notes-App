@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notes_project/data/provider/noteNProvider.dart';
+import 'package:notes_project/bloc/Notes/NoteEvents.dart';
+import '../../bloc/Notes/NoteBloc.dart';
 import '../../domain/entities/Note.dart';
 
-// ignore: must_be_immutable
 class createNote extends ConsumerWidget {
-  createNote({super.key});
-
+  createNote({super.key, required this.bloc});
+  final NoteBloc bloc;
   final textTitleController = TextEditingController(),
       textContentController = TextEditingController();
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
@@ -33,10 +32,10 @@ class createNote extends ConsumerWidget {
                         title: textTitleController.text,
                         content: textContentController.text,
                         createDate: DateTime.now(),
-                        key: 2,
+                        key: "2",
                         favorite: false,
                         dateTimeModification: DateTime.now());
-                    ref.read(noteNotifierProvider.notifier).addNote(Note);
+                    bloc.eventSink.add(AddNote(Note: Note));
                     Navigator.pop(context);
                   },
                 ),

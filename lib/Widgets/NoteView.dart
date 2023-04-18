@@ -1,13 +1,15 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import '../bloc/Notes/NoteBloc.dart';
 import '../data/provider/noteNProvider.dart';
 import '../domain/entities/Note.dart';
 import '../UI/notes/ReadNote.dart';
 
 class noteCard extends ConsumerStatefulWidget {
-  List<note> _listNote;
-  int index;
-  noteCard(this._listNote, this.index, {super.key});
+  final note Note;
+  final int index;
+  final NoteBloc bloc;
+  noteCard(this.Note, this.index, {super.key, required this.bloc});
 
   @override
   ConsumerState<noteCard> createState() => _noteCardState();
@@ -21,17 +23,17 @@ class _noteCardState extends ConsumerState<noteCard> {
       child: GestureDetector(
         onTap: () async {
           final Note = new note(
-              title: widget._listNote[widget.index].Title,
-              content: widget._listNote[widget.index].Content,
-              createDate: widget._listNote[widget.index].Date,
-              key: widget._listNote[widget.index].Key,
-              favorite: widget._listNote[widget.index].Favorite,
+              title: widget.Note.Title,
+              content: widget.Note.Content,
+              createDate: widget.Note.Date,
+              key: widget.Note.Key,
+              favorite: widget.Note.Favorite,
               dateTimeModification:
-                  widget._listNote[widget.index].DateModification);
+                  widget.Note.DateModification);
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) => readPage(widget.index, Note)));
+                  builder: (context) => readPage(widget.index, Note, bloc: widget.bloc)));
         },
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
@@ -47,18 +49,18 @@ class _noteCardState extends ConsumerState<noteCard> {
                     IconButton(
                       onPressed: () {
                         final favorite =
-                            !widget._listNote[widget.index].Favorite;
+                            !widget.Note.Favorite;
                         ref.read(noteNotifierProvider.notifier).setFavorite(
                             widget.index,
                             note(
-                                title: widget._listNote[widget.index].Title,
-                                content: widget._listNote[widget.index].Content,
-                                createDate: widget._listNote[widget.index].Date,
-                                key: widget._listNote[widget.index].Key,
+                                title: widget.Note.Title,
+                                content: widget.Note.Content,
+                                createDate: widget.Note.Date,
+                                key: widget.Note.Key,
                                 favorite: favorite,
                                 dateTimeModification: DateTime.now()));
                       },
-                      icon: widget._listNote[widget.index].Favorite
+                      icon: widget.Note.Favorite
                           ? Icon(
                               Icons.star,
                               color: Color.fromARGB(255, 240, 153, 255),
@@ -79,10 +81,10 @@ class _noteCardState extends ConsumerState<noteCard> {
                     right: 14,
                   ),
                   child: Container(
-                    child: widget._listNote[widget.index].Title.trim() != ""
+                    child: widget.Note.Title.trim() != ""
                         ? Center(
                             child: Text(
-                              widget._listNote[widget.index].Title,
+                              widget.Note.Title,
                               style: TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -92,7 +94,7 @@ class _noteCardState extends ConsumerState<noteCard> {
                             ),
                           )
                         : Text(
-                            widget._listNote[widget.index].Content + '...',
+                            widget.Note.Content + '...',
                             style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,

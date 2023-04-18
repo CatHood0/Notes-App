@@ -1,5 +1,5 @@
 class note {
-  int? key;
+  String key;
   String title;
   String content;
   bool favorite;
@@ -14,7 +14,7 @@ class note {
       required this.favorite,
       required this.dateTimeModification});
 
-  int? get Key => key;
+  String get Key => key;
   String get Title => title;
   bool get Favorite => favorite;
   String get Content => content;

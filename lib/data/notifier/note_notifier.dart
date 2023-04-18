@@ -9,7 +9,7 @@ class notesNotifier extends StateNotifier<List<note>> {
               title: "Hola",
               content: "Contenido",
               createDate: DateTime.now(),
-              key: 0,
+              key: '0',
               favorite: true,
               dateTimeModification:
                   DateTime.now()), //this can nullable if is: [];

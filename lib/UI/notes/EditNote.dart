@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:notes_project/bloc/Notes/NoteEvents.dart';
+import '../../bloc/Notes/NoteBloc.dart';
 import '../../domain/entities/Note.dart';
 
-// ignore: must_be_immutable
 class editNote extends StatefulWidget {
-  int index;
-  note Note;
-  editNote(this.index, this.Note, {super.key});
+  final int index;
+  final note Note;
+  final NoteBloc bloc;
+  editNote(this.index, this.Note, {super.key, required this.bloc});
 
   @override
   State<editNote> createState() => _editNoteState();
@@ -42,6 +44,7 @@ class _editNoteState extends State<editNote> {
                         key: widget.Note.Key,
                         favorite: widget.Note.Favorite,
                         dateTimeModification: DateTime.now());
+                    widget.bloc.eventSink.add(UpdateNote(index: widget.index, Note: Note));
                     Navigator.pop(context);
                   },
                 ),
