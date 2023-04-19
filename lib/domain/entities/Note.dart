@@ -1,7 +1,7 @@
 class note {
   String key;
   String title;
-  String content;
+  String? content;
   bool favorite;
   DateTime createDate;
   DateTime dateTimeModification;
@@ -17,7 +17,7 @@ class note {
   String get Key => key;
   String get Title => title;
   bool get Favorite => favorite;
-  String get Content => content;
+  String get Content => content!;
   DateTime get DateModification => dateTimeModification;
   DateTime get Date => createDate;
 

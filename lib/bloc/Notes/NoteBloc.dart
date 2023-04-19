@@ -4,14 +4,15 @@ import 'package:notes_project/bloc/Notes/NoteStates.dart';
 import 'package:notes_project/domain/entities/Note.dart';
 
 class NoteBloc {
-  List<note> _notes = [];
-  final _noteStateController = StreamController<NoteState>.broadcast();
+  List<note> _notes = const <note>[];
+  final _noteStateController = StreamController<NoteState>.broadcast(onListen: () => print("Listening note states"),);
   final _eventStreamController = StreamController<NoteEvent>();
 
   Stream<NoteState> get stateStream => _noteStateController.stream;
   StreamSink<NoteEvent> get eventSink => _eventStreamController.sink;
 
   NoteBloc() {
+    _noteStateController.add(InitialNoteState());
     _eventStreamController.stream.listen(_handleEvent);
   }
 
@@ -21,6 +22,14 @@ class NoteBloc {
       _notes.add(event.Note);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is DeleteNote) {
+      _noteStateController.add(LoadingNotes());
+      if (_notes.contains(event.index)) {
+        _notes.removeAt(event.index);
+        _noteStateController.add(LoadedNotes(notes: _notes));
+      } else {
+        _noteStateController
+            .add(NoteNotFound(onError: "This note can't be deleted"));
+      }
     } else if (event is UpdateNote) {
       _notes[event.index] = event.Note;
       _noteStateController.add(LoadedNotes(notes: _notes));
@@ -45,17 +54,20 @@ class NoteBloc {
     }
   }
 
-  note getNote({required String id}){
+  note getNote({required String id}) {
     note? Note;
-    _notes.forEach((notes) {if(notes.key == id) {
-       Note = notes;
-    }});
-    return Note!; 
+    for (var notes in _notes) {
+      if (notes.key == id) {
+        Note = notes;
+      }
+    }
+    return Note!;
   }
 
-  void dispose(){
+  void dispose() {
     _eventStreamController.close();
     _noteStateController.close();
   }
-
 }
+
+final NoteBloc bloc = NoteBloc();

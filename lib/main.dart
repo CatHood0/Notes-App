@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:notes_project/UI/Home/home.dart';
+import 'package:notes_project/UI/notes/notePage.dart';
 
 void main() => runApp(const ProviderScope(child: MyApp()));
 
@@ -9,9 +9,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: notesPage(),
+      home: NotesPage(),
     );
   }
 }
