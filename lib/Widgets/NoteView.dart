@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import '../data/provider/noteNProvider.dart';
+import 'package:notes_project/bloc/Notes/NoteBloc.dart';
+import 'package:notes_project/bloc/Notes/NoteEvents.dart';
 import '../domain/entities/Note.dart';
 import '../UI/notes/screens/DetailPage.dart';
 
@@ -21,13 +22,13 @@ class _NoteCardState extends ConsumerState<NoteCard> {
       child: GestureDetector(
         onTap: () async {
           final Note = note(
-              title: widget.Note.Title,
-              content: widget.Note.Content,
-              createDate: widget.Note.Date,
-              key: widget.Note.Key,
-              favorite: widget.Note.Favorite,
+              title: widget.Note.title,
+              content: widget.Note.content,
+              createDate: widget.Note.createDate,
+              key: widget.Note.key,
+              favorite: widget.Note.favorite,
               dateTimeModification:
-                  widget.Note.DateModification);
+                  widget.Note.dateTimeModification);
           Navigator.push(
               context,
               MaterialPageRoute(
@@ -47,18 +48,10 @@ class _NoteCardState extends ConsumerState<NoteCard> {
                     IconButton(
                       onPressed: () {
                         final favorite =
-                            !widget.Note.Favorite;
-                        ref.read(noteNotifierProvider.notifier).setFavorite(
-                            widget.index,
-                            note(
-                                title: widget.Note.Title,
-                                content: widget.Note.Content,
-                                createDate: widget.Note.Date,
-                                key: widget.Note.Key,
-                                favorite: favorite,
-                                dateTimeModification: DateTime.now()));
+                            !widget.Note.favorite;
+                        bloc.eventSink.add(FavoriteNote(index: widget.index, isFavorite: favorite));
                       },
-                      icon: widget.Note.Favorite
+                      icon: widget.Note.favorite
                           ? const Icon(
                               Icons.star,
                               color: Color.fromARGB(255, 240, 153, 255),
@@ -79,10 +72,10 @@ class _NoteCardState extends ConsumerState<NoteCard> {
                     right: 14,
                   ),
                   child: Container(
-                    child: widget.Note.Title.trim() != ""
+                    child: widget.Note.title.trim() != ""
                         ? Center(
                             child: Text(
-                              widget.Note.Title,
+                              widget.Note.title,
                               style: const TextStyle(
                                   color: Colors.white,
                                   fontWeight: FontWeight.bold,
@@ -92,7 +85,7 @@ class _NoteCardState extends ConsumerState<NoteCard> {
                             ),
                           )
                         : Text(
-                            '${widget.Note.Content}...',
+                            '${widget.Note.content}...',
                             style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,

@@ -1,6 +1,5 @@
 // ignore_for_file: file_names
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:notes_project/UI/notes/screens/DetailPage.dart';
 import 'package:notes_project/Widgets/popupOptions.dart';
 import 'package:notes_project/Widgets/NoteView.dart';
@@ -9,16 +8,16 @@ import 'package:notes_project/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/bloc/Notes/NoteStates.dart';
 import '../../Widgets/DialogSearch.dart';
 
-class NotesPage extends ConsumerStatefulWidget {
+class NotesPage extends StatefulWidget {
   const NotesPage({
     super.key,
   });
 
   @override
-  ConsumerState<NotesPage> createState() => _NotesPageState();
+  State<NotesPage> createState() => _NotesPageState();
 }
 
-class _NotesPageState extends ConsumerState<NotesPage> {
+class _NotesPageState extends State<NotesPage> {
    @override
   void initState() {
     bloc.eventSink

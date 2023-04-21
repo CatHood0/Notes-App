@@ -2,6 +2,7 @@ class note {
   String key;
   String title;
   String? content;
+  List<String>? tag;
   bool favorite;
   DateTime createDate;
   DateTime dateTimeModification;
@@ -12,14 +13,9 @@ class note {
       required this.createDate,
       required this.key,
       required this.favorite,
-      required this.dateTimeModification});
-
-  String get Key => key;
-  String get Title => title;
-  bool get Favorite => favorite;
-  String get Content => content!;
-  DateTime get DateModification => dateTimeModification;
-  DateTime get Date => createDate;
+      required this.dateTimeModification,
+      this.tag
+      }) : assert(title.isNotEmpty);
 
   factory note.fromJson(Map<String, dynamic> json){
     return note(
@@ -29,6 +25,7 @@ class note {
       key: json['key'], 
       favorite: json['isFavorite'], 
       dateTimeModification: json['date_modification'],
+      tag: json['tags'],
       );
 
   }
@@ -41,6 +38,7 @@ class note {
       'isFavorite': this.favorite,
       'createDate': this.createDate,
       'date_modification': this.dateTimeModification,
+      'tags': this.tag,
     };
   }
 

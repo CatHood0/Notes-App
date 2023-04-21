@@ -4,8 +4,10 @@ import 'package:notes_project/bloc/Notes/NoteStates.dart';
 import 'package:notes_project/domain/entities/Note.dart';
 
 class NoteBloc {
-  List<note> _notes = const <note>[];
-  final _noteStateController = StreamController<NoteState>.broadcast(onListen: () => print("Listening note states"),);
+  List<note> _notes = [];
+  final _noteStateController = StreamController<NoteState>.broadcast(
+    onListen: () => print("Listening note states"),
+  );
   final _eventStreamController = StreamController<NoteEvent>();
 
   Stream<NoteState> get stateStream => _noteStateController.stream;
@@ -38,20 +40,41 @@ class NoteBloc {
       _notes[event.index].favorite = event.isFavorite;
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is SearchNote) {
+      _noteStateController.add(LoadingNotes());
+      if (event.search != "" ||
+          event.search!.isNotEmpty ||
+          event.search != null) {
+        final notes = _notes.where((Note) {
+          final titleLower = Note.title.toLowerCase();
+          final contentLower = Note.content!.toLowerCase();
+          final searchLower = event.search!.toLowerCase();
+          return titleLower.contains(searchLower) ||
+              contentLower.contains(searchLower);
+        });
+        if (notes.isEmpty) {
+          _noteStateController.add(NoteNotFound(onError: "Note not found"));
+        }
+        else{
+        _noteStateController.add(LoadedNotes(notes: notes.toList()));
+        }
+      } else if(event.search!.isEmpty){
+        _noteStateController.add(LoadedNotes(notes: _notes));
+      }
     } else if (event is SaveNotesFiles) {
     } else if (event is RestoreNoteFiles) {
       _noteStateController.add(LoadingNotes());
-      _notes.add(
-        note(
-            title: "Pi pi pupu check",
-            content: "Contenido",
-            createDate: DateTime.now(),
-            key: '0',
-            favorite: true,
-            dateTimeModification: DateTime.now()),
-      );
+      _noteStateController.add(LoadedNotes(notes: _notes));
+    } else if (event is SortNotesEvents) {
+      _noteStateController.add(LoadingNotes());
+      _notes =
+          event.notes; //we get a list sorted by the type that the user selected
       _noteStateController.add(LoadedNotes(notes: _notes));
     }
+  }
+
+  //Needs to get the index for updating when we create a new note
+  int getIndex({required String id}) {
+    return _notes.length;
   }
 
   note getNote({required String id}) {
