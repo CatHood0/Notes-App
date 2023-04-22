@@ -84,9 +84,9 @@ class _NoteCardState extends ConsumerState<NoteCard> {
                               softWrap: true,
                             ),
                           )
-                        : Text(
-                            '${widget.Note.content}...',
-                            style: const TextStyle(
+                        : const Text(
+                            'Untitle note',
+                            style: TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20),

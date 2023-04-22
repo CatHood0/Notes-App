@@ -48,10 +48,8 @@ class NoteBloc {
           event.search != null) {
         final notes = _notes.where((Note) {
           final titleLower = Note.title.toLowerCase();
-          final contentLower = Note.content!.toLowerCase();
           final searchLower = event.search!.toLowerCase();
-          return titleLower.contains(searchLower) ||
-              contentLower.contains(searchLower);
+          return titleLower.contains(searchLower);
         });
         await Future.delayed(const Duration(seconds: 2));
         if (notes.isEmpty) {

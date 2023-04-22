@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:notes_project/Widgets/DialogProperties.dart';
 import 'package:notes_project/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/bloc/Notes/NoteEvents.dart';
@@ -16,9 +18,11 @@ class DetailPage extends StatefulWidget {
 
 class _ReadPageState extends State<DetailPage> {
   late note? _Note;
-  late TextEditingController _titleController, _contentController;
+  late TextEditingController _titleController;
   late bool _editMode;
   late int? _indexNote = 0;
+  late final QuillController _quillController;
+  final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNodeTitle = FocusNode(),
       _focusNodeContent = FocusNode();
   int _quitCount = 0;
@@ -38,7 +42,11 @@ class _ReadPageState extends State<DetailPage> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 58, 58, 58),
+        bottomSheet: Container(
+          child: QuillToolbar.basic(controller: _quillController,
+            multiRowsDisplay: false,
+          ),
+        ),
         appBar: AppBar(
           elevation: 5,
           leading: _editMode
@@ -71,6 +79,8 @@ class _ReadPageState extends State<DetailPage> {
           ],
         ),
         body: SingleChildScrollView(
+          controller: _scrollController,
+          scrollDirection: Axis.vertical,
           child: Column(
             children: [
               SizedBox(
@@ -81,12 +91,11 @@ class _ReadPageState extends State<DetailPage> {
                     focusNode: _focusNodeTitle,
                     controller: _titleController,
                     style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 22,
-                        fontWeight: FontWeight.bold),
+                        fontSize: 22, fontWeight: FontWeight.bold),
                     decoration: const InputDecoration(
                       hintText: "Title",
-                      hintStyle: TextStyle(color: Colors.grey),
+                      hintStyle:
+                          TextStyle(color: Color.fromARGB(255, 75, 75, 75)),
                     ),
                     keyboardType: TextInputType.multiline,
                     maxLines: null,
@@ -97,25 +106,32 @@ class _ReadPageState extends State<DetailPage> {
                 ),
               ),
               SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(15.0),
-                  child: TextFormField(
-                    focusNode: _focusNodeContent,
-                    autocorrect: true,
-                    autofocus: _editMode,
-                    controller: _contentController,
-                    style: const TextStyle(color: Colors.white, fontSize: 17),
-                    decoration: const InputDecoration.collapsed(
-                      hintText: "Write something",
-                      hintStyle: TextStyle(color: Colors.grey),
-                    ),
-                    keyboardType: TextInputType.multiline,
-                    maxLines: null,
-                    onTap: () {
+                child: QuillEditor(
+                  detectWordBoundary: true,
+                  scrollPhysics: const AlwaysScrollableScrollPhysics(),
+                  placeholder: "Write your throughs",
+                  controller: _quillController,
+                  autoFocus: false,
+                  onTapUp: (details, p1) {
+                    if (!_editMode) {
                       onEdit(edit: true);
-                    },
-                  ),
+                    }
+                    _focusNodeTitle.unfocus();
+                    return false;
+                  },
+                  onLaunchUrl: (String url) {},
+                  expands: false,
+                  customStyles:
+                      DefaultStyles(link: const TextStyle(color: Colors.white)),
+                  onImagePaste: (imageBytes) async {
+                    return;
+                  },
+                  focusNode: _focusNodeContent,
+                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  readOnly: false,
+                  scrollController: _scrollController,
+                  scrollable: false,
+                  enableSelectionToolbar: true,
                 ),
               ),
             ],
@@ -131,10 +147,12 @@ class _ReadPageState extends State<DetailPage> {
     _indexNote = widget.index;
     if (_Note?.title != null) {
       _titleController = TextEditingController(text: _Note!.title);
-      _contentController = TextEditingController(text: _Note!.content);
+      _quillController = QuillController(
+          document: Document.fromJson(jsonDecode(_Note!.content)),
+          selection: const TextSelection.collapsed(offset: 0));
     } else {
       _titleController = TextEditingController(text: "");
-      _contentController = TextEditingController(text: "");
+      _quillController = QuillController.basic();
     }
     _editMode = widget.edit;
     super.initState();
@@ -145,14 +163,15 @@ class _ReadPageState extends State<DetailPage> {
     _Note = null;
     _indexNote = null;
     _titleController.clear();
-    _contentController.clear();
     _focusNodeContent.dispose();
     _focusNodeTitle.dispose();
     _quitCount = 0;
+    _quillController.clear();
+    _scrollController.dispose();
     super.dispose();
   }
 
-    void onEdit({bool? edit}) {
+  void onEdit({bool? edit}) {
     setState(() {
       _editMode = edit!;
     });
@@ -167,26 +186,23 @@ class _ReadPageState extends State<DetailPage> {
     if (_Note != null ||
         widget.Note != null && _indexNote != null ||
         widget.index != null) {
-      _Note!.title = _titleController.text;
-      _Note!.content = _contentController.text;
+      _Note!.title =
+          _titleController.text == "" ? "Untitle note" : _titleController.text;
+      _Note!.content = jsonEncode(_quillController.document.toDelta().toJson());
       _Note!.dateTimeModification = DateTime.now();
       bloc.eventSink.add(UpdateNote(index: _indexNote!, notes: _Note!));
-    } else if(_indexNote==null){
+    } else if (_indexNote == null) {
       _Note = note(
           title: _titleController.text != ""
               ? _titleController.text
               : "Untitle note",
-          content: _contentController.text,
+          content: jsonEncode(_quillController.document.toDelta().toJson()),
           createDate: _Note?.createDate ?? DateTime.now(),
           key: _Note?.key ?? '5',
           favorite: true,
           dateTimeModification: DateTime.now());
       bloc.eventSink.add(AddNote(Note: _Note!));
       _indexNote = bloc.getIndex(id: _Note!.key);
-      _contentController.text = _Note!.content!;
     }
   }
-
-
-
 }

@@ -55,7 +55,6 @@ class _NotesPageState extends State<NotesPage> {
         return false;
       },
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 58, 58, 58),
         appBar: AppBar(
           title: !searchMode
               ? const Text('Koulin spaces',
