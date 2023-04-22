@@ -25,7 +25,7 @@ class NoteBloc {
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is DeleteNote) {
       _noteStateController.add(LoadingNotes());
-      if (_notes[event.index].content!=null) {
+      if (_notes[event.index].content != null) {
         _notes.removeAt(event.index);
         _noteStateController.add(LoadedNotes(notes: _notes));
       } else {
@@ -35,7 +35,7 @@ class NoteBloc {
         _noteStateController.add(LoadedNotes(notes: _notes));
       }
     } else if (event is UpdateNote) {
-      _notes[event.index] = event.Note;
+      _notes[event.index] = event.notes;
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is FavoriteNote) {
       _noteStateController.add(LoadingNotes());
@@ -53,8 +53,9 @@ class NoteBloc {
           return titleLower.contains(searchLower) ||
               contentLower.contains(searchLower);
         });
+        await Future.delayed(const Duration(seconds: 2));
         if (notes.isEmpty) {
-          _noteStateController.add(NoteNotFound(onError: "Note not found"));
+          _noteStateController.add(NoteNotFound(onError: "Note(s) not found"));
         } else {
           _noteStateController.add(LoadedNotes(notes: notes.toList()));
         }
@@ -64,9 +65,9 @@ class NoteBloc {
     } else if (event is SaveNotesFiles) {
     } else if (event is RestoreNoteFiles) {
       _noteStateController.add(LoadingNotes());
+      await Future.delayed(const Duration(seconds: 2));
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is SortNotesEvents) {
-      _noteStateController.add(LoadingNotes());
       _notes =
           event.notes; //we get a list sorted by the type that the user selected
       _noteStateController.add(LoadedNotes(notes: _notes));
@@ -78,7 +79,7 @@ class NoteBloc {
     return _notes.length;
   }
 
-  List<note> getAllNotes(){
+  List<note> getAllNotes() {
     return [..._notes];
   }
 

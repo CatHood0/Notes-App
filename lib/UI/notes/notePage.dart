@@ -1,11 +1,9 @@
-// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:notes_project/UI/notes/screens/DetailPage.dart';
+import 'package:notes_project/UI/notes/widget/listNoteWidget.dart';
 import 'package:notes_project/Widgets/popupOptions.dart';
-import 'package:notes_project/Widgets/NoteView.dart';
 import 'package:notes_project/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/bloc/Notes/NoteEvents.dart';
-import 'package:notes_project/bloc/Notes/NoteStates.dart';
 
 class NotesPage extends StatefulWidget {
   const NotesPage({
@@ -18,10 +16,10 @@ class NotesPage extends StatefulWidget {
 
 class _NotesPageState extends State<NotesPage> {
   late final _searchController = TextEditingController(text: "");
-  bool searchMode = false;
+  bool searchMode = false, userMostSearch = false;
   int quitCount = 0;
 
-  void isSearcheable({required bool searcheable}){
+  void isSearcheable({required bool searcheable}) {
     setState(() {
       searchMode = searcheable;
     });
@@ -29,8 +27,8 @@ class _NotesPageState extends State<NotesPage> {
 
   @override
   void initState() {
-    bloc.eventSink
-        .add(RestoreNoteFiles()); //we do begin for the user has a list of notes
+    bloc.eventSink.add(RestoreNoteFiles());
+    //we do begin for the user has a list of notes
     super.initState();
   }
 
@@ -44,8 +42,11 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (quitCount > 0 && searchMode) {
+        if (quitCount > 1 && searchMode) {
           isSearcheable(searcheable: false);
+          if (userMostSearch) {
+            bloc.eventSink.add(SearchNote(search: ""));
+          }
           return false;
         } else if (!searchMode) {
           return true;
@@ -56,24 +57,22 @@ class _NotesPageState extends State<NotesPage> {
       child: Scaffold(
         backgroundColor: const Color.fromARGB(255, 58, 58, 58),
         appBar: AppBar(
-          title: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 100),
-            child: !searchMode
-                ? const Text('Koulin spaces',
-                    style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 22,
-                        color: Colors.white))
-                : TextFormField(
-                    autocorrect: true,
-                    controller: _searchController,
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-                    decoration: const InputDecoration(
-                      hintText: "Example: cookies",
-                      hintStyle: TextStyle(color: Colors.grey),
+          title: !searchMode
+              ? const Text('Koulin spaces',
+                  style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 22,
+                      color: Colors.white))
+              : TextFormField(
+                  autocorrect: true,
+                  controller: _searchController,
+                  style: const TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.bold),
+                  decoration: const InputDecoration(
+                    hintText: "Example: cookies",
+                    hintStyle: TextStyle(color: Colors.grey),
                   ),
                 ),
-          ),
           centerTitle: true,
           backgroundColor: const Color.fromARGB(255, 59, 59, 59),
           elevation: 8,
@@ -103,47 +102,21 @@ class _NotesPageState extends State<NotesPage> {
               icon: const Icon(Icons.search),
               splashRadius: 20,
               onPressed: () {
-                  if (!searchMode) {
-                    isSearcheable(searcheable: true);
-                  }
-                  else{
-                    bloc.eventSink.add(SearchNote(search: _searchController.text));
-                    isSearcheable(searcheable: false);
-                  }
+                if (!searchMode) {
+                  isSearcheable(searcheable: true);
+                } else {
+                  bloc.eventSink
+                      .add(SearchNote(search: _searchController.text));
+                  userMostSearch = true;
+                  _searchController.clear();
+                  isSearcheable(searcheable: false);
+                }
               },
             ),
           ],
         ),
-        body: SafeArea(
-          //This must change for a StreamBuilder and use it with a bloc we do create up
-          child: SizedBox(
-            height: double.infinity,
-            child: StreamBuilder<NoteState>(
-              stream: bloc.stateStream,
-              builder: (context, snapshot) {
-                if (snapshot.data is LoadedNotes) {
-                  final data = (snapshot.data as LoadedNotes).notes;
-                  return GridView.builder(
-                    gridDelegate:
-                        const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2),
-                    itemCount: data.length,
-                    padding: const EdgeInsets.all(10),
-                    itemBuilder: (context, index) {
-                      return NoteCard(data[index], index);
-                    },
-                  );
-                } else if (snapshot.data is LoadingNotes) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.data is NoteNotFound) {}
-                return const Center(
-                    child: Text(
-                  "Notes not found",
-                  style: TextStyle(color: Colors.white),
-                ));
-              },
-            ),
-          ),
+        body: const SafeArea(
+          child: ListNotesBlocWidget(),
         ),
       ),
     );

@@ -170,7 +170,7 @@ class _ReadPageState extends State<DetailPage> {
       _Note!.title = _titleController.text;
       _Note!.content = _contentController.text;
       _Note!.dateTimeModification = DateTime.now();
-      bloc.eventSink.add(UpdateNote(index: _indexNote!, Note: _Note!));
+      bloc.eventSink.add(UpdateNote(index: _indexNote!, notes: _Note!));
     } else if(_indexNote==null){
       _Note = note(
           title: _titleController.text != ""
