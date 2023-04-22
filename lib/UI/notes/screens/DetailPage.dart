@@ -27,10 +27,10 @@ class _ReadPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (_quitCount > 1 && _editMode) {
+        if (_quitCount > 0 && _editMode) {
           onEdit(edit: false);
           createNote();
-          return true;
+          return false;
         } else if (!_editMode) {
           return true;
         }
@@ -62,7 +62,7 @@ class _ReadPageState extends State<DetailPage> {
                   showDialog(
                     context: context,
                     builder: (context) {
-                      return propertiesNote(_Note!);
+                      return PropertiesNote(currentNote: _Note!);
                     },
                   );
                 },
@@ -169,6 +169,7 @@ class _ReadPageState extends State<DetailPage> {
         widget.index != null) {
       _Note!.title = _titleController.text;
       _Note!.content = _contentController.text;
+      _Note!.dateTimeModification = DateTime.now();
       bloc.eventSink.add(UpdateNote(index: _indexNote!, Note: _Note!));
     } else if(_indexNote==null){
       _Note = note(

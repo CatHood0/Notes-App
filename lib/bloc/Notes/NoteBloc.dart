@@ -25,12 +25,14 @@ class NoteBloc {
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is DeleteNote) {
       _noteStateController.add(LoadingNotes());
-      if (_notes.contains(event.index)) {
+      if (_notes[event.index].content!=null) {
         _notes.removeAt(event.index);
         _noteStateController.add(LoadedNotes(notes: _notes));
       } else {
         _noteStateController
             .add(NoteNotFound(onError: "This note can't be deleted"));
+        Future.delayed(const Duration(seconds: 2));
+        _noteStateController.add(LoadedNotes(notes: _notes));
       }
     } else if (event is UpdateNote) {
       _notes[event.index] = event.Note;
@@ -53,11 +55,10 @@ class NoteBloc {
         });
         if (notes.isEmpty) {
           _noteStateController.add(NoteNotFound(onError: "Note not found"));
+        } else {
+          _noteStateController.add(LoadedNotes(notes: notes.toList()));
         }
-        else{
-        _noteStateController.add(LoadedNotes(notes: notes.toList()));
-        }
-      } else if(event.search!.isEmpty){
+      } else if (event.search!.isEmpty) {
         _noteStateController.add(LoadedNotes(notes: _notes));
       }
     } else if (event is SaveNotesFiles) {
@@ -75,6 +76,10 @@ class NoteBloc {
   //Needs to get the index for updating when we create a new note
   int getIndex({required String id}) {
     return _notes.length;
+  }
+
+  List<note> getAllNotes(){
+    return [..._notes];
   }
 
   note getNote({required String id}) {

@@ -22,10 +22,10 @@ class SortNotesEvents extends NoteEvent {
         break;
       case SortByNote.DateModification:
         notes.sort(
-            (a, b) => a.dateTimeModification.compareTo(b.dateTimeModification));
+            (a, b) => b.dateTimeModification.compareTo(a.dateTimeModification));
         break;
       case SortByNote.Title:
-        notes.sort((a, b) => a.title.compareTo(b.title));
+        notes.sort((a, b) => b.title.compareTo(a.title));
         break;
     }
   }

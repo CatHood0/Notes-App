@@ -1,24 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:notes_project/bloc/Notes/NoteBloc.dart';
+import 'package:notes_project/bloc/Notes/NoteEvents.dart';
+import 'package:notes_project/domain/enumBy.dart';
 
-enum listOptions { listAllNotes, listFavoriteNotes, backup, restore }
+enum listOptions { orderByTitle, orderByCreationDate, orderByModificationDate}
 
-class popupMenu extends StatefulWidget {
-  popupMenu({super.key});
+class PopupMenu extends StatefulWidget {
+  const PopupMenu({super.key});
 
   @override
-  State<popupMenu> createState() => _popupMenuState();
+  State<PopupMenu> createState() => _PopupMenuState();
 }
 
-class _popupMenuState extends State<popupMenu> {
-  listOptions? selectedItem = listOptions.listAllNotes;
+class _PopupMenuState extends State<PopupMenu> {
+  listOptions? selectedItem = listOptions.orderByTitle;
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<listOptions>(
       tooltip: "Show options",
       initialValue: selectedItem,
-      color: Color.fromARGB(255, 70, 70, 70),
-      icon: Icon(
+      color: const Color.fromARGB(255, 70, 70, 70),
+      icon: const Icon(
         Icons.more_vert,
         color: Colors.white,
       ),
@@ -31,22 +34,43 @@ class _popupMenuState extends State<popupMenu> {
       elevation: 15,
       itemBuilder: (BuildContext context) => <PopupMenuEntry<listOptions>>[
         PopupMenuItem<listOptions>(
-          value: listOptions.listAllNotes,
-          child: Text(
-            'Show all notes',
+          onTap: () {
+            bloc.eventSink.add(SortNotesEvents(
+                notes: bloc.getAllNotes(), typeSort: SortByNote.Title));
+          },
+          value: listOptions.orderByTitle,
+          child: const Text(
+            'Order by title',
             style: TextStyle(color: Colors.white),
           ),
         ),
         PopupMenuItem<listOptions>(
           onTap: () {
-            setState(() {
-                
+            setState(
+              () {
+                bloc.eventSink.add(SortNotesEvents(
+                    notes: bloc.getAllNotes(), typeSort: SortByNote.CreateDate));
               },
             );
           },
-          value: listOptions.listFavoriteNotes,
-          child: Text(
-            'Show only favorites',
+          value: listOptions.orderByCreationDate,
+          child: const Text(
+            'Order by date',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+          PopupMenuItem<listOptions>(
+          onTap: () {
+            setState(
+              () {
+                bloc.eventSink.add(SortNotesEvents(
+                    notes: bloc.getAllNotes(), typeSort: SortByNote.DateModification));
+              },
+            );
+          },
+          value: listOptions.orderByModificationDate,
+          child: const Text(
+            'Order by modification date',
             style: TextStyle(color: Colors.white),
           ),
         ),
