@@ -33,10 +33,7 @@ void main() {
           dateTimeModification:
               DateTime(DateTime.daysPerWeek, DateTime.wednesday))));
   test('should add my note and order', () {
-    bloc.getAllNotes().forEach((element) {
-      print(element.key);
-    });
-
+    
   });
 
   test('should update my note and order', () {});
