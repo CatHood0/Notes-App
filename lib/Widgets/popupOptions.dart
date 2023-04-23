@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:notes_project/bloc/Notes/NoteBloc.dart';
-import 'package:notes_project/bloc/Notes/NoteEvents.dart';
-import 'package:notes_project/domain/enumBy.dart';
+import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
+import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 
 enum listOptions { orderByTitle, orderByCreationDate, orderByModificationDate}
 
@@ -36,7 +35,7 @@ class _PopupMenuState extends State<PopupMenu> {
         PopupMenuItem<listOptions>(
           onTap: () {
             bloc.eventSink.add(SortNotesEvents(
-                notes: bloc.getAllNotes(), typeSort: SortByNote.Title));
+                notes: bloc.getAllNotes()));
           },
           value: listOptions.orderByTitle,
           child: const Text(
@@ -49,7 +48,7 @@ class _PopupMenuState extends State<PopupMenu> {
             setState(
               () {
                 bloc.eventSink.add(SortNotesEvents(
-                    notes: bloc.getAllNotes(), typeSort: SortByNote.CreateDate));
+                    notes: bloc.getAllNotes()));
               },
             );
           },
@@ -64,7 +63,7 @@ class _PopupMenuState extends State<PopupMenu> {
             setState(
               () {
                 bloc.eventSink.add(SortNotesEvents(
-                    notes: bloc.getAllNotes(), typeSort: SortByNote.DateModification));
+                    notes: bloc.getAllNotes()));
               },
             );
           },

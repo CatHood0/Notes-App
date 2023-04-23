@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../Widgets/NoteView.dart';
-import '../../../bloc/Notes/NoteBloc.dart';
-import '../../../bloc/Notes/NoteStates.dart';
+import '../../../domain/bloc/Notes/NoteBloc.dart';
+import '../../../domain/bloc/Notes/NoteStates.dart';
 
 class ListNotesBlocWidget extends StatelessWidget {
   const ListNotesBlocWidget({

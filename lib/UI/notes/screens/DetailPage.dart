@@ -2,8 +2,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:notes_project/Widgets/DialogProperties.dart';
-import 'package:notes_project/bloc/Notes/NoteBloc.dart';
-import 'package:notes_project/bloc/Notes/NoteEvents.dart';
+import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
+import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import '../../../domain/entities/Note.dart';
 
 class DetailPage extends StatefulWidget {

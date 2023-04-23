@@ -1,5 +1,4 @@
-import '../../domain/entities/Note.dart';
-import '../../domain/enumBy.dart';
+import '../../entities/Note.dart';
 
 abstract class NoteEvent {}
 
@@ -15,9 +14,9 @@ class SaveNotesFiles extends NoteEvent {
 
 class SortNotesEvents extends NoteEvent {
   List<note> notes = [];
-  SortNotesEvents({required this.notes, required SortByNote typeSort}) {
+  SortNotesEvents({required this.notes}) {
   //here we place the logic for getting the last typerSort selected
-    switch (typeSort) {
+    /*switch (typeSort) {
       case SortByNote.CreateDate:
         notes.sort((a, b) => a.createDate.compareTo(b.createDate));
         break;
@@ -28,7 +27,7 @@ class SortNotesEvents extends NoteEvent {
       case SortByNote.Title:
         notes.sort((a, b) => b.title.compareTo(a.title));
         break;
-    }
+    }*/
   }
 }
 

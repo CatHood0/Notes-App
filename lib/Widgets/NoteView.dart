@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
-import 'package:notes_project/bloc/Notes/NoteBloc.dart';
-import 'package:notes_project/bloc/Notes/NoteEvents.dart';
+import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
+import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import '../domain/entities/Note.dart';
 import '../UI/notes/screens/DetailPage.dart';
 

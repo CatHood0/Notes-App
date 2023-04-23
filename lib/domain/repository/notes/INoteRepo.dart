@@ -1,5 +1,5 @@
-import 'package:notes_project/interface/ICrud.dart';
-import 'package:notes_project/interface/ISearch.dart';
+import 'package:notes_project/domain/interface/ICrud.dart';
+import 'package:notes_project/domain/interface/ISearch.dart';
 import '../../entities/Note.dart';
 
 abstract class INoteRepository implements ICrud<note>, ISearch<note>{

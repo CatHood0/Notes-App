@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:notes_project/UI/notes/screens/DetailPage.dart';
 import 'package:notes_project/UI/notes/widget/listNoteWidget.dart';
 import 'package:notes_project/Widgets/popupOptions.dart';
-import 'package:notes_project/bloc/Notes/NoteBloc.dart';
-import 'package:notes_project/bloc/Notes/NoteEvents.dart';
+import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
+import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 
 class NotesPage extends StatefulWidget {
   const NotesPage({

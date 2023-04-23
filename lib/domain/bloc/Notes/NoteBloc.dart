@@ -1,6 +1,6 @@
 import 'dart:async';
-import 'package:notes_project/bloc/Notes/NoteEvents.dart';
-import 'package:notes_project/bloc/Notes/NoteStates.dart';
+import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
+import 'package:notes_project/domain/bloc/Notes/NoteStates.dart';
 import 'package:notes_project/domain/entities/Note.dart';
 
 class NoteBloc {
