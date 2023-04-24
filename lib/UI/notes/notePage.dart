@@ -4,6 +4,7 @@ import 'package:notes_project/UI/notes/widget/listNoteWidget.dart';
 import 'package:notes_project/Widgets/popupOptions.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
+import 'package:notes_project/main.dart';
 
 class NotesPage extends StatefulWidget {
   const NotesPage({
@@ -15,6 +16,7 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
+  final NoteBloc bloc = blocInject.getBloc<NoteBloc>();
   late final _searchController = TextEditingController(text: "");
   bool searchMode = false, userMostSearch = false;
   int quitCount = 0;
@@ -23,19 +25,6 @@ class _NotesPageState extends State<NotesPage> {
     setState(() {
       searchMode = searcheable;
     });
-  }
-
-  @override
-  void initState() {
-    bloc.eventSink.add(RestoreNoteFiles());
-    //we do begin for the user has a list of notes
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    bloc.dispose();
-    super.dispose();
   }
 
   @override
@@ -57,7 +46,7 @@ class _NotesPageState extends State<NotesPage> {
       child: Scaffold(
         appBar: AppBar(
           title: !searchMode
-              ? const Text('Koulin spaces',
+              ? Text('Notes',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 22,
@@ -72,7 +61,6 @@ class _NotesPageState extends State<NotesPage> {
                     hintStyle: TextStyle(color: Colors.grey),
                   ),
                 ),
-          centerTitle: true,
           backgroundColor: const Color.fromARGB(255, 59, 59, 59),
           elevation: 8,
           leading: const PopupMenu(),

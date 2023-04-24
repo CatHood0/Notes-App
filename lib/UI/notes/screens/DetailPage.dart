@@ -4,6 +4,7 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:notes_project/Widgets/DialogProperties.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
+import 'package:notes_project/main.dart';
 import '../../../domain/entities/Note.dart';
 
 class DetailPage extends StatefulWidget {
@@ -17,6 +18,7 @@ class DetailPage extends StatefulWidget {
 }
 
 class _ReadPageState extends State<DetailPage> {
+  final NoteBloc bloc = blocInject.getBloc<NoteBloc>();
   late note? _Note;
   late TextEditingController _titleController;
   late bool _editMode;
@@ -43,7 +45,8 @@ class _ReadPageState extends State<DetailPage> {
       },
       child: Scaffold(
         bottomSheet: Container(
-          child: QuillToolbar.basic(controller: _quillController,
+          child: QuillToolbar.basic(
+            controller: _quillController,
             multiRowsDisplay: false,
           ),
         ),
@@ -63,7 +66,7 @@ class _ReadPageState extends State<DetailPage> {
                   },
                   icon: const Icon(Icons.arrow_back)),
           backgroundColor: const Color.fromARGB(255, 59, 59, 59),
-          actions: [
+          actions: <Widget>[
             if (_Note != null)
               IconButton(
                 onPressed: () {
@@ -76,6 +79,12 @@ class _ReadPageState extends State<DetailPage> {
                 },
                 icon: const Icon(Icons.insert_drive_file),
               ),
+            IconButton(
+              icon: Icon(Icons.tag_outlined),
+              onPressed: () {
+                //Logic for add tags
+              },
+            ),
           ],
         ),
         body: SingleChildScrollView(
@@ -186,10 +195,14 @@ class _ReadPageState extends State<DetailPage> {
     if (_Note != null ||
         widget.Note != null && _indexNote != null ||
         widget.index != null) {
-      _Note!.title =
-          _titleController.text == "" ? "Untitle note" : _titleController.text;
-      _Note!.content = jsonEncode(_quillController.document.toDelta().toJson());
-      _Note!.dateTimeModification = DateTime.now();
+      _Note =_Note!.copyWith(
+        title: _titleController.text == ""
+            ? "Untitle note"
+            : _titleController.text,
+        content: jsonEncode(_quillController.document.toDelta().toJson()),
+        update: _Note!.updates+1,
+        dateTimeModification: DateTime.now(),
+      );
       bloc.eventSink.add(UpdateNote(index: _indexNote!, notes: _Note!));
     } else if (_indexNote == null) {
       _Note = note(
@@ -200,9 +213,11 @@ class _ReadPageState extends State<DetailPage> {
           createDate: _Note?.createDate ?? DateTime.now(),
           key: _Note?.key ?? '5',
           favorite: true,
+          tag: ['anything'],
+          updates: 0,
           dateTimeModification: DateTime.now());
       bloc.eventSink.add(AddNote(Note: _Note!));
-      _indexNote = bloc.getIndex(id: _Note!.key);
+      _indexNote = bloc.getIndex();
     }
   }
 }

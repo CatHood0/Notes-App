@@ -1,7 +1,11 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:convert';
+
 class note {
   String key;
   String title;
   String content;
+  int updates;
   List<String>? tag;
   bool favorite;
   DateTime createDate;
@@ -13,39 +17,67 @@ class note {
       required this.createDate,
       required this.key,
       required this.favorite,
+      required this.updates,
       required this.dateTimeModification,
       this.tag})
-      : assert(title.isNotEmpty);
+      : assert(title.isNotEmpty),
+        assert(key.isNotEmpty);
 
-  factory note.fromJson(Map<String, dynamic> json) {
+  note copyWith({
+    String? key,
+    String? title,
+    String? content,
+    List<String>? tag,
+    bool? favorite,
+    int? update,
+    DateTime? createDate,
+    DateTime? dateTimeModification,
+  }) {
     return note(
-      title: json['title'],
-      content: json['content'],
-      createDate: json['createDate'],
-      key: json['key'],
-      favorite: json['isFavorite'],
-      dateTimeModification: json['date_modification'],
-      tag: json['tags'],
+      key: key ?? this.key,
+      title: title ?? this.title,
+      content: content ?? this.content,
+      tag: tag ?? this.tag,
+      updates: update ?? this.updates,
+      favorite: favorite ?? this.favorite,
+      createDate: createDate ?? this.createDate,
+      dateTimeModification: dateTimeModification ?? this.dateTimeModification,
     );
   }
 
-  Map<String, dynamic> toJson() {
+  Map<String, dynamic> toMap() {
     return {
       'key': key,
       'title': title,
       'content': content,
-      'isFavorite': favorite,
+      'is_favorite': favorite,
       'createDate': createDate,
+      'updates': updates,
       'date_modification': dateTimeModification,
       'tags': tag,
     };
   }
 
-  Map<String, dynamic> toJsonContent() {
-    return {
-      'content': content,
-    };
+  factory note.fromMap(Map<String, dynamic> map) {
+    return note(
+      key: map['key'] as String,
+      title: map['title'] as String,
+      content: map['content'] as String,
+      tag: map['tags'] != null
+          ? List<String>.from((map['tags'] as List<String>))
+          : null,
+      favorite: map['is_favorite'] as bool,
+      createDate: DateTime.fromMillisecondsSinceEpoch(map['createDate'] as int),
+      updates: map['updates'],
+      dateTimeModification:
+          DateTime.fromMillisecondsSinceEpoch(map['date_modification'] as int),
+    );
   }
+
+  String toJson() => json.encode(toMap());
+
+  factory note.fromJson(String source) =>
+      note.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   bool operator ==(Object other) =>
@@ -54,4 +86,5 @@ class note {
 
   @override
   int get hashCode => key.hashCode;
+
 }

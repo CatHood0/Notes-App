@@ -1,12 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
+import 'package:notes_project/domain/entities/Note.dart';
+import 'package:notes_project/main.dart';
 import '../../../Widgets/NoteView.dart';
-import '../../../domain/bloc/Notes/NoteBloc.dart';
+import '../../../domain/bloc/Notes/NoteEvents.dart';
 import '../../../domain/bloc/Notes/NoteStates.dart';
 
-class ListNotesBlocWidget extends StatelessWidget {
+class ListNotesBlocWidget extends StatefulWidget {
   const ListNotesBlocWidget({
     super.key,
   });
+
+  @override
+  State<ListNotesBlocWidget> createState() => _ListNotesBlocWidgetState();
+}
+
+class _ListNotesBlocWidgetState extends State<ListNotesBlocWidget> {
+  final NoteBloc bloc = blocInject.getBloc<NoteBloc>();
+  @override
+  void initState() {
+    bloc.eventSink.add(RestoreNoteFiles());
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -17,28 +37,12 @@ class ListNotesBlocWidget extends StatelessWidget {
         builder: (context, snapshot) {
           if (snapshot.data is LoadedNotes) {
             final data = (snapshot.data as LoadedNotes).notes;
-            return GridView.builder(
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2),
-              itemCount: data.length,
-              padding: const EdgeInsets.all(10),
-              itemBuilder: (context, index) {
-                return NoteCard(data[index], index);
-              },
-            );
+            return GridNotesWidget(data: data);
           } else if (snapshot.data is LoadingNotes) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.data is NoteNotFound) {
             final error = (snapshot.data as NoteNotFound).onError;
-            return Center(
-              child: Text(
-                error,
-                style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold),
-              ),
-            );
+            return ErrorMessageWidget(error: error);
           }
           return const Center(
               child: Text(
@@ -47,6 +51,51 @@ class ListNotesBlocWidget extends StatelessWidget {
           ));
         },
       ),
+    );
+  }
+}
+
+class ErrorMessageWidget extends StatelessWidget {
+  const ErrorMessageWidget({
+    super.key,
+    required this.error,
+  });
+
+  final String error;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        error,
+        style: const TextStyle(
+            color: Colors.white,
+            fontSize: 25,
+            fontWeight: FontWeight.bold),
+      ),
+    );
+  }
+}
+
+class GridNotesWidget extends StatelessWidget {
+  const GridNotesWidget({
+    super.key,
+    required this.data,
+  });
+
+  final List<note> data;
+
+  @override
+  Widget build(BuildContext context) {
+    return GridView.builder(
+      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: 2,
+            childAspectRatio: 0.65,
+          ),
+      itemCount: data.length,
+      itemBuilder: (context, index) {
+        return NoteCard(data[index], index);
+      },
     );
   }
 }

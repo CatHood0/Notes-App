@@ -18,11 +18,12 @@ dependencies:
   crypto: ^3.0.2
   shared_preferences: ^2.0.20
   image_picker: ^0.8.6+4
-  intl: ^0.18.0
+  intl: ^0.17.0
   cached_network_image: ^3.2.3
   email_validator: ^2.1.17
   flutter_animate: ^4.1.1+1
   custom_navigation_bar: ^0.8.2 
+  easy_localization: ^3.0.1
 
   #state managment
   flutter_riverpod: ^2.3.2

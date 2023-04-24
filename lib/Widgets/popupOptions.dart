@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
+import '../main.dart';
 
-enum listOptions { orderByTitle, orderByCreationDate, orderByModificationDate}
+enum listOptions { orderByTitle, orderByCreationDate, orderByModificationDate }
 
 class PopupMenu extends StatefulWidget {
   const PopupMenu({super.key});
@@ -12,6 +13,7 @@ class PopupMenu extends StatefulWidget {
 }
 
 class _PopupMenuState extends State<PopupMenu> {
+  final NoteBloc bloc = blocInject.getBloc<NoteBloc>();
   listOptions? selectedItem = listOptions.orderByTitle;
 
   @override
@@ -34,8 +36,7 @@ class _PopupMenuState extends State<PopupMenu> {
       itemBuilder: (BuildContext context) => <PopupMenuEntry<listOptions>>[
         PopupMenuItem<listOptions>(
           onTap: () {
-            bloc.eventSink.add(SortNotesEvents(
-                notes: bloc.getAllNotes()));
+            bloc.eventSink.add(SortNotesEvents(notes: bloc.getAllNotes()));
           },
           value: listOptions.orderByTitle,
           child: const Text(
@@ -47,8 +48,7 @@ class _PopupMenuState extends State<PopupMenu> {
           onTap: () {
             setState(
               () {
-                bloc.eventSink.add(SortNotesEvents(
-                    notes: bloc.getAllNotes()));
+                bloc.eventSink.add(SortNotesEvents(notes: bloc.getAllNotes()));
               },
             );
           },
@@ -58,12 +58,11 @@ class _PopupMenuState extends State<PopupMenu> {
             style: TextStyle(color: Colors.white),
           ),
         ),
-          PopupMenuItem<listOptions>(
+        PopupMenuItem<listOptions>(
           onTap: () {
             setState(
               () {
-                bloc.eventSink.add(SortNotesEvents(
-                    notes: bloc.getAllNotes()));
+                bloc.eventSink.add(SortNotesEvents(notes: bloc.getAllNotes()));
               },
             );
           },

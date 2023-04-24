@@ -7,9 +7,9 @@ class NoteBloc {
   List<note> _notes = [];
   final _noteStateController = StreamController<NoteState>.broadcast(
     onListen: () => print("Listening note states"),
+    onCancel: () => print("Cancelling note state"),
   );
   final _eventStreamController = StreamController<NoteEvent>();
-
   Stream<NoteState> get stateStream => _noteStateController.stream;
   StreamSink<NoteEvent> get eventSink => _eventStreamController.sink;
 
@@ -22,24 +22,19 @@ class NoteBloc {
     if (event is AddNote) {
       _noteStateController.add(LoadingNotes());
       _notes.add(event.Note);
+      print(event.Note.content);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is DeleteNote) {
       _noteStateController.add(LoadingNotes());
-      if (_notes[event.index].content != null) {
-        _notes.removeAt(event.index);
-        _noteStateController.add(LoadedNotes(notes: _notes));
-      } else {
-        _noteStateController
-            .add(NoteNotFound(onError: "This note can't be deleted"));
-        Future.delayed(const Duration(seconds: 2));
-        _noteStateController.add(LoadedNotes(notes: _notes));
-      }
+      _notes.removeAt(event.index);
+      _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is UpdateNote) {
       _notes[event.index] = event.notes;
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is FavoriteNote) {
       _noteStateController.add(LoadingNotes());
-      _notes[event.index].favorite = event.isFavorite;
+      _notes[event.index] =
+          _notes[event.index].copyWith(favorite: event.isFavorite);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is SearchNote) {
       _noteStateController.add(LoadingNotes());
@@ -51,7 +46,7 @@ class NoteBloc {
           final searchLower = event.search!.toLowerCase();
           return titleLower.contains(searchLower);
         });
-        await Future.delayed(const Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 1));
         if (notes.isEmpty) {
           _noteStateController.add(NoteNotFound(onError: "Note(s) not found"));
         } else {
@@ -66,14 +61,20 @@ class NoteBloc {
       await Future.delayed(const Duration(seconds: 2));
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is SortNotesEvents) {
-      _notes =
-          event.notes; //we get a list sorted by the type that the user selected
+      _notes.add(note(
+          title: "Hello",
+          content: '',
+          createDate: DateTime.now(),
+          key: '1',
+          favorite: false,
+          updates: 1,
+          dateTimeModification: DateTime.now())); //we get a list sorted by the type that the user selected
       _noteStateController.add(LoadedNotes(notes: _notes));
     }
   }
 
   //Needs to get the index for updating when we create a new note
-  int getIndex({required String id}) {
+  int getIndex() {
     return _notes.length;
   }
 
@@ -82,12 +83,12 @@ class NoteBloc {
   }
 
   note getNote({required String id}) {
-    note? Note;
-    for (var notes in _notes) {
-      if (notes.key == id) {
-        Note = notes;
+    late note? Note = null;
+    _notes.forEach((element) {
+      if (element.key == id) {
+        Note = element;
       }
-    }
+    });
     return Note!;
   }
 
@@ -96,5 +97,3 @@ class NoteBloc {
     _noteStateController.close();
   }
 }
-
-final NoteBloc bloc = NoteBloc();

@@ -11,32 +11,31 @@ void main() {
           content: '',
           createDate: DateTime.now(),
           key: '1',
+          updates: 0,
           favorite: true,
           dateTimeModification:
               DateTime(DateTime.daysPerWeek, DateTime.wednesday))));
-  bloc.eventSink.add(AddNote(
-      Note: note(
-          title: "Baby",
-          content: '',
-          createDate: DateTime.now(),
-          key: '2',
-          favorite: true,
-          dateTimeModification:
-              DateTime(DateTime.daysPerWeek, DateTime.wednesday))));
-  bloc.eventSink.add(AddNote(
-      Note: note(
-          title: "Crazy",
-          content: '',
-          createDate: DateTime.now(),
-          key: '3',
-          favorite: true,
-          dateTimeModification:
-              DateTime(DateTime.daysPerWeek, DateTime.wednesday))));
+
   test('should add my note and order', () {
-    
+    bloc.eventSink.add(AddNote(
+        Note: note(
+            title: "Crazy",
+            content: '',
+            createDate: DateTime.now(),
+            key: '3',
+            updates: 0,
+            favorite: true,
+            dateTimeModification:
+                DateTime(DateTime.daysPerWeek, DateTime.wednesday))));
+
+    int leng = bloc.getIndex();
+
+    expect(leng, 1);
   });
 
-  test('should update my note and order', () {});
+  test('should update my note and order', () {
+    expect("", "");
+  });
   test('should delete my note and order', () {});
   test('should getAllNotes my note and order', () {});
 

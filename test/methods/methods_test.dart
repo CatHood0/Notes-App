@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notes_project/data/repositories/Store_repository.dart';
-import 'package:notes_project/injector/dependency_injector.dart';
+import 'package:notes_project/injector/DS_injector.dart';
 
 void main() {
   final Injector inject =
