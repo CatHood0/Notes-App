@@ -1,15 +1,15 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:notes_project/main.dart';
-import 'package:notes_project/constant.dart';
-import '../../../enums.dart';
-import '../../notes/notePage.dart';
 import '../../../Widgets/note_card.dart';
 import '../../notes/widget/listNoteWidget.dart';
+import '../../notes/notePage.dart';
+import '../../../domain/bloc/Store/StoreBloc.dart';
 import '../../../domain/bloc/Notes/NoteBloc.dart';
 import '../../../domain/bloc/Notes/NoteStates.dart';
 import '../../../domain/bloc/Notes/NoteEvents.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../../../enums.dart';
+import 'package:intl/intl.dart';
 
 class ViewHomePageWidget extends StatelessWidget {
   ViewHomePageWidget({
@@ -20,7 +20,10 @@ class ViewHomePageWidget extends StatelessWidget {
 
   final DateTime now;
   final TabController tabBar;
-  final bloc = blocInject.getBloc<NoteBloc>();
+
+  // blocs
+  final noteBloc = blocInject.getBloc<NoteBloc>();
+  final storeBloc = blocInject.getBloc<StoreBloc>();
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +57,7 @@ class ViewHomePageWidget extends StatelessWidget {
               TabBar(
                   onTap: (value) {
                     if (value == 0) {
-                      bloc.eventSink
+                      noteBloc.eventSink
                           .add(SortNotesEvents(sort: TypeSort.title));
                     } else {}
                   },
@@ -73,7 +76,7 @@ class ViewHomePageWidget extends StatelessWidget {
             width: double.infinity,
             height: 200,
             child: StreamBuilder<NoteState>(
-                stream: bloc.stateStream,
+                stream: noteBloc.stateStream,
                 builder: (context, snapshot) {
                   if (snapshot.data is LoadedNotes) {
                     final data = (snapshot.data as LoadedNotes).notes;
@@ -116,7 +119,10 @@ class ViewHomePageWidget extends StatelessWidget {
               style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
             ),
           ),
-        )
+        ),
+        SliverToBoxAdapter(//here we put the list view with recomends templates
+          child: SizedBox(),
+        ),
       ],
     );
   }

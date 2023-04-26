@@ -55,6 +55,8 @@ class StoreBloc {
       }
       _templateStateController
           .add(LoadedAllTemplatesState(templates: _templates));
+    } else if(event is SavePrivateTemplateEvent){
+
     }
   }
 

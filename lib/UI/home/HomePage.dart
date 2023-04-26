@@ -20,8 +20,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final UserBloc userBloc = blocInject.getBloc<UserBloc>();
   bool hadConnectionBefore = false;
   late StreamSubscription subscription;
+
   @override
-  void initState() {
+  void initState(){
     noteBloc.eventSink.add(RestoreNoteFiles());
     super.initState();
     subscription =
@@ -43,10 +44,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void showConnectionSnackBar(ConnectivityResult result) {
-    final hasInternet = result != ConnectivityResult.none;
+    final hasInternet = result == ConnectivityResult.none;
     String message = "";
     Color color = Colors.grey;
-    if (hasInternet) {
+    if (!hasInternet) {
       message = 'Connection restaured. Synchronization changes';
       color = Colors.lightGreen;
       if (hadConnectionBefore) {

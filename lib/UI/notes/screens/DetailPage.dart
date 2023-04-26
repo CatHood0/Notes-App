@@ -1,11 +1,12 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'package:notes_project/UI/notes/widget/DialogProperties.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
 import '../../../domain/entities/Note.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'dart:convert';
 
 class DetailPage extends StatefulWidget {
   final Note? note;
@@ -46,6 +47,7 @@ class _ReadPageState extends State<DetailPage> {
       child: Scaffold(
         bottomSheet: Container(
           child: QuillToolbar.basic(
+            toolbarSectionSpacing: 10,
             controller: _quillController,
             multiRowsDisplay: false,
           ),
@@ -64,7 +66,8 @@ class _ReadPageState extends State<DetailPage> {
                   onPressed: () {
                     Navigator.pop(context);
                   },
-                  icon: const Icon(Icons.arrow_back)),
+                  icon: const Icon(Icons.arrow_back),
+                ),
           backgroundColor: const Color.fromARGB(255, 59, 59, 59),
           actions: <Widget>[
             if (_Note != null)
@@ -128,12 +131,13 @@ class _ReadPageState extends State<DetailPage> {
                     _focusNodeTitle.unfocus();
                     return false;
                   },
-                  onLaunchUrl: (String url) {},
+                  onLaunchUrl: (String url) {
+                    launchUrlString(url);
+                  },
                   expands: false,
                   customStyles:
                       DefaultStyles(link: const TextStyle(color: Colors.white)),
                   onImagePaste: (imageBytes) async {
-                    return;
                   },
                   focusNode: _focusNodeContent,
                   padding: const EdgeInsets.symmetric(horizontal: 15),
@@ -154,7 +158,7 @@ class _ReadPageState extends State<DetailPage> {
   void initState() {
     _Note = widget.note;
     _indexNote = widget.index;
-    if (_Note?.title != null && _Note?.content!=null) {
+    if (_Note?.title != null && _Note?.content != null) {
       _titleController = TextEditingController(text: _Note!.title);
       _quillController = QuillController(
           document: Document.fromJson(jsonDecode(_Note!.content)),
@@ -195,12 +199,12 @@ class _ReadPageState extends State<DetailPage> {
     if (_Note != null ||
         widget.note != null && _indexNote != null ||
         widget.index != null) {
-      _Note =_Note!.copyWith(
+      _Note = _Note!.copyWith(
         title: _titleController.text == ""
             ? "Untitle note"
             : _titleController.text,
         content: jsonEncode(_quillController.document.toDelta().toJson()),
-        update: _Note!.updates+1,
+        update: _Note!.updates + 1,
         dateTimeModification: DateTime.now(),
       );
       bloc.eventSink.add(UpdateNote(index: _indexNote!, notes: _Note!));

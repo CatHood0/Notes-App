@@ -21,14 +21,15 @@ void main() async {
   inject.registerDependency<NoteRepository>(dependency: NoteRepository());
   inject.registerDependency<StoreRepository>(dependency: StoreRepository());
   inject.registerDependency<AccountRepository>(dependency: AccountRepository());
-  blocInject.registerBloc<NoteBloc>(bloc: NoteBloc(repository: NoteRepository()));
+  blocInject.registerBloc<NoteBloc>(
+      bloc: NoteBloc(repository: NoteRepository()));
   blocInject.registerBloc<StoreBloc>(bloc: StoreBloc());
   blocInject.registerBloc<UserBloc>(bloc: UserBloc());
-  runApp(MyApp());
+  runApp(MainPage());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class MainPage extends StatelessWidget {
+  const MainPage({super.key});
 
   @override
   Widget build(BuildContext context) {

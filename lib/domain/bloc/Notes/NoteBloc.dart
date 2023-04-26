@@ -58,6 +58,14 @@ class NoteBloc {
       }
     } else if (event is SaveNotesFiles) {
     } else if (event is RestoreNoteFiles) {
+      _notes.add(Note(
+          title: "76",
+          content: '{"insert": ""}',
+          createDate: DateTime.now(),
+          key: "32msakdm91m",
+          favorite: false,
+          updates: 1,
+          dateTimeModification: DateTime.now()));
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is SortNotesEvents) {
       _noteStateController.add(LoadedNotes(notes: _notes));

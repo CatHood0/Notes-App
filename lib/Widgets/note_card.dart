@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:notes_project/main.dart';
 import '../domain/entities/Note.dart';
@@ -16,9 +18,25 @@ class NoteCard extends StatefulWidget {
   State<NoteCard> createState() => _NoteCardState();
 }
 
-class _NoteCardState extends State<NoteCard>
-    with TickerProviderStateMixin {
+class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
   final bloc = blocInject.getBloc<NoteBloc>();
+  late Timer? timer;
+
+  @override
+  void initState() {
+    timer = Timer.periodic(Duration(seconds: 10), (timer) {
+      TimerFallBack();
+      print("Realoded" + timer.tick.toString());
+    });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    timer!.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -57,6 +75,10 @@ class _NoteCardState extends State<NoteCard>
         ),
       ),
     );
+  }
+
+  void TimerFallBack() {
+    setState(() {});
   }
 }
 
@@ -127,7 +149,8 @@ class NoteTitleWidget extends StatelessWidget {
       top: 0,
       left: 0,
       right: widget.title.length < 15 ? 75 : 0,
-      bottom: calculateSizeTitleNoteCard(title: widget.title, isHomePage: isHomePage),
+      bottom: calculateSizeTitleNoteCard(
+          title: widget.title, isHomePage: isHomePage),
       child: Container(
           padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
           child: Center(
@@ -145,7 +168,8 @@ class NoteTitleWidget extends StatelessWidget {
     );
   }
 
-  double calculateSizeTitleNoteCard({required String title, required bool isHomePage}) {
+  double calculateSizeTitleNoteCard(
+      {required String title, required bool isHomePage}) {
     //For notePage
     if (title.trim().length < 10 && title.trim().length > 1 && !isHomePage) {
       return 190;

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class SnackMessage {
-  static dynamic showSnackbarMessage({
+  static ScaffoldFeatureController<SnackBar, SnackBarClosedReason> showSnackbarMessage({
     required BuildContext context,
     required String message,
     Duration? duration = const Duration(seconds: 2),
@@ -15,4 +15,5 @@ class SnackMessage {
         action: SnackBarAction(
             textColor: textColor, label: '', onPressed: () => null),
       ));
+
 }

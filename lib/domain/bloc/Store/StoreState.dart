@@ -14,6 +14,15 @@ class NotFoundTemplatesState extends StoreState {
       'Sorry, but, your search may invalid because we not found anything template';
 }
 
+class RecommendTemplatesState extends StoreState {
+  final List<Template> templates;
+  final message;
+  RecommendTemplatesState({
+    required this.message,
+    required this.templates,
+  });
+}
+
 class LoadedAllTemplatesState extends StoreState {
   List<Template> templates;
   LoadedAllTemplatesState({required this.templates});
@@ -36,4 +45,3 @@ class ErrorStoreState extends StoreState {
 }
 
 class LoadingStoreTemplatesState extends StoreState {}
-
