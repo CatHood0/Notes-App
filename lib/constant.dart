@@ -13,9 +13,9 @@ const buttonGeneralColor = Color.fromRGBO(140, 255, 46, 1);
 const double fontSizeTitles = 18.0;
 const double fontSizeContent = 16;
 
-typedef StreamNoteEither = Stream<ResponseEither<String, Note>>;
+typedef StreamNoteEither = Stream<ResponseEither<String, List<Note>>>;
 typedef StreamUserEither = Stream<ResponseEither<String, User>>;
-typedef StreamStoreEither = Stream<ResponseEither<String, Template>>;
+typedef StreamStoreEither = Stream<ResponseEither<String, List<Template>>>;
 
 
 //Example for use share package (you must convert object note to json, then, json to file.something)

@@ -19,7 +19,7 @@ class StoreRepository implements IStoreRepository{
   }
 
   @override
-  Stream<List<Template>> getAllTemplates({required int idAccount}) {
+  StreamNoteEither getAllTemplates({required int idAccount}) {
     throw UnimplementedError();
   }
 
@@ -34,17 +34,17 @@ class StoreRepository implements IStoreRepository{
   }
 
   @override
-  StreamStoreEither shareTemplate({required Template template}) {
+  Future<void> shareTemplate({required Template template}) async {
     throw UnimplementedError();
   }
 
   @override
-  Stream<void> addLikeTemplate({required Template template}) {
+  Future<void> addLikeTemplate({required Template template}) {
     throw UnimplementedError();
   }
   
   @override
-  Stream<void> dislikeTemplate({required Template template}) {
+  Future<void> dislikeTemplate({required Template template}) {
     throw UnimplementedError();
   }
 

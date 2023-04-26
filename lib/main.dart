@@ -14,9 +14,8 @@ import 'package:notes_project/injector/blocs_injector.dart';
 
 import 'domain/bloc/Store/StoreBloc.dart';
 
-final Injector inject = Injector.singleton(); //we inject here our dependencies
-final BlocInjector blocInject =
-    BlocInjector.singleton(); //we can inject our blocs here
+final inject = Injector.singleton(); //we inject here our dependencies
+final blocInject = BlocInjector.singleton(); //we can inject our blocs here
 void main() async {
   //dependencies
   inject.registerDependency<NoteRepository>(dependency: NoteRepository());
@@ -25,7 +24,7 @@ void main() async {
   blocInject.registerBloc<NoteBloc>(bloc: NoteBloc(repository: NoteRepository()));
   blocInject.registerBloc<StoreBloc>(bloc: StoreBloc());
   blocInject.registerBloc<UserBloc>(bloc: UserBloc());
-  runApp(const ProviderScope(child: MyApp()));
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
