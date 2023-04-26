@@ -8,6 +8,7 @@ import 'package:notes_project/data/repositories/Store_repository.dart';
 import 'package:notes_project/data/repositories/account_repository.dart';
 import 'package:notes_project/data/repositories/note_repository.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
+import 'package:notes_project/domain/bloc/users/UserBloc.dart';
 import 'package:notes_project/injector/DS_injector.dart';
 import 'package:notes_project/injector/blocs_injector.dart';
 
@@ -23,6 +24,7 @@ void main() async {
   inject.registerDependency<AccountRepository>(dependency: AccountRepository());
   blocInject.registerBloc<NoteBloc>(bloc: NoteBloc(repository: NoteRepository()));
   blocInject.registerBloc<StoreBloc>(bloc: StoreBloc());
+  blocInject.registerBloc<UserBloc>(bloc: UserBloc());
   runApp(const ProviderScope(child: MyApp()));
 }
 
