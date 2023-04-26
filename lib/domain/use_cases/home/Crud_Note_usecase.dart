@@ -1,3 +1,4 @@
+import 'package:notes_project/constant.dart';
 import 'package:notes_project/domain/repository/notes/INoteRepo.dart';
 import '../../entities/Note.dart';
 
@@ -5,7 +6,7 @@ class CrudNoteUseCase{
   final INoteRepository noteRepository;
   CrudNoteUseCase({required this.noteRepository});
 
-  Future<void> update({required note Note}) async {
+  Future<void> update({required Note Note}) async {
     noteRepository.update(obj: Note);
   }
 
@@ -13,11 +14,11 @@ class CrudNoteUseCase{
     noteRepository.delete(idObj: key);
   }
 
-  Future<void> create({required note Note}) async {
+  Future<void> create({required Note Note}) async {
     noteRepository.create(obj: Note);
   }
 
-  Stream<List<note>> getNotes({required String keyUser}) async* {
+  StreamNoteEither getNotes({required String keyUser}) async* {
     yield* noteRepository.getAllNotes(idAccount: keyUser); 
   }
 }

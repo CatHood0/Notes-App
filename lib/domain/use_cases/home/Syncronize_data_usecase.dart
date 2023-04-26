@@ -1,4 +1,4 @@
-import 'package:notes_project/domain/entities/Note.dart';
+import 'package:notes_project/constant.dart';
 import 'package:notes_project/domain/repository/notes/INoteRepo.dart';
 
 class SyncronizeDataUseCase {
@@ -7,7 +7,7 @@ class SyncronizeDataUseCase {
     required this.noteRepository,
   });
 
-  Stream<List<note>> syncronizeData({required idAccount}) async* {
+  StreamNoteEither syncronizeData({required idAccount}) async* {
     yield* noteRepository.syncronizeData(idAccount: idAccount);
   }
 }

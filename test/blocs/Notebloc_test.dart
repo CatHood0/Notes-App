@@ -1,12 +1,13 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:notes_project/data/repositories/note_repository.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/domain/entities/Note.dart';
 
 void main() {
-  final NoteBloc bloc = NoteBloc();
+  final NoteBloc bloc = NoteBloc(repository: NoteRepository());
   bloc.eventSink.add(AddNote(
-      Note: note(
+      note: Note(
           title: "Hello",
           content: '',
           createDate: DateTime.now(),
@@ -18,7 +19,7 @@ void main() {
 
   test('should add my note and order', () {
     bloc.eventSink.add(AddNote(
-        Note: note(
+        note: Note(
             title: "Crazy",
             content: '',
             createDate: DateTime.now(),
@@ -30,9 +31,7 @@ void main() {
 
     int leng = bloc.getIndex();
 
-    expect(leng, 1);
-  });
-
+    expect(leng, 1); });
   test('should update my note and order', () {
     expect("", "");
   });

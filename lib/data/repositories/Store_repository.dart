@@ -1,3 +1,4 @@
+import 'package:notes_project/constant.dart';
 import 'package:notes_project/domain/entities/Template.dart';
 import 'package:notes_project/domain/repository/store/IStoreRepo.dart';
 
@@ -29,6 +30,21 @@ class StoreRepository implements IStoreRepository{
 
   @override
   Future<void> update({required Template obj}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  StreamStoreEither shareTemplate({required Template template}) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Stream<void> addLikeTemplate({required Template template}) {
+    throw UnimplementedError();
+  }
+  
+  @override
+  Stream<void> dislikeTemplate({required Template template}) {
     throw UnimplementedError();
   }
 

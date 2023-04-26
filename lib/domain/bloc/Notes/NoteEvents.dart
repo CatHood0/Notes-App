@@ -1,20 +1,21 @@
+import '../../../enums.dart';
 import '../../entities/Note.dart';
 
 abstract class NoteEvent {}
 
 class AddNote extends NoteEvent {
-  final note Note;
-  AddNote({required this.Note});
+  final Note note;
+  AddNote({required this.note});
 }
 
 class SaveNotesFiles extends NoteEvent {
-  final List<note> notes;
+  final List<Note> notes;
   SaveNotesFiles({required this.notes});
 }
 
 class SortNotesEvents extends NoteEvent {
-  List<note> notes = [];
-  SortNotesEvents({required this.notes}) {
+  List<Note> notes = [];
+  SortNotesEvents({required TypeSort sort}) {
   //here we place the logic for getting the last typerSort selected
     /*switch (typeSort) {
       case SortByNote.CreateDate:
@@ -35,7 +36,7 @@ class RestoreNoteFiles extends NoteEvent {}
 
 class UpdateNote extends NoteEvent {
   final int index;
-  final note notes;
+  final Note notes;
   UpdateNote({required this.index, required this.notes});
 }
 

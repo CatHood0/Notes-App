@@ -12,8 +12,8 @@ class BlocInjector {
   BlocInjector._internal();
 
   //We use for register dependencies
-  void registerBloc<T>({required T dependency}) {
-    _blocs[T.toString()] = dependency;
+  void registerBloc<T>({required T bloc}) {
+    _blocs[T.toString()] = bloc;
   }
 
   T getBloc<T>() {

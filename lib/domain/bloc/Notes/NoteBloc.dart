@@ -2,9 +2,11 @@ import 'dart:async';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteStates.dart';
 import 'package:notes_project/domain/entities/Note.dart';
+import 'package:notes_project/domain/repository/notes/INoteRepo.dart';
 
 class NoteBloc {
-  List<note> _notes = [];
+  final INoteRepository repository;
+  List<Note> _notes = [];
   final _noteStateController = StreamController<NoteState>.broadcast(
     onListen: () => print("Listening note states"),
     onCancel: () => print("Cancelling note state"),
@@ -13,7 +15,7 @@ class NoteBloc {
   Stream<NoteState> get stateStream => _noteStateController.stream;
   StreamSink<NoteEvent> get eventSink => _eventStreamController.sink;
 
-  NoteBloc() {
+  NoteBloc({required this.repository}) {
     _noteStateController.add(InitialNoteState());
     _eventStreamController.stream.listen(_handleEvent);
   }
@@ -21,8 +23,7 @@ class NoteBloc {
   void _handleEvent(NoteEvent event) async {
     if (event is AddNote) {
       _noteStateController.add(LoadingNotes());
-      _notes.add(event.Note);
-      print(event.Note.content);
+      _notes.add(event.note);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is DeleteNote) {
       _noteStateController.add(LoadingNotes());
@@ -57,18 +58,8 @@ class NoteBloc {
       }
     } else if (event is SaveNotesFiles) {
     } else if (event is RestoreNoteFiles) {
-      _noteStateController.add(LoadingNotes());
-      await Future.delayed(const Duration(seconds: 2));
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is SortNotesEvents) {
-      _notes.add(note(
-          title: "Hello",
-          content: '',
-          createDate: DateTime.now(),
-          key: '1',
-          favorite: false,
-          updates: 1,
-          dateTimeModification: DateTime.now())); //we get a list sorted by the type that the user selected
       _noteStateController.add(LoadedNotes(notes: _notes));
     }
   }
@@ -76,20 +67,6 @@ class NoteBloc {
   //Needs to get the index for updating when we create a new note
   int getIndex() {
     return _notes.length;
-  }
-
-  List<note> getAllNotes() {
-    return [..._notes];
-  }
-
-  note getNote({required String id}) {
-    late note? Note = null;
-    _notes.forEach((element) {
-      if (element.key == id) {
-        Note = element;
-      }
-    });
-    return Note!;
   }
 
   void dispose() {

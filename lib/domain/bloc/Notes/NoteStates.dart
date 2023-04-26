@@ -5,7 +5,7 @@ abstract class NoteState {}
 class LoadingNotes extends NoteState {}
 
 class InitialNoteState extends NoteState{
-  List<note> notes = [];
+  List<Note> notes = [];
 }
 
 class NoteNotFound extends NoteState {
@@ -19,6 +19,6 @@ class ErrorState extends NoteState{
 }
 
 class LoadedNotes extends NoteState {
-  final List<note> notes;
+  final List<Note> notes;
   LoadedNotes({required this.notes});
 }

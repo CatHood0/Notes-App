@@ -1,13 +1,14 @@
 import 'dart:io';
-
 import 'package:notes_project/domain/entities/Note.dart';
 import 'package:notes_project/domain/repository/notes/INoteRepo.dart';
+import '../../constant.dart';
+import '../response/response.dart';
 
 class NoteRepository implements INoteRepository{
   final HttpClient client = HttpClient();
 
   @override
-  Future<void> create({required note obj}) {
+  Future<void> create({required Note obj}) {
     throw UnimplementedError();
   }
 
@@ -17,22 +18,23 @@ class NoteRepository implements INoteRepository{
   }
 
   @override
-  Stream<List<note>> getAllNotes({required String idAccount}) {
+  Future<List<Note>> search({required String text}) {
     throw UnimplementedError();
   }
 
   @override
-  Future<List<note>> search({required String text}) {
+  StreamNoteEither syncronizeData({required String idAccount}) {
     throw UnimplementedError();
   }
 
   @override
-  Stream<List<note>> syncronizeData({required String idAccount}) {
+  Future<void> update({required Note obj}) {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> update({required note obj}) {
+  StreamNoteEither getAllNotes({required String idAccount}) async* {
+    yield ResponseEither(error: null, object: null);
     throw UnimplementedError();
   }
 

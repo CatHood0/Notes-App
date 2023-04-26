@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/entities/Note.dart';
 import 'package:notes_project/main.dart';
-import '../../../Widgets/NoteView.dart';
+import '../../../Widgets/note_card.dart';
 import '../../../domain/bloc/Notes/NoteEvents.dart';
 import '../../../domain/bloc/Notes/NoteStates.dart';
 
@@ -83,7 +83,7 @@ class GridNotesWidget extends StatelessWidget {
     required this.data,
   });
 
-  final List<note> data;
+  final List<Note> data;
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +94,10 @@ class GridNotesWidget extends StatelessWidget {
           ),
       itemCount: data.length,
       itemBuilder: (context, index) {
-        return NoteCard(data[index], index);
+        return Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+          child: NoteCard(data[index], index),
+        );
       },
     );
   }

@@ -1,17 +1,17 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:notes_project/Widgets/DialogProperties.dart';
+import 'package:notes_project/UI/notes/widget/DialogProperties.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
 import '../../../domain/entities/Note.dart';
 
 class DetailPage extends StatefulWidget {
-  final note? Note;
+  final Note? note;
   final int? index;
   final bool edit;
-  const DetailPage(this.index, this.Note, {super.key, required this.edit});
+  const DetailPage(this.index, this.note, {super.key, required this.edit});
 
   @override
   State<DetailPage> createState() => _ReadPageState();
@@ -19,7 +19,7 @@ class DetailPage extends StatefulWidget {
 
 class _ReadPageState extends State<DetailPage> {
   final NoteBloc bloc = blocInject.getBloc<NoteBloc>();
-  late note? _Note;
+  late Note? _Note;
   late TextEditingController _titleController;
   late bool _editMode;
   late int? _indexNote = 0;
@@ -152,9 +152,9 @@ class _ReadPageState extends State<DetailPage> {
 
   @override
   void initState() {
-    _Note = widget.Note;
+    _Note = widget.note;
     _indexNote = widget.index;
-    if (_Note?.title != null) {
+    if (_Note?.title != null && _Note?.content!=null) {
       _titleController = TextEditingController(text: _Note!.title);
       _quillController = QuillController(
           document: Document.fromJson(jsonDecode(_Note!.content)),
@@ -193,7 +193,7 @@ class _ReadPageState extends State<DetailPage> {
 
   void createNote() {
     if (_Note != null ||
-        widget.Note != null && _indexNote != null ||
+        widget.note != null && _indexNote != null ||
         widget.index != null) {
       _Note =_Note!.copyWith(
         title: _titleController.text == ""
@@ -205,7 +205,7 @@ class _ReadPageState extends State<DetailPage> {
       );
       bloc.eventSink.add(UpdateNote(index: _indexNote!, notes: _Note!));
     } else if (_indexNote == null) {
-      _Note = note(
+      _Note = Note(
           title: _titleController.text != ""
               ? _titleController.text
               : "Untitle note",
@@ -216,7 +216,7 @@ class _ReadPageState extends State<DetailPage> {
           tag: ['anything'],
           updates: 0,
           dateTimeModification: DateTime.now());
-      bloc.eventSink.add(AddNote(Note: _Note!));
+      bloc.eventSink.add(AddNote(note: _Note!));
       _indexNote = bloc.getIndex();
     }
   }

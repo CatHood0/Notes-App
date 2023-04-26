@@ -27,7 +27,7 @@ class Injector {
   }
 
   //We use for register dependencies
-  void registerDependency<T>({required T dependency}) {
+  void registerDependency<T>({required T dependency}) async {
     _dependencies[T.toString()] = dependency;
   }
 

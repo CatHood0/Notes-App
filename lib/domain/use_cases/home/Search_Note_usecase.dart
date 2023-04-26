@@ -6,7 +6,7 @@ class SearchNoteUseCase{
   final INoteRepository noteRepository;
   SearchNoteUseCase({required this.noteRepository});
 
-  Future<List<note>> search({required String text}){
+  Future<List<Note>> search({required String text}){
     return noteRepository.search(text: text);
   }
 }

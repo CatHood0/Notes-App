@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/UI/notes/screens/DetailPage.dart';
 import 'package:notes_project/UI/notes/widget/listNoteWidget.dart';
-import 'package:notes_project/Widgets/popupOptions.dart';
+import 'package:notes_project/UI/notes/widget/popupOptions.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
@@ -16,8 +16,8 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
-  final NoteBloc bloc = blocInject.getBloc<NoteBloc>();
-  late final _searchController = TextEditingController(text: "");
+  final bloc = blocInject.getBloc<NoteBloc>();
+  final _searchController = TextEditingController(text: "");
   bool searchMode = false, userMostSearch = false;
   int quitCount = 0;
 
@@ -25,6 +25,15 @@ class _NotesPageState extends State<NotesPage> {
     setState(() {
       searchMode = searcheable;
     });
+  }
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 
   @override
@@ -46,7 +55,7 @@ class _NotesPageState extends State<NotesPage> {
       child: Scaffold(
         appBar: AppBar(
           title: !searchMode
-              ? Text('Notes',
+              ? const Text('Notes',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 22,

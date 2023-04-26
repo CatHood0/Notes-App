@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import '../domain/entities/Note.dart';
+import '../../../domain/entities/Note.dart';
 
 class PropertiesNote extends StatefulWidget {
-  final note? currentNote;
+  final Note? currentNote;
   const PropertiesNote({super.key, required this.currentNote});
 
   @override

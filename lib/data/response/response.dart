@@ -1,13 +1,6 @@
-class Response<L,T>{
+
+class ResponseEither<L, R> {
   L? error;
-  T? object;
-
-  static L left<L>(L error){
-    return error;
-  }
-
-  static T right<T>(T object){
-    return object;
-  }
-
+  R? object;
+  ResponseEither({this.error, this.object});
 }

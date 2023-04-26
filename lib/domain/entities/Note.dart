@@ -1,7 +1,6 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
-class note {
+class Note {
   String key;
   String title;
   String content;
@@ -11,7 +10,7 @@ class note {
   DateTime createDate;
   DateTime dateTimeModification;
 
-  note(
+  Note(
       {required this.title,
       required this.content,
       required this.createDate,
@@ -23,7 +22,7 @@ class note {
       : assert(title.isNotEmpty),
         assert(key.isNotEmpty);
 
-  note copyWith({
+  Note copyWith({
     String? key,
     String? title,
     String? content,
@@ -33,7 +32,7 @@ class note {
     DateTime? createDate,
     DateTime? dateTimeModification,
   }) {
-    return note(
+    return Note(
       key: key ?? this.key,
       title: title ?? this.title,
       content: content ?? this.content,
@@ -58,8 +57,8 @@ class note {
     };
   }
 
-  factory note.fromMap(Map<String, dynamic> map) {
-    return note(
+  factory Note.fromMap(Map<String, dynamic> map) {
+    return Note(
       key: map['key'] as String,
       title: map['title'] as String,
       content: map['content'] as String,
@@ -76,13 +75,13 @@ class note {
 
   String toJson() => json.encode(toMap());
 
-  factory note.fromJson(String source) =>
-      note.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Note.fromJson(String source) =>
+      Note.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is note && runtimeType == other.runtimeType && key == other.key;
+      other is Note && runtimeType == other.runtimeType && key == other.key;
 
   @override
   int get hashCode => key.hashCode;
