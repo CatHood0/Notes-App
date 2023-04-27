@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:notes_project/UI/home/widget/view_home_page_widget.dart';
+import 'package:notes_project/UI/home/widget/homeAppBarWidget.dart';
+import 'package:notes_project/UI/home/widget/homeHeaderWidget.dart';
+import 'package:notes_project/UI/home/widget/homeNoteListWidget.dart';
+import 'package:notes_project/UI/home/widget/homeTemplateListWidget.dart';
 import 'package:notes_project/Widgets/snackMessage.dart';
-import 'package:notes_project/domain/bloc/users/UserBloc.dart';
-import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import '../../blocs(Exports)/blocs.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -22,7 +24,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   late StreamSubscription subscription;
 
   @override
-  void initState(){
+  void initState() {
     noteBloc.eventSink.add(RestoreNoteFiles());
     super.initState();
     subscription =
@@ -40,24 +42,34 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     final tabBar = TabController(length: 2, vsync: this);
     DateTime now = DateTime.now();
-    return Scaffold(body: ViewHomePageWidget(now: now, tabBar: tabBar));
+    return Scaffold(
+      body: CustomScrollView(
+          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+          slivers: [
+            HomeAppBarWidget(now: now),
+            HomeHeaderWidget(tabBar: tabBar),
+            NoteListWidget(),
+            HomeHeaderTemplatesWidget(),
+            TemplateListWidget(),
+          ]),
+    );
+    ;
   }
 
   void showConnectionSnackBar(ConnectivityResult result) {
-    final hasInternet = result == ConnectivityResult.none;
+    final hasInternet = result != ConnectivityResult.none;
     String message = "";
     Color color = Colors.grey;
-    if (!hasInternet) {
-      message = 'Connection restaured. Synchronization changes';
+    if (hasInternet && hadConnectionBefore) {
+      message = 'Connection restaured. We will go to synchronize any change';
       color = Colors.lightGreen;
-      if (hadConnectionBefore) {
-        SnackMessage.showSnackbarMessage(
-          context: context,
-          message: message,
-          backgroudColor: color,
-        );
-      }
-    } else {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      SnackMessage.showSnackbarMessage(
+        context: context,
+        message: message,
+        backgroudColor: color,
+      );
+    } else if(!hasInternet && result != ConnectivityResult.bluetooth){
       hadConnectionBefore = true;
       message =
           'Please, check your connection. The changes will not be apply if you dont have a connection';
@@ -65,10 +77,29 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
       SnackMessage.showSnackbarMessage(
         context: context,
         message: message,
-        textColor: Colors.white,
         duration: const Duration(days: 1000000),
         backgroudColor: color,
       );
     }
+  }
+}
+
+class HomeHeaderTemplatesWidget extends StatelessWidget {
+  const HomeHeaderTemplatesWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(
+      child: Container(
+        padding:
+            const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+        child: const Text(
+          "Template recommends for you",
+          style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
+        ),
+      ),
+    );
   }
 }

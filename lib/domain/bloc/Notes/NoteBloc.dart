@@ -12,6 +12,11 @@ class NoteBloc {
     onCancel: () => print("Cancelling note state"),
   );
   final _eventStreamController = StreamController<NoteEvent>();
+  final _currentLenghtNotesController = StreamController<int>.broadcast(
+    onListen: () => print("Listening current note length"),
+    onCancel: () => print("Cancelling current note length"),
+  );
+  Stream<int> get stateLenghtStream => _currentLenghtNotesController.stream;
   Stream<NoteState> get stateStream => _noteStateController.stream;
   StreamSink<NoteEvent> get eventSink => _eventStreamController.sink;
 
@@ -24,10 +29,12 @@ class NoteBloc {
     if (event is AddNote) {
       _noteStateController.add(LoadingNotes());
       _notes.add(event.note);
+      _currentLenghtNotesController.add(_notes.length);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is DeleteNote) {
       _noteStateController.add(LoadingNotes());
       _notes.removeAt(event.index);
+      _currentLenghtNotesController.add(_notes.length);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is UpdateNote) {
       _notes[event.index] = event.notes;
@@ -49,11 +56,14 @@ class NoteBloc {
         });
         await Future.delayed(const Duration(seconds: 1));
         if (notes.isEmpty) {
+          _currentLenghtNotesController.add(0);
           _noteStateController.add(NoteNotFound(onError: "Note(s) not found"));
         } else {
+          _currentLenghtNotesController.add(notes.toList().length);
           _noteStateController.add(LoadedNotes(notes: notes.toList()));
         }
       } else if (event.search!.isEmpty) {
+        _currentLenghtNotesController.add(_notes.length);
         _noteStateController.add(LoadedNotes(notes: _notes));
       }
     } else if (event is SaveNotesFiles) {
@@ -66,6 +76,7 @@ class NoteBloc {
           favorite: false,
           updates: 1,
           dateTimeModification: DateTime.now()));
+      _currentLenghtNotesController.add(_notes.length);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is SortNotesEvents) {
       _noteStateController.add(LoadedNotes(notes: _notes));
@@ -78,6 +89,7 @@ class NoteBloc {
   }
 
   void dispose() {
+    _currentLenghtNotesController.close();
     _eventStreamController.close();
     _noteStateController.close();
   }

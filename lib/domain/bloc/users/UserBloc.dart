@@ -46,7 +46,11 @@ class UserBloc {
       _userStatesController.add(UserLoggedOutState());
     } else if (event is BanUserEvent) {
     } else if (event is DesbanUserEvent) {
-    } else if (event is SearchUserEvent) {}
+    } else if (event is SearchUserEvent) {
+    } else if(event is SignInFromCredentialsEvent){
+
+    }
+    
   }
 
   void dispose(){

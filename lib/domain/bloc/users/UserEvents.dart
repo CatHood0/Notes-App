@@ -34,6 +34,11 @@ class UserUpdatedEvent extends UserEvent {
   UserUpdatedEvent({required this.user});
 }
 
+class SignInFromCredentialsEvent extends UserEvent{
+  final String credential;
+  SignInFromCredentialsEvent(this.credential);
+}
+
 class DesbanUserEvent extends UserEvent {
   final String excuseMessage;
   final User user;

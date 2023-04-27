@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:notes_project/UI/notes/screens/DetailPage.dart';
 import 'package:notes_project/UI/notes/widget/listNoteWidget.dart';
 import 'package:notes_project/UI/notes/widget/popupOptions.dart';
-import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
+import '../../blocs(Exports)/blocs.dart';
 
 class NotesPage extends StatefulWidget {
   const NotesPage({
@@ -16,7 +16,7 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
-  final bloc = blocInject.getBloc<NoteBloc>();
+  final noteBloc = blocInject.getBloc<NoteBloc>();
   final _searchController = TextEditingController(text: "");
   bool searchMode = false, userMostSearch = false;
   int quitCount = 0;
@@ -26,15 +26,6 @@ class _NotesPageState extends State<NotesPage> {
       searchMode = searcheable;
     });
   }
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +34,7 @@ class _NotesPageState extends State<NotesPage> {
         if (quitCount > 1 && searchMode) {
           isSearcheable(searcheable: false);
           if (userMostSearch) {
-            bloc.eventSink.add(SearchNote(search: ""));
+            noteBloc.eventSink.add(SearchNote(search: ""));
           }
           return false;
         } else if (!searchMode) {
@@ -53,65 +44,73 @@ class _NotesPageState extends State<NotesPage> {
         return false;
       },
       child: Scaffold(
-        appBar: AppBar(
-          title: !searchMode
-              ? const Text('Notes',
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                      color: Colors.white))
-              : TextFormField(
-                  autocorrect: true,
-                  controller: _searchController,
-                  style: const TextStyle(
-                      color: Colors.white, fontWeight: FontWeight.bold),
-                  decoration: const InputDecoration(
-                    hintText: "Example: cookies",
-                    hintStyle: TextStyle(color: Colors.grey),
-                  ),
-                ),
-          backgroundColor: const Color.fromARGB(255, 59, 59, 59),
-          elevation: 8,
-          leading: const PopupMenu(),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.add),
-              splashRadius: 20,
-              tooltip: "Add a new note",
-              color: const Color.fromARGB(255, 255, 255, 255),
-              onPressed: () async {
-                _searchController.clear();
-                isSearcheable(searcheable: false);
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const DetailPage(
-                              null,
-                              null,
-                              edit: true,
-                            )));
-              },
-            ),
-            IconButton(
-              alignment: Alignment.centerRight,
-              tooltip: "Search",
-              icon: const Icon(Icons.search),
-              splashRadius: 20,
-              onPressed: () {
-                if (!searchMode) {
-                  isSearcheable(searcheable: true);
-                } else {
-                  bloc.eventSink
-                      .add(SearchNote(search: _searchController.text));
-                  userMostSearch = true;
-                  _searchController.clear();
-                  isSearcheable(searcheable: false);
-                }
-              },
-            ),
-          ],
+        appBar: PreferredSize(
+          preferredSize:
+              Size.fromHeight(MediaQuery.of(context).size.height * 0.080),
+          child: StreamBuilder<int>(
+              initialData: 0,
+              stream: noteBloc.stateLenghtStream,
+              builder: (context, snapshot) {
+                return AppBar(
+                  title: !searchMode
+                      ? Text('Notes (${snapshot.data})',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 22,
+                              color: Colors.white))
+                      : TextFormField(
+                          autocorrect: true,
+                          controller: _searchController,
+                          style: const TextStyle(
+                              color: Colors.white, fontWeight: FontWeight.bold),
+                          decoration: const InputDecoration(
+                            hintText: "Example: cookies",
+                            hintStyle: TextStyle(color: Colors.grey),
+                          ),
+                        ),
+                  elevation: 0,
+                  leading: const PopupMenu(),
+                  actions: [
+                    IconButton(
+                      icon: const Icon(Icons.add),
+                      splashRadius: 20,
+                      tooltip: "Add a new note",
+                      color: const Color.fromARGB(255, 255, 255, 255),
+                      onPressed: () async {
+                        _searchController.clear();
+                        isSearcheable(searcheable: false);
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const DetailPage(
+                                      null,
+                                      null,
+                                      edit: true,
+                                    )));
+                      },
+                    ),
+                    IconButton(
+                      alignment: Alignment.centerRight,
+                      tooltip: "Search",
+                      icon: const Icon(Icons.search),
+                      splashRadius: 20,
+                      onPressed: () {
+                        if (!searchMode) {
+                          isSearcheable(searcheable: true);
+                        } else {
+                          noteBloc.eventSink
+                              .add(SearchNote(search: _searchController.text));
+                          userMostSearch = true;
+                          _searchController.clear();
+                          isSearcheable(searcheable: false);
+                        }
+                      },
+                    ),
+                  ],
+                );
+              }),
         ),
-        body: const SafeArea(
+        body: SafeArea(
           child: ListNotesBlocWidget(),
         ),
       ),

@@ -16,3 +16,8 @@ enum TypeSort {
   creation,
   modification,
 }
+
+enum AppTheme{
+  darkTheme,
+  lightTheme,
+}

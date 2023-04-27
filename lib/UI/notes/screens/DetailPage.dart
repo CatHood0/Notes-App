@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:intl/intl.dart';
 import 'package:notes_project/UI/notes/widget/DialogProperties.dart';
+import 'package:notes_project/UI/notes/widget/dateTimeTextDetail.dart';
+import 'package:notes_project/constant.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
 import '../../../domain/entities/Note.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-import 'package:flutter_quill/flutter_quill.dart';
 import 'dart:convert';
 
 class DetailPage extends StatefulWidget {
@@ -25,7 +28,6 @@ class _ReadPageState extends State<DetailPage> {
   late bool _editMode;
   late int? _indexNote = 0;
   late final QuillController _quillController;
-  final ScrollController _scrollController = ScrollController();
   final FocusNode _focusNodeTitle = FocusNode(),
       _focusNodeContent = FocusNode();
   int _quitCount = 0;
@@ -61,14 +63,15 @@ class _ReadPageState extends State<DetailPage> {
                     unFocusedFields();
                     createNote();
                   },
-                  icon: const Icon(Icons.check))
+                  icon: const Icon(Icons.check),
+                  style: ButtonStyle(
+                      iconColor: MaterialStatePropertyAll(buttonGeneralColor)))
               : IconButton(
                   onPressed: () {
                     Navigator.pop(context);
                   },
                   icon: const Icon(Icons.arrow_back),
                 ),
-          backgroundColor: const Color.fromARGB(255, 59, 59, 59),
           actions: <Widget>[
             if (_Note != null)
               IconButton(
@@ -91,10 +94,18 @@ class _ReadPageState extends State<DetailPage> {
           ],
         ),
         body: SingleChildScrollView(
-          controller: _scrollController,
-          scrollDirection: Axis.vertical,
           child: Column(
             children: [
+              Container(
+                alignment: Alignment.centerLeft,
+                padding: const EdgeInsets.only(left: 10, right: 10, top: 10),
+                height: MediaQuery.of(context).size.height * 0.045,
+                child: dateTimeText(
+                  time: DateFormat.yMMMEd()
+                      .format(_Note?.createDate ?? DateTime.now())
+                      .toString(),
+                ),
+              ),
               SizedBox(
                 width: double.infinity,
                 child: Padding(
@@ -103,13 +114,14 @@ class _ReadPageState extends State<DetailPage> {
                     focusNode: _focusNodeTitle,
                     controller: _titleController,
                     style: const TextStyle(
-                        fontSize: 22, fontWeight: FontWeight.bold),
-                    decoration: const InputDecoration(
+                        fontSize: 27, fontWeight: FontWeight.bold),
+                    decoration: const InputDecoration.collapsed(
                       hintText: "Title",
                       hintStyle:
                           TextStyle(color: Color.fromARGB(255, 75, 75, 75)),
                     ),
-                    keyboardType: TextInputType.multiline,
+                    keyboardType: TextInputType.text,
+                    minLines: 1,
                     maxLines: null,
                     onTap: () {
                       onEdit(edit: true);
@@ -117,13 +129,13 @@ class _ReadPageState extends State<DetailPage> {
                   ),
                 ),
               ),
-              SizedBox(
+              Container(
                 child: QuillEditor(
                   detectWordBoundary: true,
-                  scrollPhysics: const AlwaysScrollableScrollPhysics(),
-                  placeholder: "Write your throughs",
+                  placeholder: "Write something",
                   controller: _quillController,
                   autoFocus: false,
+                  textCapitalization: TextCapitalization.sentences,
                   onTapUp: (details, p1) {
                     if (!_editMode) {
                       onEdit(edit: true);
@@ -137,12 +149,11 @@ class _ReadPageState extends State<DetailPage> {
                   expands: false,
                   customStyles:
                       DefaultStyles(link: const TextStyle(color: Colors.white)),
-                  onImagePaste: (imageBytes) async {
-                  },
                   focusNode: _focusNodeContent,
-                  padding: const EdgeInsets.symmetric(horizontal: 15),
+                  padding:
+                      const EdgeInsets.only(bottom: 60, left: 15, right: 15),
                   readOnly: false,
-                  scrollController: _scrollController,
+                  scrollController: ScrollController(),
                   scrollable: false,
                   enableSelectionToolbar: true,
                 ),
@@ -180,7 +191,6 @@ class _ReadPageState extends State<DetailPage> {
     _focusNodeTitle.dispose();
     _quitCount = 0;
     _quillController.clear();
-    _scrollController.dispose();
     super.dispose();
   }
 

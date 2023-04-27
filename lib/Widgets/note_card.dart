@@ -24,16 +24,18 @@ class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    timer = Timer.periodic(Duration(seconds: 10), (timer) {
-      TimerFallBack();
-      print("Realoded" + timer.tick.toString());
-    });
+    if (widget.note.dateTimeModification.day <= 0)
+      timer = Timer.periodic(Duration(minutes: 1), (timer) {
+        TimerFallBack();
+      });
     super.initState();
   }
 
   @override
   void dispose() {
-    timer!.cancel();
+    if (widget.note.dateTimeModification.day <= 0) {
+      timer!.cancel();
+    }
     super.dispose();
   }
 

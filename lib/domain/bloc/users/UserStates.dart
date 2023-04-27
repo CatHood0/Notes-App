@@ -1,4 +1,3 @@
-import '../../../constant.dart';
 import '../../../enums.dart';
 import '../../entities/User.dart';
 
@@ -40,8 +39,9 @@ class UserWillBanningOnTimeState extends UserStates {
 
 class UserWasBannedState extends UserStates {
   final User user;
+  final DateTime timeHasBanned;
   final List<TypeBan> reasonBan;
-  UserWasBannedState({required this.user, required this.reasonBan});
+  UserWasBannedState({required this.user, required this.reasonBan, required this.timeHasBanned});
 }
 
 class UserInvalidPassword extends UserStates {
