@@ -19,7 +19,7 @@ class StoreBloc {
     _eventStreamController.stream.listen(_handleEvents);
   }
 
-  void _handleEvents(StoreEvent event) {
+  void _handleEvents(StoreEvent event) async {
     if (event is CreateTemplateEvent) {
       _templateStateController.add(LoadingStoreTemplatesState());
       _templates.add(event.template);
@@ -55,14 +55,26 @@ class StoreBloc {
       }
       _templateStateController
           .add(LoadedAllTemplatesState(templates: _templates));
-    } else if(event is SavePrivateTemplateEvent){
-
+    } else if (event is SavePrivateTemplateEvent) {
+    } else if (event is RestoreAllTemplates) {
+      _templateStateController.add(LoadingStoreTemplatesState());
+      for (int i = 0; i < 3; i++) {
+        _templates.add(Template(
+            id: "skand921m ${i}", name: "Alfonso ${i}",content: "Just", likes: 293 * (5 + i% (i + 200)), shares: 200 * (5 + i% (i + 500)), ));
+      }
+      await Future.delayed(const Duration(seconds: 1));
+      _templateStateController
+          .add(LoadedAllTemplatesState(templates: _templates));
+    } else if (event is RecommendTemplateEvent) {
+      _templates.sort(((a, b) => a.likes.compareTo(b.likes)));
+      _templateStateController.add(RecommendTemplatesState(
+          message: 'This probably like you', templates: _templates));
     }
   }
 
   int get lastIndexAdded => _templates.length;
 
-  Stream<Template> lastTemplateAdded() async*{
+  Stream<Template> lastTemplateAdded() async* {
     yield* _currentTemplateController.stream;
   }
 

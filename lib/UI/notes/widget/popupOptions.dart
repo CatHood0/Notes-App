@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:notes_project/constant.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import '../../../enums.dart';

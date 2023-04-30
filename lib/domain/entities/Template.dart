@@ -1,8 +1,8 @@
 import 'dart:convert';
-import 'package:equatable/equatable.dart';
 
 class Template {
   final String id;
+  final String name;
   final String content;
   final makePublic;
   final int likes;
@@ -10,6 +10,7 @@ class Template {
 
   Template(
       {required this.id,
+      required this.name,
       required this.content,
       required this.likes,
       required this.shares,
@@ -18,6 +19,7 @@ class Template {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'id': id,
+      'name': name,
       'content': content,
       'likes': likes,
       'shares': shares,
@@ -27,6 +29,7 @@ class Template {
   factory Template.fromMap(Map<String, dynamic> map) {
     return Template(
       id: map['id'] as String,
+      name: map['name'] as String,
       content: map['content'] as String,
       likes: map['likes'] as int,
       makePublic: map['public'] as bool,
@@ -40,12 +43,14 @@ class Template {
 
   Template copyWith({
     String? id,
+    String? name,
     String? content,
     int? likes,
     int? shares,
   }) {
     return Template(
       id: id ?? this.id,
+      name: name ?? this.name,
       content: content ?? this.content,
       likes: likes ?? this.likes,
       shares: shares ?? this.shares,
@@ -58,12 +63,11 @@ class Template {
 
     return other.id == id &&
         other.content == content &&
-        other.likes == likes &&
-        other.shares == shares;
+        other.runtimeType == this.runtimeType;
   }
 
   @override
   int get hashCode {
-    return id.hashCode ^ content.hashCode ^ likes.hashCode ^ shares.hashCode;
+    return id.hashCode ^ content.hashCode ^ name.hashCode;
   }
 }

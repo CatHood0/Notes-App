@@ -5,6 +5,8 @@ abstract class StoreEvent {}
 
 class RecommendTemplateEvent extends StoreEvent {}
 
+class RestoreAllTemplates extends StoreEvent{}
+
 class CreateTemplateEvent extends StoreEvent {
   final Template template;
   CreateTemplateEvent({required this.template});

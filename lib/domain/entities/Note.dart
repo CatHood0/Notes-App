@@ -6,6 +6,7 @@ class Note {
   String content;
   int updates;
   List<String>? tag;
+  bool? createLocally;
   bool favorite;
   DateTime createDate;
   DateTime dateTimeModification;
@@ -18,6 +19,7 @@ class Note {
       required this.favorite,
       required this.updates,
       required this.dateTimeModification,
+      this.createLocally = false,
       this.tag})
       : assert(title.isNotEmpty),
         assert(key.isNotEmpty);
@@ -28,6 +30,7 @@ class Note {
     String? content,
     List<String>? tag,
     bool? favorite,
+    bool? createLocally,
     int? update,
     DateTime? createDate,
     DateTime? dateTimeModification,
@@ -37,6 +40,7 @@ class Note {
       title: title ?? this.title,
       content: content ?? this.content,
       tag: tag ?? this.tag,
+      createLocally: createLocally ?? this.createLocally,
       updates: update ?? this.updates,
       favorite: favorite ?? this.favorite,
       createDate: createDate ?? this.createDate,
@@ -53,6 +57,7 @@ class Note {
       'createDate': createDate,
       'updates': updates,
       'date_modification': dateTimeModification,
+      'create_locally': createLocally,
       'tags': tag,
     };
   }
@@ -68,8 +73,8 @@ class Note {
       favorite: map['is_favorite'] as bool,
       createDate: DateTime.fromMillisecondsSinceEpoch(map['createDate'] as int),
       updates: map['updates'],
-      dateTimeModification:
-          DateTime.fromMillisecondsSinceEpoch(map['date_modification'] as int),
+      dateTimeModification: DateTime.fromMillisecondsSinceEpoch(map['date_modification'] as int),
+      createLocally: map['createLocally'] as bool,
     );
   }
 
@@ -85,5 +90,4 @@ class Note {
 
   @override
   int get hashCode => key.hashCode;
-
 }

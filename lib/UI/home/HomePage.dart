@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:notes_project/UI/home/widget/homeAppBarWidget.dart';
 import 'package:notes_project/UI/home/widget/homeHeaderWidget.dart';
 import 'package:notes_project/UI/home/widget/homeNoteListWidget.dart';
-import 'package:notes_project/UI/home/widget/homeTemplateListWidget.dart';
 import 'package:notes_project/Widgets/snackMessage.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
+import 'package:notes_project/domain/bloc/Store/StoreEvents.dart';
 import 'package:notes_project/main.dart';
 import 'dart:async';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -19,13 +19,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final NoteBloc noteBloc = blocInject.getBloc<NoteBloc>();
-  final UserBloc userBloc = blocInject.getBloc<UserBloc>();
+  final StoreBloc storeBloc = blocInject.getBloc<StoreBloc>();
   bool hadConnectionBefore = false;
   late StreamSubscription subscription;
 
   @override
   void initState() {
     noteBloc.eventSink.add(RestoreNoteFiles());
+    storeBloc.eventSink.add(RestoreAllTemplates());
+    storeBloc.eventSink.add(RecommendTemplateEvent());
     super.initState();
     subscription =
         Connectivity().onConnectivityChanged.listen(showConnectionSnackBar);
@@ -49,8 +51,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             HomeAppBarWidget(now: now),
             HomeHeaderWidget(tabBar: tabBar),
             NoteListWidget(),
-            HomeHeaderTemplatesWidget(),
-            TemplateListWidget(),
           ]),
     );
     ;
@@ -81,25 +81,5 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         backgroudColor: color,
       );
     }
-  }
-}
-
-class HomeHeaderTemplatesWidget extends StatelessWidget {
-  const HomeHeaderTemplatesWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Container(
-        padding:
-            const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-        child: const Text(
-          "Template recommends for you",
-          style: TextStyle(fontSize: 17, fontWeight: FontWeight.w600),
-        ),
-      ),
-    );
   }
 }

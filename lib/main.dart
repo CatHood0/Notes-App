@@ -1,8 +1,5 @@
-import 'dart:async';
-
-import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:notes_project/UI/home/HomePage.dart';
 import 'package:notes_project/constant.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -15,6 +12,7 @@ import 'package:notes_project/enums.dart';
 import 'package:notes_project/injector/DS_injector.dart';
 import 'package:notes_project/injector/blocs_injector.dart';
 
+import 'appThemes.dart';
 import 'domain/bloc/Store/StoreBloc.dart';
 
 final inject = Injector.singleton(); //we inject here our dependencies
