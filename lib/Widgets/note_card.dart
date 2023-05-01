@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:notes_project/main.dart';
 import '../domain/entities/Note.dart';
@@ -19,7 +18,6 @@ class NoteCard extends StatefulWidget {
 }
 
 class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
-  final bloc = blocInject.getBloc<NoteBloc>();
   late Timer? timer;
 
   @override
@@ -46,7 +44,7 @@ class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
       width: MediaQuery.of(context).size.width * 0.50,
       child: GestureDetector(
         onLongPress: () {
-          bloc.eventSink.add(DeleteNote(index: widget.index));
+          locator.Get<NoteBloc>().eventSink.add(DeleteNote(index: widget.index));
         },
         onTap: () async {
           Navigator.push(
@@ -69,7 +67,6 @@ class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
                   widget: widget.note, isHomePage: widget.isHomePage),
               DateAndStartNoteWidget(
                 noteCard: widget,
-                bloc: bloc,
                 isHomePage: widget.isHomePage,
               ),
             ],
@@ -87,13 +84,11 @@ class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
 class DateAndStartNoteWidget extends StatelessWidget {
   const DateAndStartNoteWidget({
     super.key,
-    required this.bloc,
     required this.noteCard,
     required this.isHomePage,
   });
 
   final NoteCard noteCard;
-  final NoteBloc bloc;
   final bool isHomePage;
 
   @override
@@ -113,7 +108,7 @@ class DateAndStartNoteWidget extends StatelessWidget {
             IconButton(
               onPressed: () {
                 final favorite = !noteCard.note.favorite;
-                bloc.eventSink.add(
+                locator.Get<NoteBloc>().eventSink.add(
                     FavoriteNote(index: noteCard.index, isFavorite: favorite));
               },
               icon: noteCard.note.favorite
@@ -199,7 +194,7 @@ class NoteTitleWidget extends StatelessWidget {
     } else if (title.trim().length > 16 &&
         title.trim().length < 25 &&
         isHomePage) {
-      return 130;
+      return 115;
     } else if (title.trim().length > 25 &&
         title.trim().length < 30 &&
         isHomePage) {

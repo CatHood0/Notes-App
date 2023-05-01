@@ -1,4 +1,4 @@
-import '../../../enums.dart';
+import '../../enums/enums.dart';
 import '../../entities/Note.dart';
 
 abstract class NoteEvent {}

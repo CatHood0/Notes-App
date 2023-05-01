@@ -16,7 +16,7 @@ class ListNotesBlocWidget extends StatefulWidget {
 }
 
 class _ListNotesBlocWidgetState extends State<ListNotesBlocWidget> {
-  final NoteBloc bloc = blocInject.getBloc<NoteBloc>();
+  final NoteBloc bloc = locator.Get<NoteBloc>();
   @override
   void initState() {
     bloc.eventSink.add(RestoreNoteFiles());

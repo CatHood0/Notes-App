@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/main.dart';
 import '../../../Widgets/note_card.dart';
-import '../../../blocs(Exports)/blocs.dart';
+import '../../../blocs/blocs.dart';
 import '../../../domain/bloc/Notes/NoteStates.dart';
 import '../../notes/widget/listNoteWidget.dart';
 
@@ -10,7 +10,7 @@ class NoteListWidget extends StatelessWidget {
     super.key,
   });
 
-  final NoteBloc noteBloc = blocInject.getBloc<NoteBloc>();
+  final NoteBloc noteBloc = locator.Get<NoteBloc>();
 
   @override
   Widget build(BuildContext context) {

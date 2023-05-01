@@ -11,7 +11,6 @@ void main() {
           title: "Hello",
           content: '',
           createDate: DateTime.now(),
-          key: '1',
           updates: 0,
           favorite: true,
           dateTimeModification:
@@ -23,7 +22,6 @@ void main() {
             title: "Crazy",
             content: '',
             createDate: DateTime.now(),
-            key: '3',
             updates: 0,
             favorite: true,
             dateTimeModification:

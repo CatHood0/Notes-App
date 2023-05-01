@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:notes_project/db%20helper/db_helper.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteStates.dart';
 import 'package:notes_project/domain/entities/Note.dart';
@@ -6,6 +7,7 @@ import 'package:notes_project/domain/repository/notes/INoteRepo.dart';
 
 class NoteBloc {
   final INoteRepository repository;
+  final _db = NoteDao();
   List<Note> _notes = [];
   final _noteStateController = StreamController<NoteState>.broadcast(
     onListen: () => print("Listening note states"),
@@ -26,6 +28,7 @@ class NoteBloc {
   }
 
   void _handleEvent(NoteEvent event) async {
+    await _db.openDb();
     if (event is AddNote) {
       _noteStateController.add(LoadingNotes());
       _notes.add(event.note);
@@ -68,19 +71,16 @@ class NoteBloc {
       }
     } else if (event is SaveNotesFiles) {
     } else if (event is RestoreNoteFiles) {
-      _notes.add(Note(
-          title: "76",
-          content: '{"insert": ""}',
-          createDate: DateTime.now(),
-          key: "32msakdm91m",
-          favorite: false,
-          updates: 1,
-          dateTimeModification: DateTime.now()));
+      _notes = await _getNotesFromDb();
       _currentLenghtNotesController.add(_notes.length);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is SortNotesEvents) {
       _noteStateController.add(LoadedNotes(notes: _notes));
     }
+  }
+
+  Future<List<Note>> _getNotesFromDb() async {
+    return _db.getAllNotes();
   }
 
   //Needs to get the index for updating when we create a new note
@@ -89,6 +89,7 @@ class NoteBloc {
   }
 
   void dispose() {
+    _db.closeConnection();
     _currentLenghtNotesController.close();
     _eventStreamController.close();
     _noteStateController.close();

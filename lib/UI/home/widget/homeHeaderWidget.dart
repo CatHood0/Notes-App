@@ -4,7 +4,7 @@ import 'package:notes_project/main.dart';
 import '../../../Widgets/buttonWidget.dart';
 import '../../../constant.dart';
 import '../../../domain/bloc/Notes/NoteEvents.dart';
-import '../../../enums.dart';
+import '../../../domain/enums/enums.dart';
 import '../../notes/notePage.dart';
 
 class HomeHeaderWidget extends StatelessWidget {
@@ -13,7 +13,6 @@ class HomeHeaderWidget extends StatelessWidget {
     required this.tabBar,
   });
 
-  final noteBloc = blocInject.getBloc<NoteBloc>();
   final TabController tabBar;
 
   @override
@@ -50,7 +49,7 @@ class HomeHeaderWidget extends StatelessWidget {
           TabBar(
               onTap: (value) {
                 if (value == 0) {
-                  noteBloc.eventSink
+                  locator.Get<NoteBloc>().eventSink
                       .add(SortNotesEvents(sort: TypeSort.title));
                 } else {}
               },

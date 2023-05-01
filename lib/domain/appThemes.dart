@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:notes_project/enums.dart';
-import 'constant.dart';
+import 'package:notes_project/domain/enums/enums.dart';
+import '../constant.dart';
 
 class AppThemes {
   static final appThemeData = {

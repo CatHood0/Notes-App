@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:notes_project/UI/notes/screens/DetailPage.dart';
 import 'package:notes_project/UI/notes/widget/listNoteWidget.dart';
 import 'package:notes_project/UI/notes/widget/popupOptions.dart';
+import 'package:notes_project/blocs/blocs.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
-import '../../blocs(Exports)/blocs.dart';
 
 class NotesPage extends StatefulWidget {
   const NotesPage({
@@ -16,7 +16,7 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
-  final noteBloc = blocInject.getBloc<NoteBloc>();
+  final NoteBloc noteBloc = locator.Get<NoteBloc>(); 
   final _searchController = TextEditingController(text: "");
   bool searchMode = false, userMostSearch = false;
   int quitCount = 0;
@@ -34,7 +34,7 @@ class _NotesPageState extends State<NotesPage> {
         if (quitCount > 1 && searchMode) {
           isSearcheable(searcheable: false);
           if (userMostSearch) {
-            noteBloc.eventSink.add(SearchNote(search: ""));
+            locator.Get<NoteBloc>().eventSink.add(SearchNote(search: ""));
           }
           return false;
         } else if (!searchMode) {

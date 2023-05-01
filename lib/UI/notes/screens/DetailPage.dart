@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/intl.dart';
+import 'package:notes_project/UI/home/controller/HomeController.dart';
 import 'package:notes_project/UI/notes/widget/DialogProperties.dart';
 import 'package:notes_project/UI/notes/widget/dateTimeTextDetail.dart';
 import 'package:notes_project/constant.dart';
+import 'package:notes_project/db%20helper/db_helper.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
@@ -22,7 +24,8 @@ class DetailPage extends StatefulWidget {
 }
 
 class _ReadPageState extends State<DetailPage> {
-  final NoteBloc bloc = blocInject.getBloc<NoteBloc>();
+  final NoteBloc bloc = locator.Get<NoteBloc>();
+  final HomeController homeController = HomeController(db: NoteDao());
   late Note? _Note;
   late TextEditingController _titleController;
   late bool _editMode;
@@ -31,6 +34,35 @@ class _ReadPageState extends State<DetailPage> {
   final FocusNode _focusNodeTitle = FocusNode(),
       _focusNodeContent = FocusNode();
   int _quitCount = 0;
+
+  @override
+  void initState() {
+    _Note = widget.note;
+    _indexNote = widget.index;
+    if (_Note?.title != null && _Note?.content != null) {
+      _titleController = TextEditingController(text: _Note!.title);
+      _quillController = QuillController(
+          document: Document.fromJson(jsonDecode(_Note!.content)),
+          selection: const TextSelection.collapsed(offset: 0));
+    } else {
+      _titleController = TextEditingController(text: "");
+      _quillController = QuillController.basic();
+    }
+    _editMode = widget.edit;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    _Note = null;
+    _indexNote = null;
+    _titleController.clear();
+    _focusNodeContent.dispose();
+    _focusNodeTitle.dispose();
+    _quitCount = 0;
+    _quillController.clear();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,11 +80,7 @@ class _ReadPageState extends State<DetailPage> {
       },
       child: Scaffold(
         bottomSheet: Container(
-          child: QuillToolbar.basic(
-            toolbarSectionSpacing: 10,
-            controller: _quillController,
-            multiRowsDisplay: false,
-          ),
+          child: ToolBarWidget(quillController: _quillController),
         ),
         appBar: AppBar(
           elevation: 5,
@@ -165,35 +193,6 @@ class _ReadPageState extends State<DetailPage> {
     );
   }
 
-  @override
-  void initState() {
-    _Note = widget.note;
-    _indexNote = widget.index;
-    if (_Note?.title != null && _Note?.content != null) {
-      _titleController = TextEditingController(text: _Note!.title);
-      _quillController = QuillController(
-          document: Document.fromJson(jsonDecode(_Note!.content)),
-          selection: const TextSelection.collapsed(offset: 0));
-    } else {
-      _titleController = TextEditingController(text: "");
-      _quillController = QuillController.basic();
-    }
-    _editMode = widget.edit;
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    _Note = null;
-    _indexNote = null;
-    _titleController.clear();
-    _focusNodeContent.dispose();
-    _focusNodeTitle.dispose();
-    _quitCount = 0;
-    _quillController.clear();
-    super.dispose();
-  }
-
   void onEdit({bool? edit}) {
     setState(() {
       _editMode = edit!;
@@ -205,7 +204,7 @@ class _ReadPageState extends State<DetailPage> {
     _focusNodeTitle.unfocus();
   }
 
-  void createNote() {
+  void createNote() async {
     if (_Note != null ||
         widget.note != null && _indexNote != null ||
         widget.index != null) {
@@ -217,21 +216,42 @@ class _ReadPageState extends State<DetailPage> {
         update: _Note!.updates + 1,
         dateTimeModification: DateTime.now(),
       );
-      bloc.eventSink.add(UpdateNote(index: _indexNote!, notes: _Note!));
+      homeController.updateLocalNote(_Note!);
+      locator.Get<NoteBloc>().eventSink.add(UpdateNote(index: _indexNote!, notes: _Note!));
     } else if (_indexNote == null) {
-      _Note = Note(
+      Note note = Note(
           title: _titleController.text != ""
               ? _titleController.text
               : "Untitle note",
           content: jsonEncode(_quillController.document.toDelta().toJson()),
           createDate: _Note?.createDate ?? DateTime.now(),
-          key: _Note?.key ?? '5',
           favorite: true,
-          tag: ['anything'],
+          tag: 'anything',
           updates: 0,
           dateTimeModification: DateTime.now());
-      bloc.eventSink.add(AddNote(note: _Note!));
+
+      int id = await homeController.insertLocalNote(note);
+      _Note = note.copyWith(key: id);
+      locator.Get<NoteBloc>().eventSink.add(AddNote(note: _Note!));
       _indexNote = bloc.getIndex();
     }
+  }
+}
+
+class ToolBarWidget extends StatelessWidget {
+  const ToolBarWidget({
+    super.key,
+    required QuillController quillController,
+  }) : _quillController = quillController;
+
+  final QuillController _quillController;
+
+  @override
+  Widget build(BuildContext context) {
+    return QuillToolbar.basic(
+      toolbarSectionSpacing: 10,
+      controller: _quillController,
+      multiRowsDisplay: false,
+    );
   }
 }

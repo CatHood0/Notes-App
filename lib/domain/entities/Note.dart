@@ -1,11 +1,10 @@
 import 'dart:convert';
-
 class Note {
-  String key;
+  int? key;
   String title;
   String content;
   int updates;
-  List<String>? tag;
+  String? tag;
   bool? createLocally;
   bool favorite;
   DateTime createDate;
@@ -15,20 +14,20 @@ class Note {
       {required this.title,
       required this.content,
       required this.createDate,
-      required this.key,
       required this.favorite,
       required this.updates,
       required this.dateTimeModification,
       this.createLocally = false,
-      this.tag})
-      : assert(title.isNotEmpty),
-        assert(key.isNotEmpty);
+      this.tag,
+      this.key,
+      })
+      : assert(title.isNotEmpty);
 
   Note copyWith({
-    String? key,
+    int? key,
     String? title,
     String? content,
-    List<String>? tag,
+    String? tag,
     bool? favorite,
     bool? createLocally,
     int? update,
@@ -50,31 +49,28 @@ class Note {
 
   Map<String, dynamic> toMap() {
     return {
-      'key': key,
       'title': title,
       'content': content,
-      'is_favorite': favorite,
-      'createDate': createDate,
+      'favorite': favorite==true ? 1 : 0,
+      'create_date': createDate.toString(),
       'updates': updates,
-      'date_modification': dateTimeModification,
-      'create_locally': createLocally,
-      'tags': tag,
+      'modification_date': dateTimeModification.toString(),
+      'create_locally': createLocally==true ? 1 : 0,
+      'tag': tag,
     };
   }
 
   factory Note.fromMap(Map<String, dynamic> map) {
     return Note(
-      key: map['key'] as String,
+      key: map['id'] as int,
       title: map['title'] as String,
       content: map['content'] as String,
-      tag: map['tags'] != null
-          ? List<String>.from((map['tags'] as List<String>))
-          : null,
-      favorite: map['is_favorite'] as bool,
-      createDate: DateTime.fromMillisecondsSinceEpoch(map['createDate'] as int),
+      tag: map['tag'],
+      favorite: map['favorite']==1 ? true : false,
+      createDate: DateTime.parse(map['create_date'] as String),
       updates: map['updates'],
-      dateTimeModification: DateTime.fromMillisecondsSinceEpoch(map['date_modification'] as int),
-      createLocally: map['createLocally'] as bool,
+      dateTimeModification: DateTime.parse(map['modification_date'] as String),
+      createLocally: map['create_locally']==1 ? true : false,
     );
   }
 

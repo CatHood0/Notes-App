@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/main.dart';
-import '../blocs(Exports)/blocs.dart';
+import '../blocs/blocs.dart';
 import '../domain/bloc/Store/StoreState.dart';
 import '../UI/notes/widget/listNoteWidget.dart';
 
@@ -9,7 +9,7 @@ class TemplateListWidget extends StatelessWidget {
     super.key,
   });
 
-  final StoreBloc storeBloc = blocInject.getBloc<StoreBloc>();
+  final StoreBloc storeBloc = locator.Get<StoreBloc>();
 
   @override
   Widget build(BuildContext context) {

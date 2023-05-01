@@ -1,6 +1,6 @@
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
-import '../../enums.dart';
+import '../enums/enums.dart';
 
 class User extends Equatable {
   final String id;

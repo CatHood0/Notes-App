@@ -4,7 +4,7 @@ import 'package:notes_project/domain/entities/User.dart';
 import 'package:timeago/timeago.dart';
 import 'data/response/response.dart';
 import 'domain/entities/Note.dart';
-import 'enums.dart';
+import 'domain/enums/enums.dart';
 
 const primaryColor = Color(0xFFefc3ff);
 const secundaryColor = Color(0xFFd7c3ff);
