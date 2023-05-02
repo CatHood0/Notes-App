@@ -18,12 +18,12 @@ class AccountRepository implements IAccountRepo{
   }
 
   @override
-  Future<void> create({required User obj}) {
+  Future<int> create({required User obj}) {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> delete({required String idObj}) {
+  Future<void> delete({required int idObj}) {
     throw UnimplementedError();
   }
 

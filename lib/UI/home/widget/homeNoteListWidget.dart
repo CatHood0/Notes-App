@@ -23,6 +23,7 @@ class NoteListWidget extends StatelessWidget {
             builder: (context, snapshot) {
               if (snapshot.data is LoadedNotes) {
                 final data = (snapshot.data as LoadedNotes).notes;
+                final show = (snapshot.data as LoadedNotes).showStar;
                 return ListView.builder(
                     physics: const AlwaysScrollableScrollPhysics(),
                     scrollDirection: Axis.horizontal,
@@ -36,6 +37,7 @@ class NoteListWidget extends StatelessWidget {
                           data[index],
                           index,
                           isHomePage: true,
+                          showStart: show,
                         ),
                       );
                     });

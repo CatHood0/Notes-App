@@ -14,7 +14,7 @@ class StoreRepository implements IStoreRepository{
   }
 
   @override
-  Future<void> delete({required String idObj}) {
+  Future<void> delete({required int idObj}) {
     throw UnimplementedError();
   }
 

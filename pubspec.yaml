@@ -59,6 +59,7 @@ dependencies:
   dio: ^5.1.1  
   mockito: ^5.4.0 
   bloc_test: ^9.1.1
+  supabase_flutter: ^1.8.1
 
 dev_dependencies:
   flutter_test:

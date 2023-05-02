@@ -5,7 +5,8 @@ import 'package:notes_project/UI/home/controller/HomeController.dart';
 import 'package:notes_project/UI/notes/widget/DialogProperties.dart';
 import 'package:notes_project/UI/notes/widget/dateTimeTextDetail.dart';
 import 'package:notes_project/constant.dart';
-import 'package:notes_project/db%20helper/db_helper.dart';
+import 'package:notes_project/data/local%20/sqflite/note_local_repo.dart';
+import 'package:notes_project/helper/db_helper.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
@@ -25,7 +26,7 @@ class DetailPage extends StatefulWidget {
 
 class _ReadPageState extends State<DetailPage> {
   final NoteBloc bloc = locator.Get<NoteBloc>();
-  final HomeController homeController = HomeController(db: NoteDao());
+  final HomeController homeController = HomeController(db: NoteLocalRepository());
   late Note? _Note;
   late TextEditingController _titleController;
   late bool _editMode;
@@ -216,7 +217,7 @@ class _ReadPageState extends State<DetailPage> {
         update: _Note!.updates + 1,
         dateTimeModification: DateTime.now(),
       );
-      homeController.updateLocalNote(_Note!);
+      homeController.updateLocalNote(note:_Note!);
       locator.Get<NoteBloc>().eventSink.add(UpdateNote(index: _indexNote!, notes: _Note!));
     } else if (_indexNote == null) {
       Note note = Note(
@@ -225,12 +226,12 @@ class _ReadPageState extends State<DetailPage> {
               : "Untitle note",
           content: jsonEncode(_quillController.document.toDelta().toJson()),
           createDate: _Note?.createDate ?? DateTime.now(),
-          favorite: true,
+          favorite: false,
           tag: 'anything',
           updates: 0,
           dateTimeModification: DateTime.now());
 
-      int id = await homeController.insertLocalNote(note);
+      int id = await homeController.insertLocalNote(note: note);
       _Note = note.copyWith(key: id);
       locator.Get<NoteBloc>().eventSink.add(AddNote(note: _Note!));
       _indexNote = bloc.getIndex();

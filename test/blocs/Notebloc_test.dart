@@ -1,11 +1,12 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:notes_project/data/local%20/sqflite/note_local_repo.dart';
 import 'package:notes_project/data/repositories/note_repository.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/domain/entities/Note.dart';
 
 void main() {
-  final NoteBloc bloc = NoteBloc(repository: NoteRepository());
+  final NoteBloc bloc = NoteBloc(repository: NoteRepository(), localRepository: NoteLocalRepository());
   bloc.eventSink.add(AddNote(
       note: Note(
           title: "Hello",

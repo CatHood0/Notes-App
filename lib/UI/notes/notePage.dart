@@ -3,6 +3,7 @@ import 'package:notes_project/UI/notes/screens/DetailPage.dart';
 import 'package:notes_project/UI/notes/widget/listNoteWidget.dart';
 import 'package:notes_project/UI/notes/widget/popupOptions.dart';
 import 'package:notes_project/blocs/blocs.dart';
+import 'package:notes_project/constant.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
 
@@ -16,9 +17,10 @@ class NotesPage extends StatefulWidget {
 }
 
 class _NotesPageState extends State<NotesPage> {
-  final NoteBloc noteBloc = locator.Get<NoteBloc>(); 
+  final NoteBloc noteBloc = locator.Get<NoteBloc>();
   final _searchController = TextEditingController(text: "");
-  bool searchMode = false, userMostSearch = false;
+  bool searchMode = false,
+      userMostSearch = false; //when the user is in the search page
   int quitCount = 0;
 
   void isSearcheable({required bool searcheable}) {
@@ -31,13 +33,15 @@ class _NotesPageState extends State<NotesPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (quitCount > 1 && searchMode) {
+        if (quitCount > 0 && searchMode || userMostSearch) {
           isSearcheable(searcheable: false);
           if (userMostSearch) {
+            userMostSearch = false;
             locator.Get<NoteBloc>().eventSink.add(SearchNote(search: ""));
           }
           return false;
-        } else if (!searchMode) {
+        } else if (!searchMode || !userMostSearch) {
+          quitCount = 0;
           return true;
         }
         quitCount++;
@@ -67,28 +71,13 @@ class _NotesPageState extends State<NotesPage> {
                             hintText: "Example: cookies",
                             hintStyle: TextStyle(color: Colors.grey),
                           ),
+                          onChanged: (value) {
+                            searchMode = true;
+                          },
                         ),
                   elevation: 0,
                   leading: const PopupMenu(),
                   actions: [
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      splashRadius: 20,
-                      tooltip: "Add a new note",
-                      color: const Color.fromARGB(255, 255, 255, 255),
-                      onPressed: () async {
-                        _searchController.clear();
-                        isSearcheable(searcheable: false);
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => const DetailPage(
-                                      null,
-                                      null,
-                                      edit: true,
-                                    )));
-                      },
-                    ),
                     IconButton(
                       alignment: Alignment.centerRight,
                       tooltip: "Search",
@@ -101,7 +90,6 @@ class _NotesPageState extends State<NotesPage> {
                           noteBloc.eventSink
                               .add(SearchNote(search: _searchController.text));
                           userMostSearch = true;
-                          _searchController.clear();
                           isSearcheable(searcheable: false);
                         }
                       },
@@ -113,6 +101,26 @@ class _NotesPageState extends State<NotesPage> {
         body: SafeArea(
           child: ListNotesBlocWidget(),
         ),
+        floatingActionButton: FloatingActionButton.extended(
+          elevation: 5,
+          backgroundColor: secundaryColor,
+          shape: StadiumBorder(),
+            onPressed: () {
+              _searchController.clear();
+              isSearcheable(searcheable: false);
+              userMostSearch = false;
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => const DetailPage(
+                            null,
+                            null,
+                            edit: true,
+                          )));
+            },
+            label: Text(
+              'Add Note',
+            )),
       ),
     );
   }

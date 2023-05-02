@@ -19,12 +19,14 @@ class _ListNotesBlocWidgetState extends State<ListNotesBlocWidget> {
   final NoteBloc bloc = locator.Get<NoteBloc>();
   @override
   void initState() {
+    // noteBloc.eventSink.add(SortNotesEvents(sort: CurrentTypeSortSelectedFromPreferences));
     bloc.eventSink.add(RestoreNoteFiles());
     super.initState();
   }
 
   @override
   void dispose() {
+    // noteBloc.eventSink.add(SortNotesEvents(sort: TypeSort.recent));
     super.dispose();
   }
 
@@ -37,7 +39,11 @@ class _ListNotesBlocWidgetState extends State<ListNotesBlocWidget> {
         builder: (context, snapshot) {
           if (snapshot.data is LoadedNotes) {
             final data = (snapshot.data as LoadedNotes).notes;
-            return GridNotesWidget(data: data);
+            final show = (snapshot.data as LoadedNotes).showStar;
+            return GridNotesWidget(
+              data: data,
+              showStar: show,
+            );
           } else if (snapshot.data is LoadingNotes) {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.data is NoteNotFound) {
@@ -69,9 +75,7 @@ class ErrorMessageWidget extends StatelessWidget {
       child: Text(
         error,
         style: const TextStyle(
-            color: Colors.white,
-            fontSize: 25,
-            fontWeight: FontWeight.bold),
+            color: Colors.white, fontSize: 25, fontWeight: FontWeight.bold),
       ),
     );
   }
@@ -81,22 +85,24 @@ class GridNotesWidget extends StatelessWidget {
   const GridNotesWidget({
     super.key,
     required this.data,
+    required this.showStar,
   });
 
+  final bool showStar;
   final List<Note> data;
 
   @override
   Widget build(BuildContext context) {
     return GridView.builder(
       gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 2,
-            childAspectRatio: 0.65,
-          ),
+        crossAxisCount: 2,
+        childAspectRatio: 0.65,
+      ),
       itemCount: data.length,
       itemBuilder: (context, index) {
         return Padding(
           padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-          child: NoteCard(data[index], index),
+          child: NoteCard(data[index], index, showStart: showStar),
         );
       },
     );

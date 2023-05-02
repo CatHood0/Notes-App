@@ -21,20 +21,17 @@ class HomeHeaderWidget extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            padding: const EdgeInsets.symmetric(
-                horizontal: 10, vertical: 10),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             alignment: Alignment.centerLeft,
             child: ButtonNotesWidget(
               buttonStyle: const ButtonStyle(
-                  backgroundColor:
-                      MaterialStatePropertyAll(primaryColor),
+                  backgroundColor: MaterialStatePropertyAll(primaryColor),
                   animationDuration: Duration(seconds: 1)),
               message: 'Notes',
-              onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const NotesPage()));
+              onPressed: () async {
+                await Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => const NotesPage()));
+                tabBar.index = 0;
               },
               textStyle: TextStyle(
                 fontSize: 17,
@@ -49,7 +46,8 @@ class HomeHeaderWidget extends StatelessWidget {
           TabBar(
               onTap: (value) {
                 if (value == 0) {
-                  locator.Get<NoteBloc>().eventSink
+                  locator.Get<NoteBloc>()
+                      .eventSink
                       .add(SortNotesEvents(sort: TypeSort.title));
                 } else {}
               },

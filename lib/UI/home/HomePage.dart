@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:notes_project/UI/home/widget/homeAppBarWidget.dart';
 import 'package:notes_project/UI/home/widget/homeHeaderWidget.dart';
 import 'package:notes_project/UI/home/widget/homeNoteListWidget.dart';
 import 'package:notes_project/Widgets/snackMessage.dart';
-import 'package:notes_project/db%20helper/db_helper.dart';
+import 'package:notes_project/helper/db_helper.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/domain/bloc/Store/StoreEvents.dart';
 import 'package:notes_project/main.dart';
-import 'dart:async';
-import 'package:connectivity_plus/connectivity_plus.dart';
 import '../../blocs/blocs.dart';
+import 'dart:async';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             HomeAppBarWidget(now: now),
             HomeHeaderWidget(tabBar: tabBar),
             NoteListWidget(),
-            SliverToBoxAdapter(child: Text("Task")),
+            HomeHeaderSecundaryWidget(),
           ]),
     );
   }
@@ -85,5 +85,21 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
         backgroudColor: color,
       );
     }
+  }
+}
+
+class HomeHeaderSecundaryWidget extends StatefulWidget {
+  const HomeHeaderSecundaryWidget({
+    super.key,
+  });
+
+  @override
+  State<HomeHeaderSecundaryWidget> createState() => _HomeHeaderSecundaryWidgetState();
+}
+
+class _HomeHeaderSecundaryWidgetState extends State<HomeHeaderSecundaryWidget> {
+  @override
+  Widget build(BuildContext context) {
+    return SliverToBoxAdapter(child: Text("Task"));
   }
 }

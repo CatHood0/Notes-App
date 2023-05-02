@@ -28,6 +28,11 @@ class AppThemes {
         indicatorColor: primaryColor,
         labelColor: primaryColor, 
       ),
+      useMaterial3: true,
+      tooltipTheme: TooltipThemeData(
+        textStyle: TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.bold),
+        waitDuration: const Duration(seconds: 1),
+      ),
       buttonTheme: ButtonThemeData(
         buttonColor: buttonGeneralColor,
         splashColor: Colors.grey
@@ -54,6 +59,9 @@ class AppThemes {
       bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           backgroundColor: Colors.grey, unselectedItemColor: Colors.white),
     ),
+
+
+
     AppTheme.lightTheme: ThemeData(
       primarySwatch: Colors.grey,
       primaryColor: Colors.white,

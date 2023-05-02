@@ -1,5 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:notes_project/UI/home/controller/HomeController.dart';
+import 'package:notes_project/data/local%20/sqflite/note_local_repo.dart';
 import 'package:notes_project/main.dart';
 import '../domain/entities/Note.dart';
 import '../UI/notes/screens/DetailPage.dart';
@@ -10,8 +12,10 @@ import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 class NoteCard extends StatefulWidget {
   final Note note;
   final int index;
+  final bool showStart;
   final bool isHomePage;
-  const NoteCard(this.note, this.index, {super.key, this.isHomePage = false});
+  const NoteCard(this.note, this.index,
+      {super.key, this.isHomePage = false, this.showStart = false});
 
   @override
   State<NoteCard> createState() => _NoteCardState();
@@ -44,7 +48,9 @@ class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
       width: MediaQuery.of(context).size.width * 0.50,
       child: GestureDetector(
         onLongPress: () {
-          locator.Get<NoteBloc>().eventSink.add(DeleteNote(index: widget.index));
+          locator.Get<NoteBloc>()
+              .eventSink
+              .add(DeleteNote(index: widget.index));
         },
         onTap: () async {
           Navigator.push(
@@ -65,7 +71,8 @@ class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
             children: [
               NoteTitleWidget(
                   widget: widget.note, isHomePage: widget.isHomePage),
-              DateAndStartNoteWidget(
+              DateAndStarNoteWidget(
+                showStar: widget.showStart,
                 noteCard: widget,
                 isHomePage: widget.isHomePage,
               ),
@@ -81,22 +88,31 @@ class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
   }
 }
 
-class DateAndStartNoteWidget extends StatelessWidget {
-  const DateAndStartNoteWidget({
+class DateAndStarNoteWidget extends StatefulWidget {
+  const DateAndStarNoteWidget({
     super.key,
+    required this.showStar,
     required this.noteCard,
     required this.isHomePage,
   });
 
+  final bool showStar;
   final NoteCard noteCard;
   final bool isHomePage;
 
   @override
+  State<DateAndStarNoteWidget> createState() => _DateAndStarNoteWidgetState();
+}
+
+class _DateAndStarNoteWidgetState extends State<DateAndStarNoteWidget> {
+  @override
   Widget build(BuildContext context) {
+    final HomeController _homeController =
+        HomeController(db: NoteLocalRepository());
     return Positioned(
-      left: !isHomePage ? 10 : 10,
-      right: !isHomePage ? -5 : -5,
-      top: !isHomePage ? 200 : 120,
+      left: !widget.isHomePage ? 10 : 10,
+      right: !widget.isHomePage ? -5 : -5,
+      top: !widget.isHomePage ? 200 : 120,
       bottom: 0,
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
@@ -104,25 +120,29 @@ class DateAndStartNoteWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Text(timeago.format(noteCard.note.dateTimeModification)),
-            IconButton(
-              onPressed: () {
-                final favorite = !noteCard.note.favorite;
-                locator.Get<NoteBloc>().eventSink.add(
-                    FavoriteNote(index: noteCard.index, isFavorite: favorite));
-              },
-              icon: noteCard.note.favorite
-                  ? const Icon(
-                      Icons.star,
-                      color: Color.fromARGB(255, 240, 153, 255),
-                    )
-                  : const Icon(
-                      Icons.star_outline,
-                      color: Color.fromARGB(255, 240, 153, 255),
-                    ),
-              splashRadius: 20,
-              tooltip: "Tap your favorite note",
-            ),
+            Text(timeago.format(widget.noteCard.note.dateTimeModification)),
+            if (widget.showStar)
+              IconButton(
+                onPressed: () {
+                  final favorite =
+                      !widget.noteCard.note.favorite ? true : false;
+                  Note note = widget.noteCard.note.copyWith(favorite: favorite);
+                  _homeController.updateLocalNote(note: note);
+                  locator.Get<NoteBloc>().eventSink.add(FavoriteNote(
+                      index: widget.noteCard.index, isFavorite: note.favorite));
+                },
+                icon: widget.noteCard.note.favorite
+                    ? const Icon(
+                        Icons.star,
+                        color: Color.fromARGB(255, 240, 153, 255),
+                      )
+                    : const Icon(
+                        Icons.star_outline,
+                        color: Color.fromARGB(255, 240, 153, 255),
+                      ),
+                splashRadius: 20,
+                tooltip: "Tap your favorite note",
+              ),
           ],
         ),
       ),

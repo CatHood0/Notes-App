@@ -4,20 +4,23 @@ import 'package:notes_project/domain/entities/User.dart';
 import 'package:timeago/timeago.dart';
 import 'data/response/response.dart';
 import 'domain/entities/Note.dart';
-import 'domain/enums/enums.dart';
 
 const primaryColor = Color(0xFFefc3ff);
-const secundaryColor = Color(0xFFd7c3ff);
+const secundaryColor = Color.fromARGB(255, 225, 143, 255);
 const appBarColor = Color(0xFF2c3e50);
 const letterColorLightTheme = Colors.black;
 const letterColorDarkTheme = Colors.white;
 const buttonGeneralColor = Color.fromARGB(255, 255, 171, 255);
 const double fontSizeTitles = 18.0;
 const double fontSizeContent = 16;
+const supabaseUrl = 'https://moqyeplsnwyhtekqdisw.supabase.co';
+const supabaseKey = String.fromEnvironment(
+    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vcXllcGxzbnd5aHRla3FkaXN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODI5MzcxMDIsImV4cCI6MTk5ODUxMzEwMn0.muS-QSw05hNAESfJ2v-bqQIqzQSCfcWVqyI8tmuQzL0');
 
 typedef StreamNoteEither = Stream<ResponseEither<String, List<Note>>>;
 typedef StreamUserEither = Stream<ResponseEither<String, User>>;
 typedef StreamStoreEither = Stream<ResponseEither<String, List<Template>>>;
+
 
 class MyCustomMessages implements LookupMessages {
   @override String prefixAgo() => '';

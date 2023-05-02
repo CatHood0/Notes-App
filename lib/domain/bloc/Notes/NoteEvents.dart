@@ -1,5 +1,6 @@
-import '../../enums/enums.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import '../../entities/Note.dart';
+import '../../enums/enums.dart';
 
 abstract class NoteEvent {}
 
@@ -33,6 +34,15 @@ class SortNotesEvents extends NoteEvent {
 }
 
 class RestoreNoteFiles extends NoteEvent {}
+
+
+class RestoreNoteFilesByIdFolder extends NoteEvent {
+  final int id;
+  RestoreNoteFilesByIdFolder({
+    required this.id,
+  });
+  
+}
 
 class UpdateNote extends NoteEvent {
   final int index;

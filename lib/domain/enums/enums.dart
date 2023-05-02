@@ -15,6 +15,9 @@ enum TypeSort {
   title,
   creation,
   modification,
+  recent,
+  suggested,
+  anything,
 }
 
 enum AppTheme{

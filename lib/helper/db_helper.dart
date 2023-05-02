@@ -1,7 +1,5 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-
 import '../domain/entities/Note.dart';
 import '../domain/entities/check.dart';
 
@@ -40,39 +38,6 @@ class DBHelper {
   }
 
   Future<void> closeDb() async => _db!.close();
-}
-
-class NoteDao {
-  late Database database;
-
-  Future<void> openDb() async {
-    database = await DBHelper.instance.database();
-  }
-
-  Future<int> insert(Note note) async {
-    return await database.insert(
-      'notes',
-      note.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  Future<void> update(Note note) async {
-    await database
-        .update('notes', note.toMap(), 
-        where: 'id = ?', 
-        whereArgs: [note.key]);
-  }
-
-  Future<void> closeConnection() async => database.close();
-
-  Future<List<Note>> getAllNotes() async {
-    final List<Map<String, dynamic>> maps = await database.query('notes');
-    return List.generate(maps.length, (i) {
-      print(maps[i]['id']);
-      return Note.fromMap(maps[i]);
-    });
-  }
 }
 
 class ChecklistDao {

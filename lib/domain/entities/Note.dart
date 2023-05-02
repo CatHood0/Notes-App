@@ -28,6 +28,7 @@ class Note {
     String? title,
     String? content,
     String? tag,
+    bool? pin,
     bool? favorite,
     bool? createLocally,
     int? update,

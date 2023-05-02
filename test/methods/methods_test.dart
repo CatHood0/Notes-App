@@ -1,8 +1,8 @@
 import 'dart:math';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:notes_project/data/repositories/Store_repository.dart';
 import 'package:notes_project/domain/entities/User.dart';
+import 'package:notes_project/domain/entities/folder.dart';
 import 'package:notes_project/domain/enums/enums.dart';
 import 'package:notes_project/injector/instance_injector.dart';
 import 'package:timeago/timeago.dart' as timeago;
@@ -10,6 +10,23 @@ import 'package:timeago/timeago.dart' as timeago;
 void main() {
   final Injector inject =
       Injector.singleton(); //we inject here our dependencies
+  List<Folder> sortNoteListByPin(List<Folder> list) {
+    List<Folder> pinnedNotes = [];
+    List<Folder> unpinnedNotes = [];
+
+    for (var note in list) {
+      if (note.isPin) {
+        pinnedNotes.add(note);
+      } else {
+        unpinnedNotes.add(note);
+      }
+    }
+
+    pinnedNotes.addAll(unpinnedNotes);
+
+    return pinnedNotes;
+  }
+
   test('should get to me a dependency that i want', () async {
     inject.registerInstance<StoreRepository>(instance: StoreRepository());
     final StoreRepository interface = inject.Get<StoreRepository>();
@@ -25,7 +42,8 @@ void main() {
       );
       return String.fromCharCodes(codeUnits);
     }
-      print(generateAsciiCode(20));
+
+    print(generateAsciiCode(20));
   });
 
   test("Should print a time ago from last year", () {
@@ -43,5 +61,32 @@ void main() {
         token: "",
         type: TypeUser.guess);
     expect(user.type.name, TypeUser.guess.name);
+  });
+
+  test('should sort my list by inPin type', () async {
+    List<Folder> list = [
+      Folder(
+          name: "Name",
+          descriptionFolder: "IsFolder",
+          isPin: false,
+          creation: DateTime.now()),
+      Folder(
+          name: "Name",
+          descriptionFolder: "IsFolder",
+          isPin: true,
+          creation: DateTime.now()),
+      Folder(
+          name: "Name",
+          descriptionFolder: "IsFolder",
+          isPin: true,
+          creation: DateTime.now()),
+      Folder(
+          name: "Name",
+          descriptionFolder: "IsFolder",
+          isPin: true,
+          creation: DateTime.now())
+    ];
+    var listSorted = sortNoteListByPin(list);
+    expect(listSorted, sortNoteListByPin(list));
   });
 }

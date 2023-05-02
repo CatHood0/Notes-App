@@ -1,20 +1,24 @@
-import '../../../db helper/db_helper.dart';
 import '../../../domain/entities/Note.dart';
+import '../../../domain/local repositories/note/INoteLocalRepo.dart';
 
 class HomeController{
 
-  final NoteDao db;
+  final INoteLocalRepository db;
 
   HomeController({required this.db}){
-    db.openDb();
+    db.openDatabase();
   } 
 
-  void updateLocalNote(Note note)async{
-    db.update(note);
+  void updateLocalNote({required Note note})async{
+    db.update(obj:note);
   }
 
-  Future<int> insertLocalNote(Note note)async{
-    return db.insert(note);
+  Future<int> insertLocalNote({required Note note})async{
+    return db.create(obj:note);
+  }
+
+  void deleteLocalNote({required int id}){
+    db.delete(id: id);
   }
 
 }

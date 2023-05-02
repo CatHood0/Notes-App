@@ -1,8 +1,7 @@
 import 'dart:ui';
 
 import 'package:notes_project/domain/entities/User.dart';
-import 'package:notes_project/domain/local%20repositories/IAccountLocalRepo.dart';
-import 'package:notes_project/domain/repository/account/IAccountRepo.dart';
+import 'package:notes_project/domain/local%20repositories/account/IAccountLocalRepo.dart';
 
 class AccountLocalRepository implements IAccountLocalRepository {
   @override
@@ -17,12 +16,12 @@ class AccountLocalRepository implements IAccountLocalRepository {
 
   //we must use the next methods, when the user has internet
   @override
-  Future<void> create({required User obj}) {//for when SignIn or SignUp
+  Future<int> create({required User obj}) {//for when SignIn or SignUp
     throw UnimplementedError();
   }
 
   @override
-  Future<void> delete({required String idObj}) {//When SignOut
+  Future<void> delete({required int id}) async{//When SignOut
     throw UnimplementedError();
   }
 
