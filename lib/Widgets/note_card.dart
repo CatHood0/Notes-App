@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 import 'package:notes_project/UI/home/controller/HomeController.dart';
 import 'package:notes_project/data/local%20/sqflite/note_local_repo.dart';
 import 'package:notes_project/main.dart';
 import '../domain/entities/Note.dart';
 import '../UI/notes/screens/DetailPage.dart';
-import 'package:timeago/timeago.dart' as timeago;
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 
@@ -26,16 +26,15 @@ class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
 
   @override
   void initState() {
-    if (widget.note.dateTimeModification.day <= 0)
       timer = Timer.periodic(Duration(minutes: 1), (timer) {
-        TimerFallBack();
+          TimerFallBack();
       });
     super.initState();
   }
 
   @override
   void dispose() {
-    if (widget.note.dateTimeModification.day <= 0) {
+    if (timer!.isActive) {
       timer!.cancel();
     }
     super.dispose();

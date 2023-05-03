@@ -6,13 +6,18 @@ import 'package:notes_project/UI/notes/widget/DialogProperties.dart';
 import 'package:notes_project/UI/notes/widget/dateTimeTextDetail.dart';
 import 'package:notes_project/constant.dart';
 import 'package:notes_project/data/local%20/sqflite/note_local_repo.dart';
-import 'package:notes_project/helper/db_helper.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
 import '../../../domain/entities/Note.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'dart:convert';
+
+final Map<String, String> fontFamilyOptions = {
+  'Arial': 'Arial',
+  'Times New Roman': 'Times New Roman',
+  'Monospace': 'Monospace',
+};
 
 class DetailPage extends StatefulWidget {
   final Note? note;
@@ -26,7 +31,8 @@ class DetailPage extends StatefulWidget {
 
 class _ReadPageState extends State<DetailPage> {
   final NoteBloc bloc = locator.Get<NoteBloc>();
-  final HomeController homeController = HomeController(db: NoteLocalRepository());
+  final HomeController homeController =
+      HomeController(db: NoteLocalRepository());
   late Note? _Note;
   late TextEditingController _titleController;
   late bool _editMode;
@@ -81,7 +87,23 @@ class _ReadPageState extends State<DetailPage> {
       },
       child: Scaffold(
         bottomSheet: Container(
-          child: ToolBarWidget(quillController: _quillController),
+          child: QuillToolbar.basic(
+            fontSizeValues: const {
+              'Title': '36',
+              'Subtitle': '29',
+              'Normal': '16',
+              'Medium': '22',
+              'Small': '13',
+            },
+            fontFamilyValues: fontFamilyOptions,
+            showLink: false,
+            showCodeBlock: false,
+            showDividers: false,
+            showInlineCode: false,
+            toolbarSectionSpacing: 10,
+            controller: _quillController,
+            multiRowsDisplay: false,
+          ),
         ),
         appBar: AppBar(
           elevation: 5,
@@ -160,31 +182,31 @@ class _ReadPageState extends State<DetailPage> {
               ),
               Container(
                 child: QuillEditor(
-                  detectWordBoundary: true,
                   placeholder: "Write something",
                   controller: _quillController,
                   autoFocus: false,
                   textCapitalization: TextCapitalization.sentences,
-                  onTapUp: (details, p1) {
-                    if (!_editMode) {
-                      onEdit(edit: true);
-                    }
-                    _focusNodeTitle.unfocus();
-                    return false;
+                  onSingleLongTapStart: (details, p1) {
+                    return focusEditor();
                   },
+                  onTapUp: (details, p1) {
+                    return focusEditor();
+                  },
+                  customStyles: DefaultStyles(
+                    // Define your own styles here
+                    sizeSmall: TextStyle(fontFamily: 'Arial', fontSize: 16),
+                  ),
                   onLaunchUrl: (String url) {
                     launchUrlString(url);
                   },
                   expands: false,
-                  customStyles:
-                      DefaultStyles(link: const TextStyle(color: Colors.white)),
                   focusNode: _focusNodeContent,
                   padding:
                       const EdgeInsets.only(bottom: 60, left: 15, right: 15),
                   readOnly: false,
                   scrollController: ScrollController(),
                   scrollable: false,
-                  enableSelectionToolbar: true,
+                  enableInteractiveSelection: true,
                 ),
               ),
             ],
@@ -198,6 +220,14 @@ class _ReadPageState extends State<DetailPage> {
     setState(() {
       _editMode = edit!;
     });
+  }
+
+  bool focusEditor() {
+    if (!_editMode) {
+      onEdit(edit: true);
+    }
+    _focusNodeTitle.unfocus();
+    return false;
   }
 
   void unFocusedFields() {
@@ -217,8 +247,10 @@ class _ReadPageState extends State<DetailPage> {
         update: _Note!.updates + 1,
         dateTimeModification: DateTime.now(),
       );
-      homeController.updateLocalNote(note:_Note!);
-      locator.Get<NoteBloc>().eventSink.add(UpdateNote(index: _indexNote!, notes: _Note!));
+      homeController.updateLocalNote(note: _Note!);
+      locator.Get<NoteBloc>()
+          .eventSink
+          .add(UpdateNote(index: _indexNote!, notes: _Note!));
     } else if (_indexNote == null) {
       Note note = Note(
           title: _titleController.text != ""
@@ -236,23 +268,5 @@ class _ReadPageState extends State<DetailPage> {
       locator.Get<NoteBloc>().eventSink.add(AddNote(note: _Note!));
       _indexNote = bloc.getIndex();
     }
-  }
-}
-
-class ToolBarWidget extends StatelessWidget {
-  const ToolBarWidget({
-    super.key,
-    required QuillController quillController,
-  }) : _quillController = quillController;
-
-  final QuillController _quillController;
-
-  @override
-  Widget build(BuildContext context) {
-    return QuillToolbar.basic(
-      toolbarSectionSpacing: 10,
-      controller: _quillController,
-      multiRowsDisplay: false,
-    );
   }
 }

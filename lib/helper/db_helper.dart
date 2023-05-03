@@ -1,6 +1,5 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import '../domain/entities/Note.dart';
 import '../domain/entities/check.dart';
 
 class DBHelper {

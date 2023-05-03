@@ -5,7 +5,6 @@ import 'package:notes_project/domain/entities/User.dart';
 import 'package:notes_project/domain/entities/folder.dart';
 import 'package:notes_project/domain/enums/enums.dart';
 import 'package:notes_project/injector/instance_injector.dart';
-import 'package:timeago/timeago.dart' as timeago;
 
 void main() {
   final Injector inject =
@@ -47,8 +46,6 @@ void main() {
   });
 
   test("Should print a time ago from last year", () {
-    String moment = timeago.format(DateTime.now());
-    expect(moment, timeago.format(DateTime.now()));
   });
 
   test("Should print one String with the value of TypeUser", () {

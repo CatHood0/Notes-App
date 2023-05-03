@@ -21,23 +21,22 @@ typedef StreamNoteEither = Stream<ResponseEither<String, List<Note>>>;
 typedef StreamUserEither = Stream<ResponseEither<String, User>>;
 typedef StreamStoreEither = Stream<ResponseEither<String, List<Template>>>;
 
-
 class MyCustomMessages implements LookupMessages {
   @override String prefixAgo() => '';
   @override String prefixFromNow() => '';
-  @override String suffixAgo() => '';
+  @override String suffixAgo() => 'ago';
   @override String suffixFromNow() => '';
   @override String lessThanOneMinute(int seconds) => 'just now';
   @override String aboutAMinute(int minutes) => '${minutes} moment';
   @override String minutes(int minutes) => '${minutes} min';
-  @override String aboutAnHour(int minutes) => '${minutes} min';
-  @override String hours(int hours) => '${hours} hour';
-  @override String aDay(int hours) => '${hours} hours';
-  @override String days(int days) => '${days} day';
+  @override String aboutAnHour(int minutes) => 'an hour';
+  @override String hours(int hours) => '${hours} hours';
+  @override String aDay(int hours) => 'a day';
+  @override String days(int days) => '$days days';
   @override String aboutAMonth(int days) => '${days} days';
   @override String months(int months) => '${months} month';
-  @override String aboutAYear(int year) => '${year} month';
-  @override String years(int years) => '${years} year';
+  @override String aboutAYear(int year) => '${year} year';
+  @override String years(int years) => '${years} years';
   @override String wordSeparator() => ' ';
 }
 

@@ -88,18 +88,15 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 }
 
-class HomeHeaderSecundaryWidget extends StatefulWidget {
+class HomeHeaderSecundaryWidget extends StatelessWidget {
   const HomeHeaderSecundaryWidget({
     super.key,
   });
 
   @override
-  State<HomeHeaderSecundaryWidget> createState() => _HomeHeaderSecundaryWidgetState();
-}
-
-class _HomeHeaderSecundaryWidgetState extends State<HomeHeaderSecundaryWidget> {
-  @override
   Widget build(BuildContext context) {
-    return SliverToBoxAdapter(child: Text("Task"));
+    return SliverToBoxAdapter(
+      child: Text("Task"),
+    );
   }
 }

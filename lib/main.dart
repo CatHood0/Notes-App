@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
-import 'package:notes_project/UI/R%20and%20B/RestoreBackupPage.dart';
 import 'package:notes_project/UI/home/HomePage.dart';
 import 'package:notes_project/constant.dart';
 import 'package:notes_project/data/local%20/sqflite/note_local_repo.dart';

@@ -1,5 +1,4 @@
 import 'package:notes_project/domain/entities/Note.dart';
-import 'package:notes_project/constant.dart';
 import 'package:notes_project/domain/local%20repositories/note/INoteLocalRepo.dart';
 import 'package:sqflite/sqflite.dart';
 

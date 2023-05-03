@@ -1,7 +1,5 @@
-import 'package:http/http.dart';
 import 'package:notes_project/constant.dart';
 import 'package:notes_project/domain/interface/ICrud.dart';
-
 import '../../entities/Template.dart';
 import '../../interface/ISearch.dart';
 

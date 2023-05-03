@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:notes_project/domain/entities/User.dart';
 import 'package:notes_project/domain/local%20repositories/account/IAccountLocalRepo.dart';
 

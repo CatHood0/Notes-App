@@ -113,6 +113,8 @@ class NoteBloc {
   List<Note> sortFolderListByPin(List<Note> list) {
     List<Note> favoriteNotes = [];
     List<Note> unFavoriteNotes = [];
+
+    //Separating notes in two different list
     for (var note in list) {
       if (note.favorite) {
         favoriteNotes.add(note);
@@ -120,6 +122,12 @@ class NoteBloc {
         unFavoriteNotes.add(note);
       }
     }
+
+    //order by
+    favoriteNotes.sort((a,b) => a.title.compareTo(b.title));
+    unFavoriteNotes.sort((a,b) => a.title.compareTo(b.title));
+
+    //Finally add whole notes into a same list
     favoriteNotes.addAll(unFavoriteNotes);
     return favoriteNotes;
   }
