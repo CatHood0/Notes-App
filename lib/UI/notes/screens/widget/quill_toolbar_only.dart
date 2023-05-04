@@ -21,6 +21,8 @@ class QuillToolBarWidgetOnlyUndoRedo extends StatelessWidget {
         color: Colors.black,
         showAlignmentButtons: false,
         showBoldButton: false,
+        showSubscript: false,
+        showSuperscript: false,
         showBackgroundColorButton: false,
         showCenterAlignment: false,
         showClearFormat: false,

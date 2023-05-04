@@ -1,6 +1,9 @@
+import 'dart:io';
+import 'dart:typed_data';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
 import 'package:intl/intl.dart';
 import 'package:notes_project/UI/home/controller/HomeController.dart';
 import 'package:notes_project/UI/notes/screens/widget/quill_toolbar_editor_widget.dart';
@@ -12,6 +15,8 @@ import 'package:notes_project/data/local%20/sqflite/note_local_repo.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 import '../../../domain/entities/Note.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'dart:convert';
@@ -166,6 +171,10 @@ class _ReadPageState extends State<DetailPage> {
                   placeholder: "Write something",
                   controller: _quillController,
                   autoFocus: false,
+                  embedBuilders: [
+                    ...FlutterQuillEmbeds.builders(),
+                  ],
+                  onImagePaste: _onImagePaste,
                   textCapitalization: TextCapitalization.sentences,
                   onSingleLongTapStart: (details, p1) {
                     return focusEditor();
@@ -211,9 +220,9 @@ class _ReadPageState extends State<DetailPage> {
     });
   }
 
-  void unFocusNode(FocusNode node){
+  void unFocusNode(FocusNode node) {
     setState(() {
-      node.unfocus();  
+      node.unfocus();
     });
   }
 
@@ -260,5 +269,14 @@ class _ReadPageState extends State<DetailPage> {
       locator.Get<NoteBloc>().eventSink.add(AddNote(note: _Note!));
       _indexNote = bloc.getIndex();
     }
+  }
+
+  Future<String> _onImagePaste(Uint8List imageBytes) async {
+    // Saves the image to applications directory
+    final appDocDir = await getApplicationDocumentsDirectory();
+    final file = await File(
+            '${appDocDir.path}/${basename('${DateTime.now().millisecondsSinceEpoch}.png')}')
+        .writeAsBytes(imageBytes, flush: true);
+    return file.path.toString();
   }
 }
