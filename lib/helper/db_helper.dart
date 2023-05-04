@@ -36,7 +36,7 @@ class DBHelper {
     );
   }
 
-  Future<void> closeDb() async => _db!.close();
+  Future<void> closeDatabase() async => _db!.close();
 }
 
 class ChecklistDao {

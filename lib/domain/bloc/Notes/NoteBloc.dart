@@ -122,12 +122,7 @@ class NoteBloc {
         unFavoriteNotes.add(note);
       }
     }
-
-    //order by
-    favoriteNotes.sort((a,b) => a.title.compareTo(b.title));
-    unFavoriteNotes.sort((a,b) => a.title.compareTo(b.title));
-
-    //Finally add whole notes into a same list
+    
     favoriteNotes.addAll(unFavoriteNotes);
     return favoriteNotes;
   }

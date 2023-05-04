@@ -26,9 +26,9 @@ class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
 
   @override
   void initState() {
-      timer = Timer.periodic(Duration(minutes: 1), (timer) {
-          TimerFallBack();
-      });
+    timer = Timer.periodic(Duration(minutes: 1), (timer) {
+      TimerFallBack();
+    });
     super.initState();
   }
 
@@ -108,42 +108,35 @@ class _DateAndStarNoteWidgetState extends State<DateAndStarNoteWidget> {
   Widget build(BuildContext context) {
     final HomeController _homeController =
         HomeController(db: NoteLocalRepository());
-    return Positioned(
-      left: !widget.isHomePage ? 10 : 10,
-      right: !widget.isHomePage ? -5 : -5,
-      top: !widget.isHomePage ? 200 : 120,
-      bottom: 0,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 5),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Text(timeago.format(widget.noteCard.note.dateTimeModification)),
-            if (widget.showStar)
-              IconButton(
-                onPressed: () {
-                  final favorite =
-                      !widget.noteCard.note.favorite ? true : false;
-                  Note note = widget.noteCard.note.copyWith(favorite: favorite);
-                  _homeController.updateLocalNote(note: note);
-                  locator.Get<NoteBloc>().eventSink.add(FavoriteNote(
-                      index: widget.noteCard.index, isFavorite: note.favorite));
-                },
-                icon: widget.noteCard.note.favorite
-                    ? const Icon(
-                        Icons.star,
-                        color: Color.fromARGB(255, 240, 153, 255),
-                      )
-                    : const Icon(
-                        Icons.star_outline,
-                        color: Color.fromARGB(255, 240, 153, 255),
-                      ),
-                splashRadius: 20,
-                tooltip: "Tap your favorite note",
-              ),
-          ],
-        ),
+    return Container(
+      padding: const EdgeInsets.only(left: 10),
+      alignment: Alignment.bottomLeft,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(timeago.format(widget.noteCard.note.dateTimeModification)),
+          if (widget.showStar)
+            IconButton(
+              onPressed: () {
+                final favorite = !widget.noteCard.note.favorite ? true : false;
+                Note note = widget.noteCard.note.copyWith(favorite: favorite);
+                _homeController.updateLocalNote(note: note);
+                locator.Get<NoteBloc>().eventSink.add(FavoriteNote(
+                    index: widget.noteCard.index, isFavorite: note.favorite));
+              },
+              icon: widget.noteCard.note.favorite
+                  ? const Icon(
+                      Icons.star,
+                      color: Color.fromARGB(255, 240, 153, 255),
+                    )
+                  : const Icon(
+                      Icons.star_outline,
+                      color: Color.fromARGB(255, 240, 153, 255),
+                    ),
+              splashRadius: 20,
+              tooltip: "Tap your favorite note",
+            ),
+        ],
       ),
     );
   }
@@ -161,66 +154,19 @@ class NoteTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      top: 0,
-      left: 0,
-      right: widget.title.length < 15 ? 75 : 0,
-      bottom: calculateSizeTitleNoteCard(
-          title: widget.title, isHomePage: isHomePage),
-      child: Container(
-          padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
-          child: Center(
-            child: Text(
-              widget.title,
-              style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: !isHomePage ? 18 : 16),
-              maxLines: !isHomePage ? 3 : 2,
-              overflow: TextOverflow.ellipsis,
-              textAlign: TextAlign.start,
-            ),
-          )),
+    return Container(
+      alignment: Alignment.topLeft,
+      padding: const EdgeInsets.symmetric(vertical: 5, horizontal: 10),
+      child: Text(
+        widget.title,
+        style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.bold,
+            fontSize: !isHomePage ? 18 : 16),
+        maxLines: !isHomePage ? 3 : 2,
+        overflow: TextOverflow.ellipsis,
+        textAlign: TextAlign.start,
+      ),
     );
-  }
-
-  double calculateSizeTitleNoteCard(
-      {required String title, required bool isHomePage}) {
-    //For notePage
-    if (title.trim().length < 10 && title.trim().length > 1 && !isHomePage) {
-      return 190;
-    } else if (title.trim().length < 15 && !isHomePage) {
-      return 190;
-    } else if (title.trim().length > 16 &&
-        title.trim().length < 25 &&
-        !isHomePage) {
-      return 170;
-    } else if (title.trim().length > 25 &&
-        title.trim().length < 30 &&
-        !isHomePage) {
-      return 170;
-    } else if (title.trim().length > 31 &&
-        title.trim().length < 40 &&
-        !isHomePage) {
-      return 140;
-    }
-
-    //For HomePage
-    if (title.trim().length < 10 && title.trim().length > 1 && isHomePage) {
-      return 130;
-    } else if (title.trim().length < 15 && isHomePage) {
-      return 110;
-    } else if (title.trim().length > 16 &&
-        title.trim().length < 25 &&
-        isHomePage) {
-      return 115;
-    } else if (title.trim().length > 25 &&
-        title.trim().length < 30 &&
-        isHomePage) {
-      return 110;
-    } else if (title.trim().length > 31 && isHomePage) {
-      return 110;
-    }
-    return 160;
   }
 }

@@ -76,7 +76,6 @@ class _NotesPageState extends State<NotesPage> {
                           },
                         ),
                   elevation: 0,
-                  leading: const PopupMenu(),
                   actions: [
                     IconButton(
                       alignment: Alignment.centerRight,

@@ -21,22 +21,28 @@ typedef StreamNoteEither = Stream<ResponseEither<String, List<Note>>>;
 typedef StreamUserEither = Stream<ResponseEither<String, User>>;
 typedef StreamStoreEither = Stream<ResponseEither<String, List<Template>>>;
 
+final Map<String, String> fontFamilyOptions = {
+  'Arial': 'Arial',
+  'Times New Roman': 'Times New Roman',
+  'Monospace': 'Monospace',
+};
+
 class MyCustomMessages implements LookupMessages {
   @override String prefixAgo() => '';
   @override String prefixFromNow() => '';
-  @override String suffixAgo() => 'ago';
+  @override String suffixAgo() => '';
   @override String suffixFromNow() => '';
   @override String lessThanOneMinute(int seconds) => 'just now';
-  @override String aboutAMinute(int minutes) => '${minutes} moment';
-  @override String minutes(int minutes) => '${minutes} min';
-  @override String aboutAnHour(int minutes) => 'an hour';
-  @override String hours(int hours) => '${hours} hours';
-  @override String aDay(int hours) => 'a day';
-  @override String days(int days) => '$days days';
-  @override String aboutAMonth(int days) => '${days} days';
-  @override String months(int months) => '${months} month';
-  @override String aboutAYear(int year) => '${year} year';
-  @override String years(int years) => '${years} years';
+  @override String aboutAMinute(int minutes) => '${minutes} moment ago';
+  @override String minutes(int minutes) => '${minutes} min ago';
+  @override String aboutAnHour(int minutes) => 'an hour ago';
+  @override String hours(int hours) => '${hours} hours ago';
+  @override String aDay(int hours) => 'a day ago';
+  @override String days(int days) => '$days days ago';
+  @override String aboutAMonth(int days) => '${days} days ago';
+  @override String months(int months) => '${months} month ago';
+  @override String aboutAYear(int year) => '${year} year ago';
+  @override String years(int years) => '${years} years ago';
   @override String wordSeparator() => ' ';
 }
 

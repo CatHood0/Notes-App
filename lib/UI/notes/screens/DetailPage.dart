@@ -1,7 +1,10 @@
+import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:intl/intl.dart';
 import 'package:notes_project/UI/home/controller/HomeController.dart';
+import 'package:notes_project/UI/notes/screens/widget/quill_toolbar_editor_widget.dart';
+import 'package:notes_project/UI/notes/screens/widget/quill_toolbar_only.dart';
 import 'package:notes_project/UI/notes/widget/DialogProperties.dart';
 import 'package:notes_project/UI/notes/widget/dateTimeTextDetail.dart';
 import 'package:notes_project/constant.dart';
@@ -12,12 +15,6 @@ import 'package:notes_project/main.dart';
 import '../../../domain/entities/Note.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'dart:convert';
-
-final Map<String, String> fontFamilyOptions = {
-  'Arial': 'Arial',
-  'Times New Roman': 'Times New Roman',
-  'Monospace': 'Monospace',
-};
 
 class DetailPage extends StatefulWidget {
   final Note? note;
@@ -86,32 +83,20 @@ class _ReadPageState extends State<DetailPage> {
         return false;
       },
       child: Scaffold(
-        bottomSheet: Container(
-          child: QuillToolbar.basic(
-            fontSizeValues: const {
-              'Title': '36',
-              'Subtitle': '29',
-              'Normal': '16',
-              'Medium': '22',
-              'Small': '13',
-            },
-            fontFamilyValues: fontFamilyOptions,
-            showLink: false,
-            showCodeBlock: false,
-            showDividers: false,
-            showInlineCode: false,
-            toolbarSectionSpacing: 10,
-            controller: _quillController,
-            multiRowsDisplay: false,
-          ),
-        ),
+        bottomSheet: _editMode && !_focusNodeTitle.hasFocus
+            ? Container(
+                child:
+                    QuillToolBarEditorWidget(quillController: _quillController),
+              )
+            : Container(
+                height: 0,
+              ),
         appBar: AppBar(
           elevation: 5,
           leading: _editMode
               ? IconButton(
                   onPressed: () {
                     onEdit(edit: false);
-                    unFocusedFields();
                     createNote();
                   },
                   icon: const Icon(Icons.check),
@@ -124,6 +109,8 @@ class _ReadPageState extends State<DetailPage> {
                   icon: const Icon(Icons.arrow_back),
                 ),
           actions: <Widget>[
+            if (_editMode && !_focusNodeTitle.hasFocus)
+              QuillToolBarWidgetOnlyUndoRedo(quillController: _quillController),
             if (_Note != null)
               IconButton(
                 onPressed: () {
@@ -136,12 +123,6 @@ class _ReadPageState extends State<DetailPage> {
                 },
                 icon: const Icon(Icons.insert_drive_file),
               ),
-            IconButton(
-              icon: Icon(Icons.tag_outlined),
-              onPressed: () {
-                //Logic for add tags
-              },
-            ),
           ],
         ),
         body: SingleChildScrollView(
@@ -193,9 +174,17 @@ class _ReadPageState extends State<DetailPage> {
                     return focusEditor();
                   },
                   customStyles: DefaultStyles(
-                    // Define your own styles here
-                    sizeSmall: TextStyle(fontFamily: 'Arial', fontSize: 16),
-                  ),
+                      // Define your own styles here
+                      sizeSmall: TextStyle(fontFamily: 'Arial', fontSize: 16),
+                      link: TextStyle(
+                          decoration: TextDecoration.underline,
+                          decorationThickness: 1.5,
+                          decorationColor: Colors.blue.shade300,
+                          color: Colors.blue.shade300,
+                          inherit: true,
+                          fontFeatures: <FontFeature>[
+                            FontFeature.enable('smcp'),
+                          ])),
                   onLaunchUrl: (String url) {
                     launchUrlString(url);
                   },
@@ -222,20 +211,23 @@ class _ReadPageState extends State<DetailPage> {
     });
   }
 
+  void unFocusNode(FocusNode node){
+    setState(() {
+      node.unfocus();  
+    });
+  }
+
   bool focusEditor() {
     if (!_editMode) {
       onEdit(edit: true);
     }
-    _focusNodeTitle.unfocus();
+    unFocusNode(_focusNodeTitle);
     return false;
   }
 
-  void unFocusedFields() {
+  void createNote() async {
     _focusNodeContent.unfocus();
     _focusNodeTitle.unfocus();
-  }
-
-  void createNote() async {
     if (_Note != null ||
         widget.note != null && _indexNote != null ||
         widget.index != null) {
