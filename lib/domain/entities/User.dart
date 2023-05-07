@@ -1,9 +1,10 @@
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
+import 'package:notes_project/domain/translators/translator.dart';
 import '../enums/enums.dart';
 
 class User extends Equatable {
-  final String id;
+  final int? id;
   final String username;
   final String avatar;
   final String email;
@@ -21,13 +22,13 @@ class User extends Equatable {
     required this.token,
     required this.type,
     this.ban = const [TypeBan.nothing],
-  })  : assert(id.isNotEmpty),
+  })  : assert(id!>1),
         assert(token.isNotEmpty),
         assert(email.isNotEmpty),
         assert(username.isNotEmpty);
 
   User copyWith({
-    String? id,
+    int? id,
     String? username,
     String? avatar,
     String? email,
@@ -70,43 +71,13 @@ class User extends Equatable {
 
   factory User.fromMap(Map<String, dynamic> map) {
     return User(
-        id: map['id'] as String,
+        id: map['id'] as int,
         username: map['username'] as String,
         avatar: map['avatar'] as String,
         email: map['email'] as String,
         token: map['token'] as String,
         encryptedPass: map['encryptedPass'] as String,
-        type: _TranslationTypeUser(map['type_user'] as String),
-        ban: _TranslationTypeBan(map['ban']));
-  }
-
-  static TypeUser _TranslationTypeUser(String type) {
-    switch (type) {
-      case 'user':
-        return TypeUser.user;
-      case 'admin':
-        return TypeUser.admin;
-      case 'guess':
-        return TypeUser.guess;
-      default:
-        return TypeUser.unknown;
-    }
-  }
-
-  static List<TypeBan>? _TranslationTypeBan(List<String> reasonList) {
-    List<TypeBan>? bans = null;
-    reasonList.forEach((whyBanned) {
-      switch (whyBanned) {
-        case 'perPublishSensitiveContent':
-          bans?.add(TypeBan.perPublicSensitiveContent);
-          break;
-        case 'perRobTemplates':
-          bans?.add(TypeBan.perRobTemplates);
-          break;
-        default:
-          bans?.add(TypeBan.nothing);
-      }
-    });
-    return bans;
+        type: Translator.translationTypeUser(map['type_user'] as String),
+        ban: Translator.translationTypeBan(map['ban']));
   }
 }

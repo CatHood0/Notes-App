@@ -1,15 +1,17 @@
 import 'dart:convert';
 
 class Template {
-  final String id;
+  final int id;
+  final int id_user; 
   final String name;
   final String content;
   final makePublic;
   final int likes;
   final int shares;
 
-  Template(
+  Template( 
       {required this.id,
+      required this.id_user,
       required this.name,
       required this.content,
       required this.likes,
@@ -28,7 +30,8 @@ class Template {
 
   factory Template.fromMap(Map<String, dynamic> map) {
     return Template(
-      id: map['id'] as String,
+      id: map['id'] as int,
+      id_user: map['id_user'] as int,
       name: map['name'] as String,
       content: map['content'] as String,
       likes: map['likes'] as int,
@@ -42,7 +45,8 @@ class Template {
   factory Template.fromJson(String source) => Template.fromMap(json.decode(source) as Map<String, dynamic>);
 
   Template copyWith({
-    String? id,
+    int? id,
+    int? idUser, 
     String? name,
     String? content,
     int? likes,
@@ -50,6 +54,7 @@ class Template {
   }) {
     return Template(
       id: id ?? this.id,
+      id_user: idUser = this.id_user,
       name: name ?? this.name,
       content: content ?? this.content,
       likes: likes ?? this.likes,

@@ -1,6 +1,5 @@
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
-import '../domain/entities/check.dart';
 
 class DBHelper {
   static final DBHelper instance = DBHelper._init();
@@ -37,31 +36,4 @@ class DBHelper {
   }
 
   Future<void> closeDatabase() async => _db!.close();
-}
-
-class ChecklistDao {
-  late Database database;
-
-  Future<void> openDb() async {
-    database = await DBHelper.instance.database();
-  }
-
-  Future<void> insert(Check checklist) async {
-    await database.insert(
-      'checklists',
-      checklist.toMap(),
-      conflictAlgorithm: ConflictAlgorithm.replace,
-    );
-  }
-
-  Future<List<Check>> getAllChecklists() async {
-    final List<Map<String, dynamic>> maps = await database.query('checklists');
-    return List.generate(maps.length, (i) {
-      return Check(
-        id: maps[i]['id'],
-        name: maps[i]['name'],
-        description: maps[i]['description'],
-      );
-    });
-  }
 }

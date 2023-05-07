@@ -1,12 +1,12 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
+import 'package:flutter_quill_extensions/embeds/embed_types.dart';
+import 'package:notes_project/embed-blocks/widgets/imageButtonEditor.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
-
 import '../../../../constant.dart';
+import '../../../../embed-blocks/widgets/videoButtonEditor.dart';
 
 class QuillToolBarEditorWidget extends StatelessWidget {
   const QuillToolBarEditorWidget({
@@ -47,9 +47,11 @@ class QuillToolBarEditorWidget extends StatelessWidget {
       toolbarSectionSpacing: 10,
       controller: _quillController,
       multiRowsDisplay: false,
-      embedButtons: FlutterQuillEmbeds.buttons(
+      embedButtons: embedButtons(
+        imageButtonTooltip: 'image',
         onImagePickCallback: _onImagePickCallback,
-        showCameraButton: false,
+        mediaPickSettingSelector: (context) async =>
+            await MediaPickSetting.Gallery,
       ),
       showAlignmentButtons: true,
     );
@@ -62,3 +64,34 @@ class QuillToolBarEditorWidget extends StatelessWidget {
     return copiedFile.path.toString();
   }
 }
+
+List<EmbedButtonBuilder> embedButtons({
+  bool showImageButton = true,
+  bool showVideoButton = true,
+  String? videoButtonTooltip,
+  String? imageButtonTooltip,
+  OnImagePickCallback? onImagePickCallback,
+  MediaPickSettingSelector? mediaPickSettingSelector,
+}) =>
+    [
+      if (showImageButton)
+        (controller, toolbarIconSize, iconTheme, dialogTheme) => ImageButton(
+              icon: Icons.image,
+              iconSize: toolbarIconSize,
+              tooltip: imageButtonTooltip,
+              controller: controller,
+              onImagePickCallback: onImagePickCallback,
+              mediaPickSettingSelector: mediaPickSettingSelector,
+              iconTheme: iconTheme,
+              dialogTheme: dialogTheme,
+            ),
+      if (showVideoButton)
+        (controller, toolbarIconSize, iconTheme, dialogTheme) => VideoButton(
+              icon: Icons.movie_rounded,
+              iconSize: toolbarIconSize,
+              tooltip: videoButtonTooltip,
+              controller: controller,
+              iconTheme: iconTheme,
+              dialogTheme: dialogTheme,
+            ),
+    ];

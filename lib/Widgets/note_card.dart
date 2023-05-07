@@ -45,27 +45,23 @@ class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
     return SizedBox(
       height: MediaQuery.of(context).size.height * 0.20,
       width: MediaQuery.of(context).size.width * 0.50,
-      child: GestureDetector(
-        onLongPress: () {
-          locator.Get<NoteBloc>()
-              .eventSink
-              .add(DeleteNote(index: widget.index));
-        },
-        onTap: () async {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => DetailPage(
-                        widget.index,
-                        widget.note,
-                        edit: false,
-                      )));
-        },
-        child: Card(
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-          elevation: 0,
-          color: const Color.fromARGB(145, 87, 87, 87),
+      child: Card(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        elevation: 0,
+        color: const Color.fromARGB(145, 87, 87, 87),
+        child: InkWell(
+          borderRadius: BorderRadius.circular(10),
+          enableFeedback: true,
+          onTap: () async {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => DetailPage(
+                          widget.index,
+                          widget.note,
+                          edit: false,
+                        )));
+          },
           child: Stack(
             children: [
               NoteTitleWidget(

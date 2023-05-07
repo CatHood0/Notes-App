@@ -50,7 +50,7 @@ void main() {
 
   test("Should print one String with the value of TypeUser", () {
     User user = User(
-        id: "ansdsadi1",
+        id: 1,
         username: "",
         avatar: "",
         email: "",

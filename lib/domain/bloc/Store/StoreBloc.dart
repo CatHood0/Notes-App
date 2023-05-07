@@ -60,7 +60,7 @@ class StoreBloc {
       _templateStateController.add(LoadingStoreTemplatesState());
       for (int i = 0; i < 3; i++) {
         _templates.add(Template(
-            id: "skand921m ${i}", name: "Alfonso ${i}",content: "Just", likes: 293 * (5 + i% (i + 200)), shares: 200 * (5 + i% (i + 500)), ));
+            id: (i+500/2).round(), name: "Alfonso ${i}",content: "Just", likes: 293 * (5 + i% (i + 200)), shares: 200 * (5 + i% (i + 500)), id_user: 0, ));
       }
       await Future.delayed(const Duration(seconds: 1));
       _templateStateController

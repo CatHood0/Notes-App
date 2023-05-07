@@ -12,11 +12,12 @@ import 'package:notes_project/UI/notes/widget/DialogProperties.dart';
 import 'package:notes_project/UI/notes/widget/dateTimeTextDetail.dart';
 import 'package:notes_project/constant.dart';
 import 'package:notes_project/data/local%20/sqflite/note_local_repo.dart';
-import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
-import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
+import 'package:notes_project/embed-blocks/imageEmbedBlock.dart';
 import 'package:notes_project/main.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import '../../../blocs/blocs.dart';
+import '../../../domain/bloc/Notes/NoteEvents.dart';
 import '../../../domain/entities/Note.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'dart:convert';
@@ -42,7 +43,7 @@ class _ReadPageState extends State<DetailPage> {
   late final QuillController _quillController;
   final FocusNode _focusNodeTitle = FocusNode(),
       _focusNodeContent = FocusNode();
-  int _quitCount = 0;
+  int _quitCount = 1;
 
   @override
   void initState() {
@@ -68,7 +69,7 @@ class _ReadPageState extends State<DetailPage> {
     _titleController.clear();
     _focusNodeContent.dispose();
     _focusNodeTitle.dispose();
-    _quitCount = 0;
+    _quitCount = 1;
     _quillController.clear();
     super.dispose();
   }
@@ -77,11 +78,12 @@ class _ReadPageState extends State<DetailPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (_quitCount > 0 && _editMode) {
+        if (_quitCount > 1 && _editMode) {
           onEdit(edit: false);
           createNote();
           return false;
         } else if (!_editMode) {
+          _quitCount = 1;
           return true;
         }
         _quitCount++;
@@ -172,9 +174,12 @@ class _ReadPageState extends State<DetailPage> {
                   controller: _quillController,
                   autoFocus: false,
                   embedBuilders: [
+                    ImageEmbedBuilder(),
                     ...FlutterQuillEmbeds.builders(),
                   ],
                   onImagePaste: _onImagePaste,
+                  detectWordBoundary: true,
+                  enableUnfocusOnTapOutside: true,
                   textCapitalization: TextCapitalization.sentences,
                   onSingleLongTapStart: (details, p1) {
                     return focusEditor();
@@ -200,7 +205,7 @@ class _ReadPageState extends State<DetailPage> {
                   expands: false,
                   focusNode: _focusNodeContent,
                   padding:
-                      const EdgeInsets.only(bottom: 60, left: 15, right: 15),
+                      const EdgeInsets.only(bottom: 45, left: 15, right: 15),
                   readOnly: false,
                   scrollController: ScrollController(),
                   scrollable: false,

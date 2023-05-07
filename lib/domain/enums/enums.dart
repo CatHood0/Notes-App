@@ -5,10 +5,21 @@ enum TypeUser {
   unknown,
 }
 
-enum TypeBan{
+enum TypeBan {
   perRobTemplates,
   perPublicSensitiveContent,
   nothing,
+}
+
+enum TypeReason {
+  sensitiveContent,
+  spam,
+  unknownContent,
+  appException,
+  appCrashed,
+  errorToChargeContent,
+  error,
+  errorToCreateOrUpdateSomething,
 }
 
 enum TypeSort {
@@ -20,7 +31,7 @@ enum TypeSort {
   anything,
 }
 
-enum AppTheme{
+enum AppTheme {
   darkTheme,
   lightTheme,
 }

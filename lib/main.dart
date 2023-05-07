@@ -12,7 +12,7 @@ import 'package:notes_project/domain/bloc/Notes/NoteBloc.dart';
 import 'package:notes_project/domain/bloc/users/UserBloc.dart';
 import 'package:notes_project/domain/enums/enums.dart';
 import 'package:notes_project/injector/instance_injector.dart';
-import 'domain/appThemes.dart';
+import 'appThemes.dart';
 import 'domain/bloc/Store/StoreBloc.dart';
 
 final locator = Injector.singleton();
