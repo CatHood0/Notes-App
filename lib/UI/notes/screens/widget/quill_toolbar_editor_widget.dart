@@ -2,11 +2,11 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/embeds/embed_types.dart';
-import 'package:notes_project/embed-blocks/widgets/imageButtonEditor.dart';
+import 'package:notes_project/embedded/widgets/imageButtonEditor.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 import '../../../../constant.dart';
-import '../../../../embed-blocks/widgets/videoButtonEditor.dart';
+import '../../../../embedded/widgets/videoButtonEditor.dart';
 
 class QuillToolBarEditorWidget extends StatelessWidget {
   const QuillToolBarEditorWidget({

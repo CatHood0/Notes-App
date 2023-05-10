@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:flutter_quill_extensions/embeds/embed_types.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:notes_project/embed-blocks/utils/Utils.dart';
-
-import 'linkDialog.dart';
+import 'package:notes_project/embedded/utils/Utils.dart';
 
 class ImageButton extends StatelessWidget {
   const ImageButton({

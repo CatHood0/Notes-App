@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:notes_project/UI/notes/controller/NoteController.dart';
-import 'package:notes_project/data/local%20/sqflite/note_local_repo.dart';
 import 'package:notes_project/main.dart';
 import '../domain/entities/Note.dart';
 import '../UI/notes/screens/DetailPage.dart';

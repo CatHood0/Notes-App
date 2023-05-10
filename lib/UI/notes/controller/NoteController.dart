@@ -10,7 +10,7 @@ class NoteController {
   final INoteLocalRepository localDatabase;
   final INoteRepository database;
   late final OldImagesPrefService _pref;
-  List<String> oldImages = [];
+  Set<String> oldImages = Set<String>();
 
   NoteController(
       {required this.localDatabase,
@@ -29,23 +29,21 @@ class NoteController {
     log("eliminating...");
     var imagesFromPref = await _pref.oldImages;
     bool error = false;
-    if (oldImages.isNotEmpty) {
-      error = await deleteImageFromCloud(images: oldImages);
-      if (error) {
-        if (imagesFromPref!.isNotEmpty) {
-          imagesFromPref.forEach((image) {
-            if (!oldImages.contains(image)) {
-              oldImages.add(image);
-            }
-          });
-          _pref.saveOldImages(oldImages);
-        }
-      } else {
+    if (oldImages.toList().isNotEmpty) {
+      error = await deleteImageFromCloud(images: oldImages.toList());
+      if (!error) {
         _pref.removeAllOldImages;
+      } else if (imagesFromPref != null) {
+        imagesFromPref
+            .where(((image) => !oldImages.contains(image)))
+            .forEach((image) {
+          oldImages.add(image);
+        });
+        _pref.saveOldImages(oldImages.toList());
       }
-      oldImages = [];
+      oldImages = Set<String>();
       log("Finished");
-    } else {
+    } else if (oldImages.toList().isEmpty) {
       log("There aren't images in the editor or there aren't deleted ones");
     }
   }
@@ -53,17 +51,15 @@ class NoteController {
   void compare(
       {required QuillController newController,
       required QuillController oldController}) async {
-    final List<String?> newImages =
+    final Set<String?> newImages =
         _getImagesFromController(controller: newController);
-    if (oldImages.isEmpty) {
+    if (oldImages.toList().isEmpty) {
       oldImages = _getImagesFromController(controller: oldController);
     } else {
       final listAux = _getImagesFromController(controller: oldController);
       listAux.forEach((image) {
-        if (!oldImages.contains(image) && !newImages.contains(image)) {
-          print('new image added to old images ${image}');
-          oldImages.add(image);
-        }
+        log('new image added to old images ${image}');
+        oldImages.add(image);
       });
     }
     oldImages.toSet().difference(newImages.toSet()).forEach((image) {
@@ -75,13 +71,13 @@ class NoteController {
       oldImages.remove(image);
     });
     var imagesFromPref = await _pref.oldImages;
-    if (imagesFromPref!.isEmpty) {
-      _pref.saveOldImages(oldImages);
+    if (imagesFromPref == null) {
+      _pref.saveOldImages(oldImages.toList());
     }
   }
 
-  List<String> _getImagesFromController({required QuillController controller}) {
-    List<String> urlList = [];
+  Set<String> _getImagesFromController({required QuillController controller}) {
+    Set<String> urlList = Set<String>();
     final json = jsonEncode(controller.document.toDelta());
     final List<dynamic> delta = jsonDecode(json);
     for (final line in delta) {

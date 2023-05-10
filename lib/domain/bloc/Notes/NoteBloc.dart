@@ -10,17 +10,23 @@ class NoteBloc {
   List<Note> _notes = [];
   List<Note> resultSearchNote = [];
   String? _oldSearch = null;
+
+  //repositories
   final INoteRepository repository;
   final INoteLocalRepository localRepository;
+
+  //streams
+  final _eventStreamController = StreamController<NoteEvent>();
   final _noteStateController = StreamController<NoteState>.broadcast(
     onListen: () => print("Listening note states"),
     onCancel: () => print("Cancelling note state"),
   );
-  final _eventStreamController = StreamController<NoteEvent>();
   final _currentLenghtNotesController = StreamController<int>.broadcast(
     onListen: () => print("Listening current note length"),
     onCancel: () => print("Cancelling current note length"),
   );
+
+  //getters
   Stream<int> get stateLenghtStream => _currentLenghtNotesController.stream;
   Stream<NoteState> get stateStream => _noteStateController.stream;
   StreamSink<NoteEvent> get eventSink => _eventStreamController.sink;
@@ -131,9 +137,9 @@ class NoteBloc {
   List<Note> sortNotes({required List<Note> notes, required TypeSort sort}) {
     if (sort == TypeSort.recent) {
       notes.sort(
-          (a, b) => a.dateTimeModification.compareTo(b.dateTimeModification));
+          (a, b) => b.dateTimeModification.compareTo(a.dateTimeModification));
     } else if (sort == TypeSort.suggested) {
-      notes.sort((a, b) => b.content.compareTo(a.content));
+      notes.sort((a, b) => a.content.compareTo(b.content));
     }
     return notes;
   }

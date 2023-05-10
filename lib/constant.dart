@@ -13,6 +13,7 @@ const letterColorDarkTheme = Colors.white;
 const buttonGeneralColor = Color.fromARGB(255, 255, 171, 255);
 const double fontSizeTitles = 18.0;
 const double fontSizeContent = 16;
+int TIME_OUT = 0; //this incremented if connectivityChecker return false
 
 typedef StreamNoteEither = Stream<ResponseEither<String, List<Note>>>;
 typedef StreamUserEither = Stream<ResponseEither<String, User>>;

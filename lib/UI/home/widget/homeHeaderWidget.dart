@@ -45,11 +45,8 @@ class HomeHeaderWidget extends StatelessWidget {
           ),
           TabBar(
               onTap: (value) {
-                if (value == 0) {
-                  locator.Get<NoteBloc>()
-                      .eventSink
-                      .add(SortNotesEvents(sort: TypeSort.title));
-                } else {}
+                locator.Get<NoteBloc>().eventSink.add(SortNotesEvents(
+                    sort: value == 0 ? TypeSort.recent : TypeSort.suggested));
               },
               controller: tabBar,
               tabs: const <Widget>[

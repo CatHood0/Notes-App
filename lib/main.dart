@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/UI/home/HomePage.dart';
+import 'package:notes_project/UI/home/controller/HomeController.dart';
 import 'package:notes_project/UI/notes/controller/NoteController.dart';
 import 'package:notes_project/constant.dart';
 import 'package:notes_project/data/local%20/preferences/old_images_key.dart';
@@ -49,6 +50,7 @@ void setup() {
   locator.registerInstance<AccountRepository>(instance: AccountRepository());
 
   //Controllers
+  locator.registerInstance<HomeController>(instance: HomeController());
   locator.registerInstance<NoteController>(
       instance: NoteController(
           localDatabase: locator.Get<NoteLocalRepository>(),

@@ -1,18 +1,18 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:notes_project/UI/home/controller/HomeController.dart';
 import 'package:notes_project/UI/notes/controller/NoteController.dart';
-import 'package:notes_project/Widgets/snackMessage.dart';
 import 'package:notes_project/data/local%20/preferences/old_images_key.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/helper/db_helper.dart';
-import '../../blocs/blocs.dart';
-import 'dart:async';
 import 'package:internet_connectivity_checker/internet_connectivity_checker.dart';
 import 'package:notes_project/UI/home/widget/homeAppBarWidget.dart';
 import 'package:notes_project/UI/home/widget/homeHeaderWidget.dart';
 import 'package:notes_project/UI/home/widget/homeNoteListWidget.dart';
 import 'package:notes_project/main.dart';
+import '../../constant.dart';
+import '../../blocs/blocs.dart';
+import 'dart:developer';
+import 'dart:async';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -23,7 +23,6 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final NoteBloc noteBloc = locator.Get<NoteBloc>();
-  bool hadConnectionBefore = false, showAdvice = false;
   final DBHelper _db = DBHelper.instance;
   late StreamSubscription subscription;
 
@@ -32,9 +31,7 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
     _db.database();
     noteBloc.eventSink.add(RestoreNoteFiles());
     super.initState();
-    subscription = ConnectivityChecker(interval: const Duration(seconds: 5))
-        .stream
-        .listen(showConnectionSnackBar);
+    subscription = ConnectivityChecker().stream.listen(showConnectionSnackBar);
   }
 
   @override
@@ -71,37 +68,20 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   }
 
   void showConnectionSnackBar(var result) async {
-    print(result.toString());
     final hasInternet = result != false;
+    TIME_OUT = !hasInternet ? TIME_OUT++ : 0;
     if (hasInternet) {
       List<String>? imagesFromPref =
           await locator.Get<OldImagesPrefService>().oldImages;
-      if (imagesFromPref != null || imagesFromPref!.isNotEmpty) {
+      if (imagesFromPref != null) {
         log("Saved old images isn't empty");
         await locator.Get<NoteController>()
             .deleteImageFromCloud(images: imagesFromPref);
         log("Deleted old images");
         locator.Get<OldImagesPrefService>().removeAllOldImages;
-      }
+      } else
+        log("dont has nothing");
     }
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    if (hasInternet && hadConnectionBefore && !showAdvice) {
-      showAdvice = true;
-      SnackMessage.showSnackbarMessage(
-        context: context,
-        message: "Connection established",
-        backgroudColor: Colors.green,
-      );
-    } else if (!hasInternet) {
-      hadConnectionBefore = true;
-      showAdvice = false;
-      SnackMessage.showSnackbarMessage(
-        context: context,
-        message:
-            'Please, check your connection. The changes will not be apply if you dont have a connection',
-        duration: const Duration(days: 1000000),
-        backgroudColor: Colors.red,
-      );
-    }
+    locator.Get<HomeController>().showSnackbarMessage(context: context, TIME_OUT: TIME_OUT, hasInternet: hasInternet);
   }
 }

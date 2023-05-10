@@ -12,7 +12,7 @@ import 'dart:ui';
 import '../../../blocs/blocs.dart';
 import '../../../domain/entities/Note.dart';
 import '../../../domain/bloc/Notes/NoteEvents.dart';
-import 'package:notes_project/embed-blocks/imageEmbedBlock.dart';
+import 'package:notes_project/embedded/imageEmbedBlock.dart';
 import 'package:notes_project/UI/notes/screens/widget/quill_toolbar_only.dart';
 import 'package:notes_project/UI/notes/screens/widget/quill_toolbar_editor_widget.dart';
 import 'package:notes_project/UI/notes/controller/NoteController.dart';
