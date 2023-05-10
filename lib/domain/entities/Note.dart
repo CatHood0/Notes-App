@@ -1,11 +1,11 @@
 import 'dart:convert';
 class Note {
   int? key;
+  int updates;
   String title;
   String content;
-  int updates;
   String? tag;
-  bool? createLocally;
+  double? lastScroll;
   bool favorite;
   DateTime createDate;
   DateTime dateTimeModification;
@@ -17,21 +17,21 @@ class Note {
       required this.favorite,
       required this.updates,
       required this.dateTimeModification,
-      this.createLocally = false,
       this.tag,
       this.key,
+      this.lastScroll,
       })
       : assert(title.isNotEmpty);
 
   Note copyWith({
     int? key,
+    int? update,
+    double? last,
     String? title,
     String? content,
     String? tag,
     bool? pin,
     bool? favorite,
-    bool? createLocally,
-    int? update,
     DateTime? createDate,
     DateTime? dateTimeModification,
   }) {
@@ -40,10 +40,10 @@ class Note {
       title: title ?? this.title,
       content: content ?? this.content,
       tag: tag ?? this.tag,
-      createLocally: createLocally ?? this.createLocally,
       updates: update ?? this.updates,
       favorite: favorite ?? this.favorite,
       createDate: createDate ?? this.createDate,
+      lastScroll: last ?? this.lastScroll, 
       dateTimeModification: dateTimeModification ?? this.dateTimeModification,
     );
   }
@@ -56,7 +56,6 @@ class Note {
       'create_date': createDate.toString(),
       'updates': updates,
       'modification_date': dateTimeModification.toString(),
-      'create_locally': createLocally==true ? 1 : 0,
       'tag': tag,
     };
   }
@@ -71,7 +70,6 @@ class Note {
       createDate: DateTime.parse(map['create_date'] as String),
       updates: map['updates'],
       dateTimeModification: DateTime.parse(map['modification_date'] as String),
-      createLocally: map['create_locally']==1 ? true : false,
     );
   }
 

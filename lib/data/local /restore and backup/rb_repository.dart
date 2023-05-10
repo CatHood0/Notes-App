@@ -7,7 +7,6 @@ class RestoreAndBackupLocal {
       await Permission.manageExternalStorage.request();
     } 
 
-    var status1 = await Permission.storage.status;
   }
 
   Future<void> restoreDatabase() async {

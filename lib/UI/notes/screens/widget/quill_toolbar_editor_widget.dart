@@ -11,10 +11,11 @@ import '../../../../embed-blocks/widgets/videoButtonEditor.dart';
 class QuillToolBarEditorWidget extends StatelessWidget {
   const QuillToolBarEditorWidget({
     super.key,
-    required QuillController quillController,
-  }) : _quillController = quillController;
-
-  final QuillController _quillController;
+    required this.quillController,
+    required this.oldController,
+  });
+  final QuillController quillController;
+  final QuillController oldController;
 
   @override
   Widget build(BuildContext context) {
@@ -45,10 +46,11 @@ class QuillToolBarEditorWidget extends StatelessWidget {
       showSuperscript: false,
       showRedo: false,
       toolbarSectionSpacing: 10,
-      controller: _quillController,
+      controller: quillController,
       multiRowsDisplay: false,
       embedButtons: embedButtons(
         imageButtonTooltip: 'image',
+        oldController: oldController,
         onImagePickCallback: _onImagePickCallback,
         mediaPickSettingSelector: (context) async =>
             await MediaPickSetting.Gallery,
@@ -68,6 +70,7 @@ class QuillToolBarEditorWidget extends StatelessWidget {
 List<EmbedButtonBuilder> embedButtons({
   bool showImageButton = true,
   bool showVideoButton = true,
+  required QuillController oldController,
   String? videoButtonTooltip,
   String? imageButtonTooltip,
   OnImagePickCallback? onImagePickCallback,
@@ -80,6 +83,7 @@ List<EmbedButtonBuilder> embedButtons({
               iconSize: toolbarIconSize,
               tooltip: imageButtonTooltip,
               controller: controller,
+              oldController: oldController,
               onImagePickCallback: onImagePickCallback,
               mediaPickSettingSelector: mediaPickSettingSelector,
               iconTheme: iconTheme,

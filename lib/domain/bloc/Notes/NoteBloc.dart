@@ -1,8 +1,9 @@
-import 'dart:async';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteStates.dart';
 import 'package:notes_project/domain/entities/Note.dart';
 import 'package:notes_project/domain/repository/notes/INoteRepo.dart';
+import 'dart:async';
+import '../../enums/enums.dart';
 import '../../local repositories/note/INoteLocalRepo.dart';
 
 class NoteBloc {
@@ -35,14 +36,14 @@ class NoteBloc {
       _noteStateController.add(LoadingNotes());
       _notes.add(event.note);
       if (event.note.favorite) {
-        _notes = sortFolderListByPin(_notes);
+        _notes = sortNoteListByPin(_notes);
       }
       _currentLenghtNotesController.add(_notes.length);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is DeleteNote) {
       _noteStateController.add(LoadingNotes());
       _notes.removeAt(event.index);
-      _notes = sortFolderListByPin(_notes);
+      _notes = sortNoteListByPin(_notes);
       _currentLenghtNotesController.add(_notes.length);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is UpdateNote) {
@@ -53,12 +54,13 @@ class NoteBloc {
       var note = _notes[event.index].copyWith(favorite: event.isFavorite);
       _notes[event.index] = note;
       if (resultSearchNote.isEmpty) {
-        _notes = sortFolderListByPin(_notes);
+        _notes = sortNoteListByPin(_notes);
         _noteStateController.add(LoadedNotes(notes: _notes, showStar: true));
       } else {
         _notes[event.index] = note;
         resultSearchNote = searchNote(_oldSearch, _notes);
-        _noteStateController.add(LoadedNotes(notes: resultSearchNote, showStar: false));
+        _noteStateController
+            .add(LoadedNotes(notes: resultSearchNote, showStar: false));
       }
     } else if (event is SearchNote) {
       _noteStateController.add(LoadingNotes());
@@ -74,24 +76,24 @@ class NoteBloc {
           _oldSearch = event.search;
           if (event.search == null || event.search == "") {
             resultSearchNote = [];
-            _notes = await _getNotesFromLocalDatabase();
-            _notes = sortFolderListByPin(_notes);
             _currentLenghtNotesController.add(_notes.length);
-            _noteStateController.add(LoadedNotes(notes: _notes, showStar: true));
+            _noteStateController
+                .add(LoadedNotes(notes: _notes, showStar: true));
           } else {
             _currentLenghtNotesController.add(resultSearchNote.toList().length);
-            _noteStateController
-                .add(LoadedNotes(notes: resultSearchNote.toList(), showStar: false));
+            _noteStateController.add(
+                LoadedNotes(notes: resultSearchNote.toList(), showStar: false));
           }
         }
       }
     } else if (event is SaveNotesFiles) {
     } else if (event is RestoreNoteFiles) {
       _notes = await _getNotesFromLocalDatabase();
-      _notes = sortFolderListByPin(_notes);
+      _notes = sortNoteListByPin(_notes);
       _currentLenghtNotesController.add(_notes.length);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is SortNotesEvents) {
+      _notes = sortNotes(notes: _notes, sort: event.sort);
       _noteStateController.add(LoadedNotes(notes: _notes));
     }
   }
@@ -106,11 +108,10 @@ class NoteBloc {
       final searchLower = search!.toLowerCase();
       return titleLower.contains(searchLower);
     }).toList();
-
     return result;
   }
 
-  List<Note> sortFolderListByPin(List<Note> list) {
+  List<Note> sortNoteListByPin(List<Note> list) {
     List<Note> favoriteNotes = [];
     List<Note> unFavoriteNotes = [];
 
@@ -122,9 +123,19 @@ class NoteBloc {
         unFavoriteNotes.add(note);
       }
     }
-    
+
     favoriteNotes.addAll(unFavoriteNotes);
     return favoriteNotes;
+  }
+
+  List<Note> sortNotes({required List<Note> notes, required TypeSort sort}) {
+    if (sort == TypeSort.recent) {
+      notes.sort(
+          (a, b) => a.dateTimeModification.compareTo(b.dateTimeModification));
+    } else if (sort == TypeSort.suggested) {
+      notes.sort((a, b) => b.content.compareTo(a.content));
+    }
+    return notes;
   }
 
   //Needs to get the index for updating when we create a new note

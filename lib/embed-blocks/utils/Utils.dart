@@ -1,47 +1,17 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
-import 'package:flutter_quill/translations.dart';
 import 'package:flutter_quill_extensions/embeds/embed_types.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../UI/notes/controller/NoteController.dart';
+import 'dart:io';
+import 'package:notes_project/main.dart';
 
 class ImageAndVideoUtils {
-  //decide which one will use it
-  static Future<MediaPickSetting?> selectMediaPickSetting(
-    BuildContext context,
-  ) =>
-      showDialog<MediaPickSetting>(
-        context: context,
-        builder: (ctx) => AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextButton.icon(
-                icon: const Icon(
-                  Icons.collections,
-                  color: Colors.orangeAccent,
-                ),
-                label: Text('Gallery'.i18n),
-                onPressed: () => Navigator.pop(ctx, MediaPickSetting.Gallery),
-              ),
-              TextButton.icon(
-                icon: const Icon(
-                  Icons.link,
-                  color: Colors.cyanAccent,
-                ),
-                label: Text('Link'.i18n),
-                onPressed: () => Navigator.pop(ctx, MediaPickSetting.Link),
-              )
-            ],
-          ),
-        ),
-      );
 
-  ///image picking logic
   static Future<void> handleImageButtonTap(
     BuildContext context,
     QuillController controller,
+    QuillController oldController,
     ImageSource imageSource,
     OnImagePickCallback onImagePickCallback,
   ) async {
@@ -53,7 +23,14 @@ class ImageAndVideoUtils {
     imageUrl = await _pickImage(imageSource, onImagePickCallback);
 
     if (imageUrl != null) {
+      //here we put the logic for upload the image to cloud storage
+      
       controller.replaceText(index, length, BlockEmbed.image(imageUrl), null);
+
+      locator.Get<NoteController>()
+          .compare(newController: controller, oldController: oldController);
+      oldController.clear();
+      oldController.document = Document.fromJson(controller.document.toDelta().toJson());
     }
   }
 

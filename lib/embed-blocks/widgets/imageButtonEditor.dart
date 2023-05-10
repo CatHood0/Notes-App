@@ -10,6 +10,7 @@ class ImageButton extends StatelessWidget {
   const ImageButton({
     required this.icon,
     required this.controller,
+    required this.oldController,
     this.iconSize = kDefaultIconSize,
     this.onImagePickCallback,
     this.fillColor,
@@ -26,6 +27,8 @@ class ImageButton extends StatelessWidget {
   final Color? fillColor;
 
   final QuillController controller;
+
+  final QuillController oldController;
 
   final OnImagePickCallback? onImagePickCallback;
 
@@ -52,47 +55,16 @@ class ImageButton extends StatelessWidget {
       size: iconSize * 1.77,
       fillColor: iconFillColor,
       borderRadius: iconTheme?.borderRadius ?? 2,
-      onPressed: () => _onPressedHandler(context),
+      onPressed: () => _pickImage(context),
     );
   }
 
-  Future<void> _onPressedHandler(BuildContext context) async {
-    if (onImagePickCallback != null) {
-      final selector =
-          mediaPickSettingSelector ?? ImageAndVideoUtils.selectMediaPickSetting;
-      final source = await selector(context);
-      if (source != null) {
-        if (source == MediaPickSetting.Gallery) {
-          _pickImage(context);
-        } else {
-          _typeLink(context);
-        }
-      }
-    } else {
-      _typeLink(context);
-    }
-  }
-
-  void _pickImage(BuildContext context) => ImageAndVideoUtils.handleImageButtonTap(
+  void _pickImage(BuildContext context) =>
+      ImageAndVideoUtils.handleImageButtonTap(
         context,
         controller,
+        oldController,
         ImageSource.gallery,
         onImagePickCallback!,
       );
-
-  void _typeLink(BuildContext context) {
-    showDialog<String>(
-      context: context,
-      builder: (_) => LinkDialog(dialogTheme: dialogTheme),
-    ).then(_linkSubmitted);
-  }
-
-  void _linkSubmitted(String? value) {
-    if (value != null && value.isNotEmpty) {
-      final index = controller.selection.baseOffset;
-      final length = controller.selection.extentOffset - index;
-
-      controller.replaceText(index, length, BlockEmbed.image(value), null);
-    }
-  }
 }

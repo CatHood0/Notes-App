@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:notes_project/UI/notes/screens/DetailPage.dart';
 import 'package:notes_project/UI/notes/widget/listNoteWidget.dart';
-import 'package:notes_project/UI/notes/widget/popupOptions.dart';
 import 'package:notes_project/blocs/blocs.dart';
 import 'package:notes_project/constant.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
@@ -93,6 +92,22 @@ class _NotesPageState extends State<NotesPage> {
                         }
                       },
                     ),
+                    IconButton(
+                      onPressed: () {
+                        _searchController.clear();
+                        isSearcheable(searcheable: false);
+                        userMostSearch = false;
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => const DetailPage(
+                                      null,
+                                      null,
+                                      edit: true,
+                                    )));
+                      },
+                      icon: Icon(Icons.add),
+                    )
                   ],
                 );
               }),
@@ -100,26 +115,6 @@ class _NotesPageState extends State<NotesPage> {
         body: SafeArea(
           child: ListNotesBlocWidget(),
         ),
-        floatingActionButton: FloatingActionButton.extended(
-          elevation: 5,
-          backgroundColor: secundaryColor,
-          shape: StadiumBorder(),
-            onPressed: () {
-              _searchController.clear();
-              isSearcheable(searcheable: false);
-              userMostSearch = false;
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => const DetailPage(
-                            null,
-                            null,
-                            edit: true,
-                          )));
-            },
-            label: Text(
-              'Add Note',
-            )),
       ),
     );
   }

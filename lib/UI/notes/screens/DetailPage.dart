@@ -1,26 +1,25 @@
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
+import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
-import 'package:flutter/material.dart';
-import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
-import 'package:intl/intl.dart';
-import 'package:notes_project/UI/home/controller/HomeController.dart';
-import 'package:notes_project/UI/notes/screens/widget/quill_toolbar_editor_widget.dart';
+import '../../../blocs/blocs.dart';
+import '../../../domain/entities/Note.dart';
+import '../../../domain/bloc/Notes/NoteEvents.dart';
+import 'package:notes_project/embed-blocks/imageEmbedBlock.dart';
 import 'package:notes_project/UI/notes/screens/widget/quill_toolbar_only.dart';
+import 'package:notes_project/UI/notes/screens/widget/quill_toolbar_editor_widget.dart';
+import 'package:notes_project/UI/notes/controller/NoteController.dart';
 import 'package:notes_project/UI/notes/widget/DialogProperties.dart';
 import 'package:notes_project/UI/notes/widget/dateTimeTextDetail.dart';
 import 'package:notes_project/constant.dart';
-import 'package:notes_project/data/local%20/sqflite/note_local_repo.dart';
-import 'package:notes_project/embed-blocks/imageEmbedBlock.dart';
 import 'package:notes_project/main.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
-import '../../../blocs/blocs.dart';
-import '../../../domain/bloc/Notes/NoteEvents.dart';
-import '../../../domain/entities/Note.dart';
-import 'package:url_launcher/url_launcher_string.dart';
-import 'dart:convert';
 
 class DetailPage extends StatefulWidget {
   final Note? note;
@@ -33,14 +32,13 @@ class DetailPage extends StatefulWidget {
 }
 
 class _ReadPageState extends State<DetailPage> {
-  final NoteBloc bloc = locator.Get<NoteBloc>();
-  final HomeController homeController =
-      HomeController(db: NoteLocalRepository());
+  final homeController = locator.Get<NoteController>();
   late Note? _Note;
   late TextEditingController _titleController;
   late bool _editMode;
   late int? _indexNote = 0;
-  late final QuillController _quillController;
+  late final QuillController _quillController,
+      _quillControllerOld = QuillController.basic();
   final FocusNode _focusNodeTitle = FocusNode(),
       _focusNodeContent = FocusNode();
   int _quitCount = 1;
@@ -54,6 +52,9 @@ class _ReadPageState extends State<DetailPage> {
       _quillController = QuillController(
           document: Document.fromJson(jsonDecode(_Note!.content)),
           selection: const TextSelection.collapsed(offset: 0));
+      _quillControllerOld.clear();
+      _quillControllerOld.document =
+          Document.fromJson(_quillController.document.toDelta().toJson());
     } else {
       _titleController = TextEditingController(text: "");
       _quillController = QuillController.basic();
@@ -66,11 +67,13 @@ class _ReadPageState extends State<DetailPage> {
   void dispose() {
     _Note = null;
     _indexNote = null;
+    locator.Get<NoteController>().deleteOldImages();
     _titleController.clear();
     _focusNodeContent.dispose();
     _focusNodeTitle.dispose();
     _quitCount = 1;
     _quillController.clear();
+    _quillControllerOld.clear();
     super.dispose();
   }
 
@@ -92,8 +95,9 @@ class _ReadPageState extends State<DetailPage> {
       child: Scaffold(
         bottomSheet: _editMode && !_focusNodeTitle.hasFocus
             ? Container(
-                child:
-                    QuillToolBarEditorWidget(quillController: _quillController),
+                child: QuillToolBarEditorWidget(
+                    quillController: _quillController,
+                    oldController: _quillControllerOld),
               )
             : Container(
                 height: 0,
@@ -215,6 +219,14 @@ class _ReadPageState extends State<DetailPage> {
             ],
           ),
         ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: () {
+            homeController.compare(
+                newController: _quillController,
+                oldController: _quillControllerOld);
+          },
+          child: Icon(Icons.compare),
+        ),
       ),
     );
   }
@@ -272,8 +284,10 @@ class _ReadPageState extends State<DetailPage> {
       int id = await homeController.insertLocalNote(note: note);
       _Note = note.copyWith(key: id);
       locator.Get<NoteBloc>().eventSink.add(AddNote(note: _Note!));
-      _indexNote = bloc.getIndex();
+      _indexNote = locator.Get<NoteBloc>().getIndex();
     }
+    homeController.compare(
+        newController: _quillController, oldController: _quillControllerOld);
   }
 
   Future<String> _onImagePaste(Uint8List imageBytes) async {

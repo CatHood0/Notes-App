@@ -1,15 +1,18 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:notes_project/UI/notes/controller/NoteController.dart';
+import 'package:notes_project/Widgets/snackMessage.dart';
+import 'package:notes_project/data/local%20/preferences/old_images_key.dart';
+import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
+import 'package:notes_project/helper/db_helper.dart';
+import '../../blocs/blocs.dart';
+import 'dart:async';
+import 'package:internet_connectivity_checker/internet_connectivity_checker.dart';
 import 'package:notes_project/UI/home/widget/homeAppBarWidget.dart';
 import 'package:notes_project/UI/home/widget/homeHeaderWidget.dart';
 import 'package:notes_project/UI/home/widget/homeNoteListWidget.dart';
-import 'package:notes_project/Widgets/snackMessage.dart';
-import 'package:notes_project/helper/db_helper.dart';
-import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
-import 'package:notes_project/domain/bloc/Store/StoreEvents.dart';
 import 'package:notes_project/main.dart';
-import '../../blocs/blocs.dart';
-import 'dart:async';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,8 +23,7 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   final NoteBloc noteBloc = locator.Get<NoteBloc>();
-  final StoreBloc storeBloc = locator.Get<StoreBloc>();
-  bool hadConnectionBefore = false;
+  bool hadConnectionBefore = false, showAdvice = false;
   final DBHelper _db = DBHelper.instance;
   late StreamSubscription subscription;
 
@@ -29,18 +31,17 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   void initState() {
     _db.database();
     noteBloc.eventSink.add(RestoreNoteFiles());
-    storeBloc.eventSink.add(RestoreAllTemplates());
-    storeBloc.eventSink.add(RecommendTemplateEvent());
     super.initState();
-    subscription =
-        Connectivity().onConnectivityChanged.listen(showConnectionSnackBar);
+    subscription = ConnectivityChecker(interval: const Duration(seconds: 5))
+        .stream
+        .listen(showConnectionSnackBar);
   }
 
   @override
   void dispose() {
     _db.closeDatabase();
+    locator.Get<NoteController>().closeDatabase();
     noteBloc.dispose();
-    storeBloc.dispose();
     subscription.cancel();
     super.dispose();
   }
@@ -56,48 +57,51 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
             HomeAppBarWidget(now: now),
             HomeHeaderWidget(tabBar: tabBar),
             NoteListWidget(),
-            HomeHeaderSecundaryWidget(),
+            SliverToBoxAdapter(
+              child: Container(
+                  alignment: Alignment.centerLeft,
+                  padding: const EdgeInsets.only(left: 15),
+                  child: Text(
+                    "Task",
+                    style: TextStyle(fontSize: 20),
+                  )),
+            ),
           ]),
     );
   }
 
-  void showConnectionSnackBar(ConnectivityResult result) {
-    final hasInternet = result != ConnectivityResult.none;
-    String message = "";
-    Color color = Colors.grey;
-    if (hasInternet && hadConnectionBefore) {
-      message = 'Connection restaured. We will go to synchronize any change';
-      color = Colors.lightGreen;
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  void showConnectionSnackBar(var result) async {
+    print(result.toString());
+    final hasInternet = result != false;
+    if (hasInternet) {
+      List<String>? imagesFromPref =
+          await locator.Get<OldImagesPrefService>().oldImages;
+      if (imagesFromPref != null || imagesFromPref!.isNotEmpty) {
+        log("Saved old images isn't empty");
+        await locator.Get<NoteController>()
+            .deleteImageFromCloud(images: imagesFromPref);
+        log("Deleted old images");
+        locator.Get<OldImagesPrefService>().removeAllOldImages;
+      }
+    }
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    if (hasInternet && hadConnectionBefore && !showAdvice) {
+      showAdvice = true;
       SnackMessage.showSnackbarMessage(
         context: context,
-        message: message,
-        backgroudColor: color,
+        message: "Connection established",
+        backgroudColor: Colors.green,
       );
-    } else if (!hasInternet && result != ConnectivityResult.bluetooth) {
+    } else if (!hasInternet) {
       hadConnectionBefore = true;
-      message =
-          'Please, check your connection. The changes will not be apply if you dont have a connection';
-      color = Colors.red;
+      showAdvice = false;
       SnackMessage.showSnackbarMessage(
         context: context,
-        message: message,
+        message:
+            'Please, check your connection. The changes will not be apply if you dont have a connection',
         duration: const Duration(days: 1000000),
-        backgroudColor: color,
+        backgroudColor: Colors.red,
       );
     }
-  }
-}
-
-class HomeHeaderSecundaryWidget extends StatelessWidget {
-  const HomeHeaderSecundaryWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SliverToBoxAdapter(
-      child: Text("Task"),
-    );
   }
 }

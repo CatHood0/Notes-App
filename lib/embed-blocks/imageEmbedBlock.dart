@@ -7,6 +7,7 @@ import 'package:flutter_quill_extensions/embeds/widgets/image.dart';
 import 'package:flutter_quill_extensions/embeds/widgets/image_resizer.dart';
 
 class ImageEmbedBuilder extends EmbedBuilder {
+
   @override
   String get key => BlockEmbed.imageType;
 
@@ -22,7 +23,7 @@ class ImageEmbedBuilder extends EmbedBuilder {
     final imageUrl = standardizeImageUrl(node.value.data);
     OptionalSize? _imageSize; //for resize images
 
-    //Is HTML?
+    //Is HTML image?
     final style = node.style.attributes['style'];
     if (base.isMobile() && style != null) {
       final _attrs = base.parseKeyValuePairs(style.value.toString(), {

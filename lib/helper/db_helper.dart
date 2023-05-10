@@ -35,5 +35,13 @@ class DBHelper {
     );
   }
 
+  Future<void> _updateDatabase(Database db, int version) async {
+    await db.execute(
+      '''
+      Alter notes
+      ''',
+    );
+  }
+
   Future<void> closeDatabase() async => _db!.close();
 }

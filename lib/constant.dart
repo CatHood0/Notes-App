@@ -13,9 +13,6 @@ const letterColorDarkTheme = Colors.white;
 const buttonGeneralColor = Color.fromARGB(255, 255, 171, 255);
 const double fontSizeTitles = 18.0;
 const double fontSizeContent = 16;
-const supabaseUrl = 'https://moqyeplsnwyhtekqdisw.supabase.co';
-const supabaseKey = String.fromEnvironment(
-    'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1vcXllcGxzbnd5aHRla3FkaXN3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODI5MzcxMDIsImV4cCI6MTk5ODUxMzEwMn0.muS-QSw05hNAESfJ2v-bqQIqzQSCfcWVqyI8tmuQzL0');
 
 typedef StreamNoteEither = Stream<ResponseEither<String, List<Note>>>;
 typedef StreamUserEither = Stream<ResponseEither<String, User>>;

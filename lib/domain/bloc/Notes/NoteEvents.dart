@@ -15,33 +15,17 @@ class SaveNotesFiles extends NoteEvent {
 }
 
 class SortNotesEvents extends NoteEvent {
-  List<Note> notes = [];
-  SortNotesEvents({required TypeSort sort}) {
-  //here we place the logic for getting the last typerSort selected
-    /*switch (typeSort) {
-      case SortByNote.CreateDate:
-        notes.sort((a, b) => a.createDate.compareTo(b.createDate));
-        break;
-      case SortByNote.DateModification:
-        notes.sort(
-            (a, b) => b.dateTimeModification.compareTo(a.dateTimeModification));
-        break;
-      case SortByNote.Title:
-        notes.sort((a, b) => b.title.compareTo(a.title));
-        break;
-    }*/
-  }
+  final TypeSort sort;
+  SortNotesEvents({required this.sort});
 }
 
 class RestoreNoteFiles extends NoteEvent {}
-
 
 class RestoreNoteFilesByIdFolder extends NoteEvent {
   final int id;
   RestoreNoteFilesByIdFolder({
     required this.id,
   });
-  
 }
 
 class UpdateNote extends NoteEvent {
