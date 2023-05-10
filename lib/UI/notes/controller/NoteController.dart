@@ -30,22 +30,28 @@ class NoteController {
     var imagesFromPref = await _pref.oldImages;
     bool error = false;
     if (oldImages.toList().isNotEmpty) {
+      print(oldImages.toList());
       error = await deleteImageFromCloud(images: oldImages.toList());
       if (!error) {
         _pref.removeAllOldImages;
       } else if (imagesFromPref != null) {
-        imagesFromPref
-            .where(((image) => !oldImages.contains(image)))
-            .forEach((image) {
-          oldImages.add(image);
-        });
-        _pref.saveOldImages(oldImages.toList());
+        saveInPreference(imagesFromPref);
       }
       oldImages = Set<String>();
       log("Finished");
     } else if (oldImages.toList().isEmpty) {
       log("There aren't images in the editor or there aren't deleted ones");
     }
+  }
+
+  void saveInPreference(List<String> imagesFromPref) {
+    imagesFromPref
+        .where((image) => !oldImages.contains(image))
+        .forEach((image) {
+      log("adding before images to new old images: " + image);
+      oldImages.add(image);
+    });
+    _pref.saveOldImages(oldImages.toList());
   }
 
   void compare(
@@ -57,22 +63,21 @@ class NoteController {
       oldImages = _getImagesFromController(controller: oldController);
     } else {
       final listAux = _getImagesFromController(controller: oldController);
-      listAux.forEach((image) {
+      listAux.where((image) => !newImages.contains(image)).forEach((image) {
         log('new image added to old images ${image}');
         oldImages.add(image);
       });
     }
-    oldImages.toSet().difference(newImages.toSet()).forEach((image) {
-      print("New images does not contain this one: $image");
-    });
 
     newImages.toSet().intersection(oldImages.toSet()).forEach((image) {
       print("$image has been eliminated from old images.");
       oldImages.remove(image);
     });
     var imagesFromPref = await _pref.oldImages;
-    if (imagesFromPref == null) {
+    if (imagesFromPref == null && oldImages.isNotEmpty) {
       _pref.saveOldImages(oldImages.toList());
+    } else if (imagesFromPref != null) {
+      saveInPreference(imagesFromPref);
     }
   }
 
@@ -126,3 +131,8 @@ class NoteController {
     localDatabase.delete(id: id);
   }
 }
+
+    //only use this for knowing if the newImages not contains a image that's in oldImages
+    // oldImages.toSet().difference(newImages.toSet()).forEach((image) {
+    //   print("New images does not contain this one: $image");
+    // });

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../Widgets/snackMessage.dart';
 
 class HomeController {
-  bool hadConnectionBefore = false, showAdvice = false;
+  bool hadConnectionBefore = false, showAdvice = false, showAdviceDisconnected = false;
 
   void showSnackbarMessage(
       {required BuildContext context,
@@ -11,13 +11,15 @@ class HomeController {
       required bool hasInternet}) async {
     if (hasInternet && hadConnectionBefore && !showAdvice) {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      showAdviceDisconnected = false;
       showAdvice = true;
       SnackMessage.showSnackbarMessage(
         context: context,
         message: "Connection established",
         backgroudColor: Colors.green,
       );
-    } else if (!hasInternet && TIME_OUT >= 8) {
+    } else if (!hasInternet && TIME_OUT >=8 && !showAdviceDisconnected) {
+      showAdviceDisconnected = true;
       hadConnectionBefore = true;
       showAdvice = false;
       SnackMessage.showSnackbarMessage(

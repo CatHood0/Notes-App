@@ -7,7 +7,7 @@ class OldImagesPrefService {
   }
 
   Future<bool> saveOldImages(List<String> images) async {
-    print("Saving old images");
+    print("Saving old images ${images.toList()}");
     return await _shared.setStringList('old_images', images);
   }
 

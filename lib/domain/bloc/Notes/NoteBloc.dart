@@ -12,8 +12,8 @@ class NoteBloc {
   String? _oldSearch = null;
 
   //repositories
-  final INoteRepository repository;
-  final INoteLocalRepository localRepository;
+  final INoteRepository _repository;
+  final INoteLocalRepository _localRepository;
 
   //streams
   final _eventStreamController = StreamController<NoteEvent>();
@@ -31,25 +31,25 @@ class NoteBloc {
   Stream<NoteState> get stateStream => _noteStateController.stream;
   StreamSink<NoteEvent> get eventSink => _eventStreamController.sink;
 
-  NoteBloc({required this.repository, required this.localRepository}) {
+  NoteBloc(this._repository, this._localRepository) {
     _noteStateController.add(InitialNoteState());
     _eventStreamController.stream.listen(_handleEvent);
   }
 
   void _handleEvent(NoteEvent event) async {
-    await localRepository.openDatabase();
+    await _localRepository.openDatabase();
     if (event is AddNote) {
       _noteStateController.add(LoadingNotes());
       _notes.add(event.note);
       if (event.note.favorite) {
-        _notes = sortNoteListByPin(_notes);
+        _notes = sortNoteList(list: _notes);
       }
       _currentLenghtNotesController.add(_notes.length);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is DeleteNote) {
       _noteStateController.add(LoadingNotes());
       _notes.removeAt(event.index);
-      _notes = sortNoteListByPin(_notes);
+      _notes = sortNoteList(list: _notes);
       _currentLenghtNotesController.add(_notes.length);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is UpdateNote) {
@@ -60,7 +60,7 @@ class NoteBloc {
       var note = _notes[event.index].copyWith(favorite: event.isFavorite);
       _notes[event.index] = note;
       if (resultSearchNote.isEmpty) {
-        _notes = sortNoteListByPin(_notes);
+        _notes = sortNoteList(list: _notes);
         _noteStateController.add(LoadedNotes(notes: _notes, showStar: true));
       } else {
         _notes[event.index] = note;
@@ -95,17 +95,17 @@ class NoteBloc {
     } else if (event is SaveNotesFiles) {
     } else if (event is RestoreNoteFiles) {
       _notes = await _getNotesFromLocalDatabase();
-      _notes = sortNoteListByPin(_notes);
+      _notes = sortNoteList(list: _notes);
       _currentLenghtNotesController.add(_notes.length);
       _noteStateController.add(LoadedNotes(notes: _notes));
     } else if (event is SortNotesEvents) {
-      _notes = sortNotes(notes: _notes, sort: event.sort);
+      _notes = sortNoteList(list: _notes, sort: event.sort);
       _noteStateController.add(LoadedNotes(notes: _notes));
     }
   }
 
   Future<List<Note>> _getNotesFromLocalDatabase() async {
-    return localRepository.getAllNotes();
+    return _localRepository.getAllNotes();
   }
 
   List<Note> searchNote(String? search, List<Note> notes) {
@@ -117,7 +117,7 @@ class NoteBloc {
     return result;
   }
 
-  List<Note> sortNoteListByPin(List<Note> list) {
+  List<Note> sortNoteList({required List<Note> list, TypeSort? sort}) {
     List<Note> favoriteNotes = [];
     List<Note> unFavoriteNotes = [];
 
@@ -129,19 +129,20 @@ class NoteBloc {
         unFavoriteNotes.add(note);
       }
     }
+    if (sort != null) {
+      if (sort == TypeSort.recent) {
+        favoriteNotes.sort(
+            (a, b) => b.dateTimeModification.compareTo(a.dateTimeModification));
+        unFavoriteNotes.sort(
+            (a, b) => b.dateTimeModification.compareTo(a.dateTimeModification));
+      } else if (sort == TypeSort.suggested) {
+        favoriteNotes.sort((a, b) => a.content.compareTo(b.content));
+        unFavoriteNotes.sort((a, b) => a.content.compareTo(b.content));
+      }
+    }
 
     favoriteNotes.addAll(unFavoriteNotes);
     return favoriteNotes;
-  }
-
-  List<Note> sortNotes({required List<Note> notes, required TypeSort sort}) {
-    if (sort == TypeSort.recent) {
-      notes.sort(
-          (a, b) => b.dateTimeModification.compareTo(a.dateTimeModification));
-    } else if (sort == TypeSort.suggested) {
-      notes.sort((a, b) => a.content.compareTo(b.content));
-    }
-    return notes;
   }
 
   //Needs to get the index for updating when we create a new note
@@ -150,7 +151,7 @@ class NoteBloc {
   }
 
   void dispose() {
-    localRepository.closeDatabase();
+    _localRepository.closeDatabase();
     _currentLenghtNotesController.close();
     _eventStreamController.close();
     _noteStateController.close();

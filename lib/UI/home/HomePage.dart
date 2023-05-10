@@ -9,10 +9,11 @@ import 'package:notes_project/UI/home/widget/homeAppBarWidget.dart';
 import 'package:notes_project/UI/home/widget/homeHeaderWidget.dart';
 import 'package:notes_project/UI/home/widget/homeNoteListWidget.dart';
 import 'package:notes_project/main.dart';
-import '../../constant.dart';
 import '../../blocs/blocs.dart';
 import 'dart:developer';
 import 'dart:async';
+
+import '../../constant.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -63,25 +64,24 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                     style: TextStyle(fontSize: 20),
                   )),
             ),
+            SliverList(delegate: SliverChildListDelegate([])),
           ]),
     );
   }
 
   void showConnectionSnackBar(var result) async {
-    final hasInternet = result != false;
-    TIME_OUT = !hasInternet ? TIME_OUT++ : 0;
+    final hasInternet = result;
+    TIME_OUT = !hasInternet ? TIME_OUT + 1 : 0;
     if (hasInternet) {
       List<String>? imagesFromPref =
           await locator.Get<OldImagesPrefService>().oldImages;
       if (imagesFromPref != null) {
-        log("Saved old images isn't empty");
         await locator.Get<NoteController>()
             .deleteImageFromCloud(images: imagesFromPref);
-        log("Deleted old images");
         locator.Get<OldImagesPrefService>().removeAllOldImages;
-      } else
-        log("dont has nothing");
+      }
     }
-    locator.Get<HomeController>().showSnackbarMessage(context: context, TIME_OUT: TIME_OUT, hasInternet: hasInternet);
+    locator.Get<HomeController>().showSnackbarMessage(
+        context: context, TIME_OUT: TIME_OUT, hasInternet: hasInternet);
   }
 }

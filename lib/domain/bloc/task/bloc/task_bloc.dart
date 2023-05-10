@@ -9,7 +9,7 @@ class TaskBloc extends Bloc<TaskEvent, TaskState> {
   TaskBloc() : super(TaskInitial()) {
     on<TaskEvent>((event, emit) {
       if(event is addTask){
-
+        
       }
     });
   }

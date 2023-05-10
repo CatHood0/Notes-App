@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:notes_project/main.dart';
 import 'package:flutter_quill/flutter_quill.dart' hide Text;
 import 'package:flutter_quill_extensions/embeds/embed_types.dart';
 import 'package:image_picker/image_picker.dart';
 import '../../UI/notes/controller/NoteController.dart';
 import 'dart:io';
-import 'package:notes_project/main.dart';
 
 class ImageAndVideoUtils {
-
   static Future<void> handleImageButtonTap(
     BuildContext context,
     QuillController controller,
@@ -24,13 +23,19 @@ class ImageAndVideoUtils {
 
     if (imageUrl != null) {
       //here we put the logic for upload the image to cloud storage
-      
+
+      //ensure that the images eliminates is in oldImages
+      locator.Get<NoteController>()
+          .compare(newController: controller, oldController: oldController);
+
       controller.replaceText(index, length, BlockEmbed.image(imageUrl), null);
 
+      //second ensure
       locator.Get<NoteController>()
           .compare(newController: controller, oldController: oldController);
       oldController.clear();
-      oldController.document = Document.fromJson(controller.document.toDelta().toJson());
+      oldController.document =
+          Document.fromJson(controller.document.toDelta().toJson());
     }
   }
 

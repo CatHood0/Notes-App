@@ -6,7 +6,7 @@ import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/domain/entities/Note.dart';
 
 void main() {
-  final NoteBloc bloc = NoteBloc(repository: NoteRepository(), localRepository: NoteLocalRepository());
+  final NoteBloc bloc = NoteBloc(NoteRepository(), NoteLocalRepository());
   bloc.eventSink.add(AddNote(
       note: Note(
           title: "Hello",

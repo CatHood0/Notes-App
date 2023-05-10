@@ -59,9 +59,7 @@ void setup() {
 
   //Blocs
   locator.registerInstance<NoteBloc>(
-      instance: NoteBloc(
-          repository: NoteRepository(),
-          localRepository: NoteLocalRepository()));
+      instance: NoteBloc(NoteRepository(), NoteLocalRepository()));
   locator.registerInstance(instance: FolderBloc());
   locator.registerInstance<UserBloc>(instance: UserBloc());
 }
