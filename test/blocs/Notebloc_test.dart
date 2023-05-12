@@ -12,7 +12,6 @@ void main() {
           title: "Hello",
           content: '',
           createDate: DateTime.now(),
-          updates: 0,
           favorite: true,
           dateTimeModification:
               DateTime(DateTime.daysPerWeek, DateTime.wednesday))));
@@ -23,7 +22,6 @@ void main() {
             title: "Crazy",
             content: '',
             createDate: DateTime.now(),
-            updates: 0,
             favorite: true,
             dateTimeModification:
                 DateTime(DateTime.daysPerWeek, DateTime.wednesday))));

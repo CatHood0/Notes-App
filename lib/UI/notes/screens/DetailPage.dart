@@ -35,6 +35,7 @@ class _ReadPageState extends State<DetailPage> {
   final homeController = locator.Get<NoteController>();
   late Note? _Note;
   late TextEditingController _titleController;
+  late final ScrollController _scrollController;
   late bool _editMode;
   late int? _indexNote = 0;
   late final QuillController _quillController,
@@ -48,6 +49,7 @@ class _ReadPageState extends State<DetailPage> {
     _Note = widget.note;
     _indexNote = widget.index;
     if (_Note?.title != null && _Note?.content != null) {
+      _scrollController = ScrollController(initialScrollOffset: _Note!.lastScroll);
       _titleController = TextEditingController(text: _Note!.title);
       _quillController = QuillController(
           document: Document.fromJson(jsonDecode(_Note!.content)),
@@ -137,6 +139,7 @@ class _ReadPageState extends State<DetailPage> {
           ],
         ),
         body: SingleChildScrollView(
+          controller: _scrollController,
           child: Column(
             children: [
               Container(
@@ -262,7 +265,7 @@ class _ReadPageState extends State<DetailPage> {
             ? "Untitle note"
             : _titleController.text,
         content: jsonEncode(_quillController.document.toDelta().toJson()),
-        update: _Note!.updates + 1,
+        last: _scrollController.position.pixels,
         dateTimeModification: DateTime.now(),
       );
       homeController.updateLocalNote(note: _Note!);
@@ -277,8 +280,8 @@ class _ReadPageState extends State<DetailPage> {
           content: jsonEncode(_quillController.document.toDelta().toJson()),
           createDate: _Note?.createDate ?? DateTime.now(),
           favorite: false,
-          tag: 'anything',
-          updates: 0,
+          password: null,
+          lastScroll: _scrollController.position.pixels,
           dateTimeModification: DateTime.now());
 
       int id = await homeController.insertLocalNote(note: note);
@@ -286,6 +289,8 @@ class _ReadPageState extends State<DetailPage> {
       locator.Get<NoteBloc>().eventSink.add(AddNote(note: _Note!));
       _indexNote = locator.Get<NoteBloc>().getIndex();
     }
+    print(_Note!.lastScroll);
+    print(_scrollController.position.pixels);
     homeController.compare(
         newController: _quillController, oldController: _quillControllerOld);
   }

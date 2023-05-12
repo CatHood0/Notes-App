@@ -1,35 +1,39 @@
 import 'dart:convert';
+
 class Note {
   int? key;
-  int updates;
+  int? id_folder;
+  int? id_user;
   String title;
+  String? password;
   String content;
-  String? tag;
-  double? lastScroll;
+  double lastScroll;
   bool favorite;
   DateTime createDate;
   DateTime dateTimeModification;
 
-  Note(
-      {required this.title,
-      required this.content,
-      required this.createDate,
-      required this.favorite,
-      required this.updates,
-      required this.dateTimeModification,
-      this.tag,
-      this.key,
-      this.lastScroll,
-      })
-      : assert(title.isNotEmpty);
+  Note({
+    required this.title,
+    required this.content,
+    required this.createDate,
+    required this.favorite,
+    required this.dateTimeModification,
+    this.id_folder,
+    this.id_user,
+    this.key,
+    this.lastScroll = 0.0,
+    this.password
+  }) : assert(title.isNotEmpty);
 
   Note copyWith({
     int? key,
     int? update,
+    int? id_folder,
+    int? id_user,
     double? last,
     String? title,
     String? content,
-    String? tag,
+    String? password,
     bool? pin,
     bool? favorite,
     DateTime? createDate,
@@ -37,39 +41,43 @@ class Note {
   }) {
     return Note(
       key: key ?? this.key,
+      id_folder: id_folder ?? this.id_folder,
+      id_user: id_user ?? this.id_user,
       title: title ?? this.title,
       content: content ?? this.content,
-      tag: tag ?? this.tag,
-      updates: update ?? this.updates,
+      password: password ?? this.password,
       favorite: favorite ?? this.favorite,
       createDate: createDate ?? this.createDate,
-      lastScroll: last ?? this.lastScroll, 
+      lastScroll: last ?? this.lastScroll,
       dateTimeModification: dateTimeModification ?? this.dateTimeModification,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
+      'id_folder': id_folder,
+      'id_user': id_user,
       'title': title,
       'content': content,
-      'favorite': favorite==true ? 1 : 0,
+      'favorite': favorite == true ? 1 : 0,
       'create_date': createDate.toString(),
-      'updates': updates,
       'modification_date': dateTimeModification.toString(),
-      'tag': tag,
+      'last_position': lastScroll,
+      'password': password,
     };
   }
 
   factory Note.fromMap(Map<String, dynamic> map) {
     return Note(
       key: map['id'] as int,
+      id_folder: map['id_folder'],
+      id_user: map['id_user'],
       title: map['title'] as String,
       content: map['content'] as String,
-      tag: map['tag'],
-      favorite: map['favorite']==1 ? true : false,
+      favorite: map['favorite'] == 1 ? true : false,
       createDate: DateTime.parse(map['create_date'] as String),
-      updates: map['updates'],
       dateTimeModification: DateTime.parse(map['modification_date'] as String),
+      lastScroll: map['last_position'] ?? 0.0,
     );
   }
 

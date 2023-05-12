@@ -10,9 +10,7 @@ import 'package:notes_project/UI/home/widget/homeHeaderWidget.dart';
 import 'package:notes_project/UI/home/widget/homeNoteListWidget.dart';
 import 'package:notes_project/main.dart';
 import '../../blocs/blocs.dart';
-import 'dart:developer';
 import 'dart:async';
-
 import '../../constant.dart';
 
 class HomePage extends StatefulWidget {
