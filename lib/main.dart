@@ -54,12 +54,12 @@ void setup() {
   locator.registerInstance<NoteController>(
       instance: NoteController(
           localDatabase: locator.Get<NoteLocalRepository>(),
-          database: locator.Get<NoteRepository>(),
-          pref: locator.Get<OldImagesPrefService>()));
+          database: locator.Get<NoteRepository>()));
 
   //Blocs
   locator.registerInstance<NoteBloc>(
       instance: NoteBloc(NoteRepository(), NoteLocalRepository()));
   locator.registerInstance(instance: FolderBloc());
   locator.registerInstance<UserBloc>(instance: UserBloc());
+  locator.registerInstance<CheckBloc>(instance: CheckBloc(initial: CheckInitialState()));
 }

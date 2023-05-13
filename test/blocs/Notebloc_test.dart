@@ -11,6 +11,7 @@ void main() {
       note: Note(
           title: "Hello",
           content: '',
+          readable: '',
           createDate: DateTime.now(),
           favorite: true,
           dateTimeModification:
@@ -21,6 +22,7 @@ void main() {
         note: Note(
             title: "Crazy",
             content: '',
+            readable: '',
             createDate: DateTime.now(),
             favorite: true,
             dateTimeModification:

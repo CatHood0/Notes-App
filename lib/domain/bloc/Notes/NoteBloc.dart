@@ -12,6 +12,7 @@ class NoteBloc {
   String? _oldSearch = null;
 
   //repositories
+  // ignore: unused_field
   final INoteRepository _repository;
   final INoteLocalRepository _localRepository;
 

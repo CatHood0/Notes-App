@@ -1,10 +1,9 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
-
 import 'package:equatable/equatable.dart';
 
 class Task extends Equatable {
   final int? id;
+  final int? id_user;
   final String name;
   final String content;
   final DateTime finishItTask;
@@ -12,6 +11,7 @@ class Task extends Equatable {
 
   Task({
     this.id,
+    this.id_user,
     required this.name,
     required this.content,
     required this.finishItTask,
@@ -19,24 +19,26 @@ class Task extends Equatable {
   });
 
   @override
-  List<Object?> get props => [id, name, content, finishItTask, creationDate];
+  List<Object?> get props => [id, id_user, name, content, finishItTask, creationDate];
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
+      'id_user': id_user,
       'name': name,
-      'content': content,
-      'finishItTask': finishItTask.toString(),
-      'creationDate': creationDate.toString(),
+      'detail': content,
+      'finish_it': finishItTask.toString(),
+      'creation_date': creationDate.toString(),
     };
   }
 
   factory Task.fromMap(Map<String, dynamic> map) {
     return Task(
       id: map['id'],
+      id_user: map['id_user'],
       name: map['name'] as String,
-      content: map['content'] as String,
-      finishItTask: DateTime.parse(map['finishItTask'] as String),
-      creationDate: DateTime.parse(map['creationDate'] as String),
+      content: map['detail'] as String,
+      finishItTask: DateTime.parse(map['finish_it'] as String),
+      creationDate: DateTime.parse(map['creation_date'] as String),
     );
   }
 
@@ -53,6 +55,7 @@ class Task extends Equatable {
   }) {
     return Task(
       id: id ?? this.id,
+      id_user: id_user,
       name: name ?? this.name,
       content: content ?? this.content,
       finishItTask: finishItTask ?? this.finishItTask,

@@ -5,12 +5,13 @@ import 'package:timeago/timeago.dart';
 import 'data/response/response.dart';
 import 'domain/entities/Note.dart';
 
-const primaryColor = Color(0xFFefc3ff);
-const secundaryColor = Color.fromARGB(255, 225, 143, 255);
-const appBarColor = Color(0xFF2c3e50);
+const primaryColor = const Color(0xFFefc3ff);
+const secundaryColor = const Color.fromARGB(255, 225, 143, 255);
+const appBarColor = const Color(0xFF2c3e50);
 const letterColorLightTheme = Colors.black;
 const letterColorDarkTheme = Colors.white;
-const buttonGeneralColor = Color.fromARGB(255, 255, 171, 255);
+const buttonGeneralColor = const Color.fromARGB(255, 255, 171, 255);
+const default_color_card = Color.fromARGB(255, 70, 70, 70);
 const double fontSizeTitles = 18.0;
 const double fontSizeContent = 16;
 int TIME_OUT = 0; //this incremented if connectivityChecker return false

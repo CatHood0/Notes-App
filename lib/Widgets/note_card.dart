@@ -65,6 +65,15 @@ class _NoteCardState extends State<NoteCard> with TickerProviderStateMixin {
             children: [
               NoteTitleWidget(
                   widget: widget.note, isHomePage: widget.isHomePage),
+              Container(
+                padding: const EdgeInsets.only(top: 30, left: 10),
+                child: Text(
+                  widget.note.readable,
+                  style: TextStyle(color: const Color.fromARGB(255, 212, 212, 212), fontSize: 13),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 3,
+                ),
+              ),
               DateAndStarNoteWidget(
                 showStar: widget.showStart,
                 noteCard: widget,

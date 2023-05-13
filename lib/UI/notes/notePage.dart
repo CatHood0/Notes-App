@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:notes_project/UI/notes/screens/DetailPage.dart';
 import 'package:notes_project/UI/notes/widget/listNoteWidget.dart';
 import 'package:notes_project/blocs/blocs.dart';
-import 'package:notes_project/constant.dart';
 import 'package:notes_project/domain/bloc/Notes/NoteEvents.dart';
 import 'package:notes_project/main.dart';
 

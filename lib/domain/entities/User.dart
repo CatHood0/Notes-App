@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:equatable/equatable.dart';
-import 'package:notes_project/domain/translators/translator.dart';
 import '../enums/enums.dart';
 
 class User extends Equatable {
@@ -11,7 +10,7 @@ class User extends Equatable {
   final String token;
   final String encryptedPass;
   final TypeUser type;
-  final List<TypeBan>? ban;
+  final TypeBan? ban;
 
   User({
     required this.id,
@@ -21,7 +20,7 @@ class User extends Equatable {
     required this.encryptedPass,
     required this.token,
     required this.type,
-    this.ban = const [TypeBan.nothing],
+    this.ban,
   })  : assert(id!>1),
         assert(token.isNotEmpty),
         assert(email.isNotEmpty),
@@ -35,7 +34,7 @@ class User extends Equatable {
     String? token,
     String? encryptedPass,
     TypeUser? type,
-    List<TypeBan>? ban,
+    TypeBan? ban,
   }) {
     return User(
         id: id ?? this.id,
@@ -64,8 +63,8 @@ class User extends Equatable {
       'email': email,
       'token': token,
       'encryptedPass': encryptedPass,
-      'type_user': type.toString(),
-      'type_ban': ban!.toList().toString(),
+      'type_user': type.index,
+      'type_ban': ban!.index,
     };
   }
 
@@ -77,7 +76,7 @@ class User extends Equatable {
         email: map['email'] as String,
         token: map['token'] as String,
         encryptedPass: map['encryptedPass'] as String,
-        type: Translator.translationTypeUser(map['type_user'] as String),
-        ban: Translator.translationTypeBan(map['ban']));
+        type: TypeUser.values[map['type_user'] as int],
+        ban: TypeBan.values[map['ban'] as int]);
   }
 }

@@ -1,11 +1,9 @@
-import 'dart:io';
 import 'package:notes_project/domain/entities/Note.dart';
 import 'package:notes_project/domain/repository/notes/INoteRepo.dart';
 import '../../constant.dart';
 import '../response/response.dart';
 
-class NoteRepository implements INoteRepository{
-  final HttpClient client = HttpClient();
+class NoteRepository implements INoteRepository {
 
   @override
   Future<void> create({required Note obj}) {
@@ -18,7 +16,7 @@ class NoteRepository implements INoteRepository{
   }
 
   @override
-  Future<List<Note>> search({required String text}) {
+  Future<List<Note>> search({required String text}) async {
     throw UnimplementedError();
   }
 
@@ -37,5 +35,4 @@ class NoteRepository implements INoteRepository{
     yield ResponseEither(error: null, object: null);
     throw UnimplementedError();
   }
-
 }

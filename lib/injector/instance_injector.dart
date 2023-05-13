@@ -3,9 +3,6 @@ class Injector {
   final Map<String, dynamic> _instances = {};
 
   factory Injector.singleton() {
-    if (_singleton == null) {
-      return _singleton = Injector._internal();
-    }
     return _singleton;
   }
 

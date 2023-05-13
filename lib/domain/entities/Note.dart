@@ -1,20 +1,22 @@
 import 'dart:convert';
 
 class Note {
-  int? key;
-  int? id_folder;
-  int? id_user;
-  String title;
-  String? password;
-  String content;
-  double lastScroll;
-  bool favorite;
-  DateTime createDate;
-  DateTime dateTimeModification;
+  final int? key;
+  final int? id_folder;
+  final int? id_user;
+  final String title;
+  final String? password;
+  final String content;
+  final String readable;
+  final double lastScroll;
+  final bool favorite;
+  final DateTime createDate;
+  final DateTime dateTimeModification;
 
   Note({
     required this.title,
     required this.content,
+    required this.readable,
     required this.createDate,
     required this.favorite,
     required this.dateTimeModification,
@@ -33,6 +35,7 @@ class Note {
     double? last,
     String? title,
     String? content,
+    String? readable,
     String? password,
     bool? pin,
     bool? favorite,
@@ -45,6 +48,7 @@ class Note {
       id_user: id_user ?? this.id_user,
       title: title ?? this.title,
       content: content ?? this.content,
+      readable: readable ?? this.readable,
       password: password ?? this.password,
       favorite: favorite ?? this.favorite,
       createDate: createDate ?? this.createDate,
@@ -59,6 +63,7 @@ class Note {
       'id_user': id_user,
       'title': title,
       'content': content,
+      'plain_content': readable,
       'favorite': favorite == true ? 1 : 0,
       'create_date': createDate.toString(),
       'modification_date': dateTimeModification.toString(),
@@ -74,6 +79,7 @@ class Note {
       id_user: map['id_user'],
       title: map['title'] as String,
       content: map['content'] as String,
+      readable: map['plain_content'] as String,
       favorite: map['favorite'] == 1 ? true : false,
       createDate: DateTime.parse(map['create_date'] as String),
       dateTimeModification: DateTime.parse(map['modification_date'] as String),

@@ -1,18 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:flutter_quill_extensions/flutter_quill_extensions.dart';
-import 'package:path/path.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'dart:convert';
-import 'dart:io';
-import 'dart:typed_data';
 import 'dart:ui';
 import '../../../blocs/blocs.dart';
 import '../../../domain/entities/Note.dart';
 import '../../../domain/bloc/Notes/NoteEvents.dart';
-import 'package:notes_project/embedded/imageEmbedBlock.dart';
 import 'package:notes_project/UI/notes/screens/widget/quill_toolbar_only.dart';
 import 'package:notes_project/UI/notes/screens/widget/quill_toolbar_editor_widget.dart';
 import 'package:notes_project/UI/notes/controller/NoteController.dart';
@@ -38,8 +32,7 @@ class _ReadPageState extends State<DetailPage> {
   late final ScrollController _scrollController;
   late bool _editMode;
   late int? _indexNote = 0;
-  late final QuillController _quillController,
-      _quillControllerOld = QuillController.basic();
+  late final QuillController _quillController;
   final FocusNode _focusNodeTitle = FocusNode(),
       _focusNodeContent = FocusNode();
   int _quitCount = 1;
@@ -48,16 +41,15 @@ class _ReadPageState extends State<DetailPage> {
   void initState() {
     _Note = widget.note;
     _indexNote = widget.index;
-    if (_Note?.title != null && _Note?.content != null) {
-      _scrollController = ScrollController(initialScrollOffset: _Note!.lastScroll);
+    if (_Note?.title != null && _Note?.content != null && _Note!.content.isNotEmpty) {
+      _scrollController =
+          ScrollController(initialScrollOffset: _Note!.lastScroll);
       _titleController = TextEditingController(text: _Note!.title);
       _quillController = QuillController(
           document: Document.fromJson(jsonDecode(_Note!.content)),
           selection: const TextSelection.collapsed(offset: 0));
-      _quillControllerOld.clear();
-      _quillControllerOld.document =
-          Document.fromJson(_quillController.document.toDelta().toJson());
     } else {
+      _scrollController = ScrollController();
       _titleController = TextEditingController(text: "");
       _quillController = QuillController.basic();
     }
@@ -69,13 +61,11 @@ class _ReadPageState extends State<DetailPage> {
   void dispose() {
     _Note = null;
     _indexNote = null;
-    locator.Get<NoteController>().deleteOldImages();
     _titleController.clear();
     _focusNodeContent.dispose();
     _focusNodeTitle.dispose();
     _quitCount = 1;
     _quillController.clear();
-    _quillControllerOld.clear();
     super.dispose();
   }
 
@@ -97,9 +87,8 @@ class _ReadPageState extends State<DetailPage> {
       child: Scaffold(
         bottomSheet: _editMode && !_focusNodeTitle.hasFocus
             ? Container(
-                child: QuillToolBarEditorWidget(
-                    quillController: _quillController,
-                    oldController: _quillControllerOld),
+                child:
+                    QuillToolBarEditorWidget(quillController: _quillController),
               )
             : Container(
                 height: 0,
@@ -180,13 +169,8 @@ class _ReadPageState extends State<DetailPage> {
                   placeholder: "Write something",
                   controller: _quillController,
                   autoFocus: false,
-                  embedBuilders: [
-                    ImageEmbedBuilder(),
-                    ...FlutterQuillEmbeds.builders(),
-                  ],
-                  onImagePaste: _onImagePaste,
                   detectWordBoundary: true,
-                  enableUnfocusOnTapOutside: true,
+                  minHeight: MediaQuery.of(context).size.height * 1,
                   textCapitalization: TextCapitalization.sentences,
                   onSingleLongTapStart: (details, p1) {
                     return focusEditor();
@@ -212,7 +196,7 @@ class _ReadPageState extends State<DetailPage> {
                   expands: false,
                   focusNode: _focusNodeContent,
                   padding:
-                      const EdgeInsets.only(bottom: 45, left: 15, right: 15),
+                      const EdgeInsets.only(bottom: 60, left: 15, right: 15),
                   readOnly: false,
                   scrollController: ScrollController(),
                   scrollable: false,
@@ -221,14 +205,6 @@ class _ReadPageState extends State<DetailPage> {
               ),
             ],
           ),
-        ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            homeController.compare(
-                newController: _quillController,
-                oldController: _quillControllerOld);
-          },
-          child: Icon(Icons.compare),
         ),
       ),
     );
@@ -265,6 +241,7 @@ class _ReadPageState extends State<DetailPage> {
             ? "Untitle note"
             : _titleController.text,
         content: jsonEncode(_quillController.document.toDelta().toJson()),
+        readable: _quillController.document.toPlainText(),
         last: _scrollController.position.pixels,
         dateTimeModification: DateTime.now(),
       );
@@ -278,6 +255,7 @@ class _ReadPageState extends State<DetailPage> {
               ? _titleController.text
               : "Untitle note",
           content: jsonEncode(_quillController.document.toDelta().toJson()),
+          readable: _quillController.document.toPlainText(),
           createDate: _Note?.createDate ?? DateTime.now(),
           favorite: false,
           password: null,
@@ -289,18 +267,5 @@ class _ReadPageState extends State<DetailPage> {
       locator.Get<NoteBloc>().eventSink.add(AddNote(note: _Note!));
       _indexNote = locator.Get<NoteBloc>().getIndex();
     }
-    print(_Note!.lastScroll);
-    print(_scrollController.position.pixels);
-    homeController.compare(
-        newController: _quillController, oldController: _quillControllerOld);
-  }
-
-  Future<String> _onImagePaste(Uint8List imageBytes) async {
-    // Saves the image to applications directory
-    final appDocDir = await getApplicationDocumentsDirectory();
-    final file = await File(
-            '${appDocDir.path}/${basename('${DateTime.now().millisecondsSinceEpoch}.png')}')
-        .writeAsBytes(imageBytes, flush: true);
-    return file.path.toString();
   }
 }
